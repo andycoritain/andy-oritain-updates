@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blocker Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Geist', sans-serif;
+    background: #EEEAE2;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .card {
+    background: #FDFCF8;
+    border-radius: 20px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 10px 10px 30px rgba(140,130,110,0.3), -6px -6px 20px rgba(255,252,245,0.9);
+  }
+
+  h1 {
+    font-size: 22px; font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+
+  .sub {
+    font-size: 12px; color: #ACA49A;
+    margin-bottom: 24px;
+  }
+
+  .status {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 12px; border-radius: 99px;
+    display: inline-block; margin-bottom: 20px;
+  }
+  .status.ok  { background: #C8DCC8; color: #1E4E2A; }
+  .status.err { background: #F0D8D0; color: #7A2E18; }
+  .status.loading { background: #FAF0D0; color: #7A5A00; }
+
+  .input-row {
+    display: flex; gap: 8px; margin-bottom: 24px;
+  }
+
+  input {
+    flex: 1;
+    background: #EEEAE2;
+    border: none; border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px; color: #1A1714;
+    outline: none;
+    box-shadow: inset 3px 3px 8px rgba(150,140,120,0.4), inset -3px -3px 8px rgba(255,252,245,0.9);
+  }
+
+  input::placeholder { color: #ACA49A; }
+
+  button {
+    background: #1A1714;
+    border: none; border-radius: 10px;
+    padding: 10px 18px;
+    font-family: 'Geist', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #F5D842; cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 4px 4px 10px rgba(26,23,20,0.4);
+    transition: opacity 0.15s;
+  }
+
+  button:disabled { opacity: 0.5; }
+
+  .list { display: flex; flex-direction: column; gap: 8px; }
+
+  .item {
+    background: #EEEAE2;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 13px; color: #1A1714;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 4px 4px 10px rgba(150,140,120,0.3), -3px -3px 8px rgba(255,252,245,0.85);
+  }
+
+  .item.resolved {
+    opacity: 0.5;
+    text-decoration: line-through;
+    color: #ACA49A;
+  }
+
+  .item-text { flex: 1; }
+
+  .resolve-btn {
+    background: #C8DCC8;
+    color: #1E4E2A;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    box-shadow: none;
+    letter-spacing: 0.04em;
+  }
+
+  .empty {
+    text-align: center;
+    font-size: 13px; color: #ACA49A;
+    padding: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Blocker Test 🧪</h1>
+  <p class="sub">Testing Supabase connection — april-2026 table</p>
+
+  <div class="status loading" id="status">Connecting…</div>
+
+  <div class="input-row">
+    <input id="input" type="text" placeholder="Type a blocker and hit Add…" />
+    <button id="add-btn" onclick="addBlocker()" disabled>+ ADD</button>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty">Loading…</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://aiqdizvifkiylkwbesix.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpcWRpenZpZmtpeWxrd2Jlc2l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NDEyODMsImV4cCI6MjA5MTUxNzI4M30.78rwjJ67B80tcBhD4nvVvpgIwwpPIsl3tIm-WqrPrzY'
+  );
+
+  const MONTH = 'april-2026';
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status ' + type;
+  }
+
+  function render(items) {
+    const list = document.getElementById('list');
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">No blockers yet — add one above!</div>';
+      return;
+    }
+    list.innerHTML = '';
+    items.forEach(b => {
+      const div = document.createElement('div');
+      div.className = 'item' + (b.resolved ? ' resolved' : '');
+      div.innerHTML = `<span class="item-text">${b.text}</span>`;
+      if (!b.resolved) {
+        const btn = document.createElement('button');
+        btn.className = 'resolve-btn';
+        btn.textContent = '✓ Done';
+        btn.onclick = () => resolve(b.id);
+        div.appendChild(btn);
+      }
+      list.appendChild(div);
+    });
+  }
+
+  async function load() {
+    const { data, error } = await db
+      .from('blockers')
+      .select('*')
+      .eq('month', MONTH)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      setStatus('❌ Connection failed: ' + error.message, 'err');
+      document.getElementById('list').innerHTML = '<div class="empty">Could not load.</div>';
+    } else {
+      setStatus('✓ Connected to Supabase', 'ok');
+      document.getElementById('add-btn').disabled = false;
+      render(data);
+    }
+  }
+
+  async function addBlocker() {
+    const input = document.getElementById('input');
+    const val = input.value.trim();
+    if (!val) return;
+    const btn = document.getElementById('add-btn');
+    btn.textContent = '…'; btn.disabled = true;
+    const { error } = await db
+      .from('blockers')
+      .insert({ month: MONTH, text: val, resolved: false });
+    if (error) {
+      setStatus('❌ Insert failed: ' + error.message, 'err');
+    } else {
+      input.value = '';
+      await load();
+    }
+    btn.textContent = '+ ADD'; btn.disabled = false;
+  }
+
+  async function resolve(id) {
+    await db.from('blockers').update({ resolved: true }).eq('id', id);
+    await load();
+  }
+
+  document.getElementById('input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addBlocker();
+  });
+
+  load();
+</script>
+</body>
+</html>
