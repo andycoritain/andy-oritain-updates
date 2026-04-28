@@ -348,9 +348,9 @@
   /* Resolved — faded neo */
   .k-card.resolved {
     background: var(--bg);
-    color: var(--text-3);
+    color: var(--text-2);
     box-shadow: var(--neo-pill);
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .k-card-sub {
@@ -557,15 +557,7 @@
           <div class="k-col">
             <div class="k-col-head blocker"><span class="k-dot b"></span>Challenges<span class="k-count" id="blocker-count">3</span></div>
               <div class="k-cards" id="blocker-cards">
-                <div class="k-card b">GitHub org permissions
-                  <div class="k-card-sub">No owner access — workaround via personal account</div>
-                </div>
-                <div class="k-card resolved">Engineering availability
-                  <div class="k-card-sub">Resolved — meetings now scheduled</div>
-                </div>
-                <div class="k-card resolved">No set objectives at onboarding
-                  <div class="k-card-sub">Resolved — self-defined + stakeholder-aligned</div>
-                </div>
+                <div style="font-size:12px;color:var(--text-3);padding:8px 0">Loading…</div>
               </div>
               <div class="challenge-input-wrap">
               <label class="challenge-input-label">Add a blocker</label>
@@ -646,24 +638,91 @@
 
 <div class="toast" id="toast">BLOCKER ADDED ✓</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  function toggleAcc(btn) {
-    btn.closest('.acc-item').classList.toggle('open');
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://aiqdizvifkiylkwbesix.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpcWRpenZpZmtpeWxrd2Jlc2l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NDEyODMsImV4cCI6MjA5MTUxNzI4M30.78rwjJ67B80tcBhD4nvVvpgIwwpPIsl3tIm-WqrPrzY'
+  );
+  const MONTH = 'april-2026';
+
+  function renderBlockers(blockers) {
+    const container = document.getElementById('blocker-cards');
+    const countEl = document.getElementById('blocker-count');
+    container.innerHTML = '';
+    if (!blockers.length) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--text-3);padding:8px 0">No blockers yet.</div>';
+      countEl.textContent = '0';
+      return;
+    }
+    blockers.forEach(b => {
+      const card = document.createElement('div');
+      card.className = b.resolved ? 'k-card resolved' : 'k-card b';
+      const txt = document.createElement('span');
+      txt.textContent = b.text;
+      card.appendChild(txt);
+      if (!b.resolved) {
+        const btn = document.createElement('button');
+        btn.textContent = '✓ Resolve';
+        btn.style.cssText = `
+          display:block; margin-top:6px;
+          font-size:10px; font-weight:700; letter-spacing:0.06em;
+          background:none; border:1px solid rgba(26,23,20,0.2);
+          border-radius:20px; padding:3px 10px;
+          color:var(--blush-dark); cursor:pointer;
+          font-family:'Geist',sans-serif;
+        `;
+        btn.onclick = () => resolveBlocker(b.id);
+        card.appendChild(btn);
+      } else {
+        const sub = document.createElement('div');
+        sub.className = 'k-card-sub';
+        sub.textContent = 'Resolved';
+        card.appendChild(sub);
+      }
+      container.appendChild(card);
+    });
+    countEl.textContent = blockers.length;
   }
 
-  function addBlocker() {
+  async function loadBlockers() {
+    const { data, error } = await db
+      .from('blockers')
+      .select('*')
+      .eq('month', MONTH)
+      .order('created_at', { ascending: true });
+    if (error) {
+      document.getElementById('blocker-cards').innerHTML =
+        '<div style="font-size:12px;color:var(--blush-dark);padding:8px 0">Could not load blockers.</div>';
+    } else {
+      renderBlockers(data);
+    }
+  }
+
+  async function addBlocker() {
     const input = document.getElementById('blocker-input');
     const val = input.value.trim();
     if (!val) return;
-    const card = document.createElement('div');
-    card.className = 'k-card b';
-    card.textContent = val;
-    const cards = document.getElementById('blocker-cards');
-    cards.insertBefore(card, cards.firstChild);
-    const cnt = document.getElementById('blocker-count');
-    cnt.textContent = parseInt(cnt.textContent) + 1;
-    input.value = '';
-    showToast('BLOCKER ADDED ✓');
+    const btn = document.querySelector('.challenge-btn');
+    btn.textContent = '…'; btn.disabled = true;
+    const { error } = await db
+      .from('blockers')
+      .insert({ month: MONTH, text: val, resolved: false });
+    if (!error) {
+      input.value = '';
+      await loadBlockers();
+      showToast('BLOCKER ADDED ✓');
+    } else {
+      showToast('ERROR — try again');
+    }
+    btn.textContent = '+ ADD'; btn.disabled = false;
+  }
+
+  async function resolveBlocker(id) {
+    await db.from('blockers').update({ resolved: true }).eq('id', id);
+    await loadBlockers();
+    showToast('MARKED RESOLVED ✓');
   }
 
   function showToast(msg) {
@@ -673,9 +732,15 @@
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  function toggleAcc(btn) {
+    btn.closest('.acc-item').classList.toggle('open');
+  }
+
   document.getElementById('blocker-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') addBlocker();
   });
+
+  loadBlockers();
 </script>
 
   async function sbFetch(path, opts = {}) {
