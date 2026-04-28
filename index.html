@@ -388,6 +388,46 @@
     padding: 2px 7px; border-radius: 6px;
     color: var(--text-2); font-family: monospace;
   }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+
+    .main { padding: 32px 16px 80px; }
+
+    /* Nav */
+    .nav { padding: 12px 16px; gap: 8px; }
+    .nav-wordmark { font-size: 12px; }
+    .nav-sub { font-size: 10px; letter-spacing: 0.04em; }
+    .nav-link { font-size: 10px; padding: 5px 10px; }
+
+    /* Title */
+    .page-title { font-size: 44px; letter-spacing: -1.5px; }
+    .page-sub   { font-size: 13px; }
+    .fy-chip    { font-size: 10px; padding: 5px 12px; }
+
+    /* Summary strip — 2x2 grid */
+    .summary { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 36px; }
+    .sum-n { font-size: 24px; }
+    .sum-l { font-size: 10px; }
+
+    /* Quarter header */
+    .q-header { flex-wrap: wrap; gap: 8px; }
+    .q-name   { font-size: 18px; }
+    .q-range  { margin-left: 0; font-size: 11px; }
+    .q-badge  { margin-left: auto; }
+
+    /* Theme cards */
+    .theme-card { padding: 14px 16px; }
+    .theme-name { font-size: 13px; }
+    .theme-pct  { font-size: 12px; }
+
+    /* Pills — wrap nicely */
+    .theme-items { gap: 5px; }
+    .ti { font-size: 11px; padding: 4px 9px; }
+
+    /* Hide edit hint on mobile — it's for devs */
+    .edit-hint { display: none; }
+  }
 </style>
 </head>
 <body>
