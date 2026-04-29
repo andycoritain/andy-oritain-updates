@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oritain Typography System — Design Rationale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --t900: #006086; --t800: #0080A6; --t700: #0090B9;
+      --t600: #16A3CB; --t500: #23B1D8; --t400: #53B8D5;
+      --t300: #68C6DD; --t100: #B6E8EE; --t000: #D4EDF4;
+      --g900: #20262C; --g800: #303A44; --g700: #49545F;
+      --g600: #848C94; --g500: #AEB5BC; --g400: #CED4DA;
+      --g300: #EEF0F2; --g100: #FAFAFA;
+      --white: #FFFFFF;
+      --amber: #7A5200; --amber-bg: #FEF3CD; --amber-bd: #F0C040;
+      --green: #1A5C35; --green-bg: #EDF7F2; --green-bd: #6BBF90;
+      --red: #9B2222; --red-bg: #FDF0F0; --red-bd: #E8A0A0;
+      --font-display: 'Montserrat', 'Century Gothic', 'Trebuchet MS', sans-serif;
+      --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-ui);
+      background: var(--g300);
+      color: var(--g900);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    /* ── Skip link (accessibility) ───────────────────────── */
+    .skip-link {
+      position: absolute; top: -100px; left: 12px;
+      background: var(--t800); color: white;
+      padding: 8px 16px; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      font-size: 13px; font-weight: 600; z-index: 9999;
+      text-decoration: none; transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Header ───────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--t900) 0%, var(--t700) 45%, var(--t500) 80%, var(--t300) 100%);
+      padding: 28px 40px 32px;
+      position: relative; overflow: hidden;
+    }
+    .header::after {
+      content: ''; position: absolute;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -120px; right: -80px; pointer-events: none;
+    }
+    .header-bar {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 24px;
+    }
+    .logo-wrap { width: 160px; flex-shrink: 0; }
+    .logo-wrap svg { width: 100%; height: auto; display: block; }
+    .header-label {
+      font-family: var(--font-ui); font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.12);
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    .header h1 {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 30px;
+      color: var(--white); line-height: 1.15;
+      margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .header-desc {
+      font-size: 14px; color: var(--t100);
+      max-width: 560px; line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .header-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill {
+      font-size: 11px; padding: 4px 12px;
+      background: rgba(255,255,255,0.14);
+      color: var(--white); border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Nav ──────────────────────────────────────────────── */
+    .nav-wrap {
+      background: var(--white);
+      border-bottom: 1.5px solid var(--g400);
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .nav {
+      display: flex; overflow-x: auto;
+      padding: 0 40px;
+      scrollbar-width: none;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 15px 20px;
+      font-family: var(--font-ui);
+      font-size: 13px; font-weight: 500;
+      color: var(--g600); white-space: nowrap;
+      cursor: pointer; border: none;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      transition: color 0.18s, border-color 0.18s;
+      position: relative;
+    }
+    .tab-btn:hover { color: var(--t700); }
+    .tab-btn[aria-selected="true"] {
+      color: var(--t800);
+      border-bottom-color: var(--t700);
+      font-weight: 600;
+    }
+    .tab-btn:focus-visible {
+      outline: 2px solid var(--t700);
+      outline-offset: -2px;
+    }
+
+    /* ── Main content ─────────────────────────────────────── */
+    .main { padding: 32px 40px 48px; max-width: 960px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform:none; } }
+
+    /* ── Section headings ─────────────────────────────────── */
+    .sec-title {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 19px;
+      color: var(--g900); margin-bottom: 4px;
+    }
+    .sec-sub {
+      font-size: 13px; color: var(--g600);
+      margin-bottom: 8px; line-height: 1.5;
+    }
+    .rule { height: 2px; width: 32px; background: var(--t700); border-radius: 2px; margin-bottom: 24px; }
+
+    /* ── Callout boxes ────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      border-left: 4px solid;
+      margin-bottom: 20px;
+      font-size: 13px; line-height: 1.6;
+    }
+    .callout.teal { background: var(--t000); border-color: var(--t700); color: var(--t900); }
+    .callout.amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+    .callout.green { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+    .callout.red { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+    .callout b { font-weight: 700; }
+
+    /* ── Font stacks tab ──────────────────────────────────── */
+    .stack-list {
+      border: 1.5px solid var(--g400);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .stack-row {
+      display: grid;
+      grid-template-columns: 148px 1fr 200px;
+      background: var(--white);
+      border-bottom: 1px solid var(--g300);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .stack-row:last-child { border-bottom: none; }
+    .stack-row:hover { background: #f5fdff; }
+    .stack-row.is-open { background: var(--t000); }
+    .stack-row:focus-visible {
+      outline: 3px solid var(--t600);
+      outline-offset: -3px; z-index: 1;
+    }
+    .stack-accent {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+    }
+    .stack-meta { padding: 20px 16px 20px 22px; }
+    .stack-name {
+      font-weight: 700; font-size: 14px;
+      color: var(--g900); margin-bottom: 4px;
+    }
+    .stack-ctx { font-size: 12px; color: var(--g600); line-height: 1.4; }
+    .stack-specimen-wrap {
+      padding: 16px 12px;
+      display: flex; align-items: center;
+    }
+    .sp-display {
+      font-family: var(--font-display);
+      font-weight: 600; font-size: 22px;
+      color: var(--g900); line-height: 1.2;
+    }
+    .sp-offline {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 21px; color: var(--g900);
+    }
+    .sp-ui {
+      font-family: var(--font-ui);
+      font-weight: 400; font-size: 19px;
+      color: var(--g900);
+    }
+    .stack-var-col { padding: 20px 40px 20px 8px; text-align: right; overflow: hidden; }
+    .css-var {
+      font-family: 'Courier New', monospace;
+      font-size: 11px; font-weight: 700;
+      color: var(--t900); display: block; margin-bottom: 5px;
+      white-space: nowrap;
+    }
+    .fallback-txt {
+      font-family: 'Courier New', monospace;
+      font-size: 9.5px; color: var(--g600);
+      line-height: 1.5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      display: block;
+    }
+    .expand-icon {
+      position: absolute; right: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--g400);
+      transition: transform 0.25s ease;
+      pointer-events: none;
+      display: flex; align-items: center;
+    }
+    .expand-icon svg { display: block; }
+    .stack-row.is-open .expand-icon { transform: translateY(-50%) rotate(180deg); color: var(--t700); }
+
+    /* Stack detail panel */
+    .stack-detail {
+      background: var(--white);
+      border-bottom: 1px solid var(--g300);
+      padding: 0 24px;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .stack-detail.open {
+      max-height: 600px;
+      padding: 20px 24px 24px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 16px;
+    }
+    .detail-item label {
+      display: block;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--g500); margin-bottom: 5px;
+    }
+    .detail-item p { font-size: 12.5px; color: var(--g700); line-height: 1.6; }
+    .code-block {
+      background: var(--g900); color: #7dd3ea;
+      font-family: 'Courier New', monospace; font-size: 11.5px;
+      padding: 14px 16px; border-radius: var(--radius-md);
+      line-height: 1.75; white-space: pre; overflow-x: auto;
+      margin-top: 4px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+    .tag {
+      font-size: 10.5px; padding: 3px 9px;
+      border-radius: 14px;
+      font-weight: 500;
+    }
+    .tag.teal { background: var(--t000); color: var(--t900); }
+    .tag.grey { background: var(--g300); color: var(--g700); }
+    .tag.red { background: var(--red-bg); color: var(--red); }
+
+    /* ── Comparison tab ───────────────────────────────────── */
+    .comp-grid {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1.5px solid var(--g400);
+    }
+    .comp-header {
+      display: grid; grid-template-columns: 185px 1fr 1fr;
+      background: var(--g900);
+    }
+    .comp-col-head {
+      padding: 14px 16px;
+      font-weight: 700; font-size: 12px; color: var(--white);
+    }
+    .comp-col-head.ent { background: var(--t800); border-left: 1px solid rgba(255,255,255,0.1); }
+    .comp-col-head.mkt { background: var(--g700); border-left: 1px solid rgba(255,255,255,0.1); }
+    .comp-row {
+      display: grid; grid-template-columns: 185px 1fr 1fr;
+      border-bottom: 1px solid var(--g300);
+    }
+    .comp-row:last-child { border-bottom: none; }
+    .comp-row:nth-child(even) .comp-cell { background: var(--g100); }
+    .comp-cell {
+      padding: 13px 16px; font-size: 12.5px;
+      background: var(--white); vertical-align: top;
+    }
+    .comp-cell.metric {
+      font-weight: 600; font-size: 12px;
+      color: var(--g800); background: var(--g100) !important;
+      border-right: 1px solid var(--g400);
+    }
+    .comp-cell + .comp-cell { border-left: 1px solid var(--g300); }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 9px; border-radius: 14px;
+      font-size: 11px; font-weight: 600;
+    }
+    .badge.green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
+    .badge.red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bd); }
+    .badge.amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bd); }
+    .badge.blue { background: var(--t000); color: var(--t900); border: 1px solid var(--t300); }
+    .score-wrap { margin-top: 6px; }
+    .score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .score-label { font-size: 10.5px; color: var(--g600); width: 130px; flex-shrink: 0; }
+    .score-track { flex: 1; height: 5px; background: var(--g300); border-radius: 3px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+    .score-val { font-size: 10.5px; font-weight: 700; width: 34px; text-align: right; }
+
+    /* ── Decision tree tab ────────────────────────────────── */
+    .dt-wrap { max-width: 580px; margin: 0 auto; }
+    .dt-node {
+      background: var(--white);
+      border: 2px solid var(--g400);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px; text-align: center;
+      margin-bottom: 8px;
+    }
+    .dt-node.q { border-color: var(--t600); background: linear-gradient(135deg, var(--white) 60%, var(--t000)); }
+    .dt-question { font-weight: 600; font-size: 14px; color: var(--g900); margin-bottom: 14px; }
+    .dt-answers { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .dt-btn {
+      padding: 9px 20px; border-radius: 24px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--t700); color: var(--t800);
+      background: var(--white); transition: all 0.15s;
+      font-family: var(--font-ui);
+    }
+    .dt-btn:hover { background: var(--t700); color: var(--white); }
+    .dt-btn.chosen { background: var(--t700); color: var(--white); }
+    .dt-btn:focus-visible { outline: 3px solid var(--t600); outline-offset: 2px; }
+    .dt-arrow { text-align: center; color: var(--g400); font-size: 20px; margin: 2px 0; line-height: 1; }
+    .dt-result {
+      border-radius: var(--radius-lg); padding: 20px 24px;
+      text-align: center; display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .dt-result.show { display: block; }
+    .dt-result.montserrat { background: var(--green-bg); border: 2px solid var(--green-bd); }
+    .dt-result.cloud { background: var(--amber-bg); border: 2px solid var(--amber-bd); }
+    .dt-result.print { background: var(--t000); border: 2px solid var(--t300); }
+    .dt-res-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .dt-res-body { font-size: 13px; line-height: 1.6; }
+    .dt-reset-btn {
+      margin-top: 14px; font-size: 12px;
+      cursor: pointer; background: none; border: none;
+      color: var(--g500); text-decoration: underline;
+      font-family: var(--font-ui);
+    }
+    .dt-reset-btn:hover { color: var(--g700); }
+
+    /* ── Web fonts tab ────────────────────────────────────── */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .info-card {
+      background: var(--white); border-radius: var(--radius-md);
+      padding: 16px; border: 1px solid var(--g400);
+      border-left: 4px solid;
+      box-shadow: var(--shadow-sm);
+    }
+    .info-card.danger { border-left-color: var(--red); }
+    .info-card.warning { border-left-color: var(--amber); }
+    .info-card.safe { border-left-color: var(--green); }
+    .info-card h3 { font-size: 12.5px; font-weight: 700; color: var(--g900); margin-bottom: 6px; }
+    .info-card p { font-size: 12px; color: var(--g700); line-height: 1.55; }
+
+    /* Checklist */
+    .checklist { background: var(--white); border: 1.5px solid var(--g400); border-radius: var(--radius-md); overflow: hidden; }
+    .check-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 16px; border-bottom: 1px solid var(--g300);
+      cursor: pointer; transition: background 0.12s;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item:hover { background: var(--g100); }
+    .check-item.done { background: var(--green-bg); }
+    .check-item.done .check-label { color: var(--g500); text-decoration: line-through; }
+    .check-cb {
+      width: 16px; height: 16px; flex-shrink: 0;
+      accent-color: var(--t700); cursor: pointer;
+    }
+    .check-label { font-size: 12.5px; color: var(--g800); flex: 1; }
+
+    /* Fallback chain */
+    .chain-wrap { display: flex; border: 1.5px solid var(--g400); border-radius: var(--radius-md); overflow: hidden; margin-top: 8px; }
+    .chain-item { flex: 1; padding: 14px 8px; text-align: center; position: relative; }
+    .chain-name { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700; margin-bottom: 5px; word-break: break-all; }
+    .chain-note { font-size: 10px; opacity: 0.85; line-height: 1.3; }
+    .chain-arrow { position: absolute; right: -8px; top: 50%; transform: translateY(-50%); font-size: 14px; z-index: 1; color: var(--g400); }
+
+    /* ── Rules tab ────────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+    .rule-card { background: var(--white); border-radius: var(--radius-md); overflow: hidden; border: 1.5px solid var(--g400); box-shadow: var(--shadow-sm); }
+    .rule-head { padding: 11px 16px; font-weight: 700; font-size: 13px; }
+    .rule-head.do { background: var(--t800); color: var(--white); }
+    .rule-head.dont { background: var(--red); color: var(--white); }
+    .rule-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 14px; border-bottom: 1px solid var(--g300);
+      font-size: 12.5px; color: var(--g800); line-height: 1.45;
+    }
+    .rule-item:last-child { border-bottom: none; }
+    .rule-icon { flex-shrink: 0; font-weight: 700; font-size: 12px; margin-top: 1px; }
+    .rule-icon.do { color: var(--green); }
+    .rule-icon.dont { color: var(--red); }
+
+    /* Type scale */
+    .scale-table { background: var(--white); border: 1.5px solid var(--g400); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .scale-row { display: grid; grid-template-columns: 76px 1fr 130px 160px; align-items: center; border-bottom: 1px solid var(--g300); }
+    .scale-row:last-child { border-bottom: none; }
+    .scale-row:nth-child(even) { background: var(--g100); }
+    .scale-token { padding: 10px 12px; }
+    .scale-badge {
+      font-family: 'Courier New', monospace; font-size: 10px;
+      background: var(--g300); color: var(--t900);
+      padding: 3px 7px; border-radius: 4px; white-space: nowrap;
+    }
+    .scale-specimen { padding: 8px 12px; }
+    .scale-font { padding: 10px 12px; font-size: 11.5px; color: var(--g600); }
+    .scale-use { padding: 10px 12px; font-size: 11.5px; color: var(--g700); text-align: right; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 24px;
+      font-size: 11.5px; color: var(--g500);
+      border-top: 1px solid var(--g400);
+      background: var(--white); margin-top: 24px;
+    }
+
+    /* ── Focus styles (accessibility) ──────────────────────── */
+    a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid var(--t600);
+      outline-offset: 2px;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 700px) {
+      .header { padding: 20px 20px 24px; }
+      .header h1 { font-size: 22px; }
+      .nav { padding: 0 16px; }
+      .main { padding: 20px 16px 40px; }
+      .stack-row { grid-template-columns: 110px 1fr; }
+      .stack-var-col { display: none; }
+      .detail-grid, .info-grid, .two-col { grid-template-columns: 1fr; }
+      .comp-header, .comp-row { grid-template-columns: 120px 1fr 1fr; }
+      .comp-cell { font-size: 11px; padding: 10px 10px; }
+      .scale-row { grid-template-columns: 64px 1fr 100px; }
+      .scale-use { display: none; }
+      .chain-wrap { flex-direction: column; }
+      .chain-arrow { display: none; }
+      .body-compare { grid-template-columns: 1fr; }
+      .compare-table th, .compare-table td { font-size: 11px; padding: 8px 10px; }
+    }
+
+    /* ── Body comparison panel ───────────────────────────────── */
+    .body-compare {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px; margin: 16px 0;
+    }
+    .body-sample {
+      background: var(--white);
+      border: 1.5px solid var(--g400);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .body-sample-head {
+      padding: 10px 14px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      border-bottom: 1px solid var(--g300);
+    }
+    .body-sample-head.inter { background: var(--t000); color: var(--t900); }
+    .body-sample-head.calibri { background: var(--amber-bg); color: var(--amber); }
+    .body-sample-text {
+      padding: 14px 16px;
+      font-size: 14px; line-height: 1.65;
+      color: var(--g800);
+    }
+    .body-metric-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 14px; border-top: 1px solid var(--g300);
+      font-size: 11.5px; color: var(--g700);
+    }
+    .body-metric-row .metric-label { flex: 1; }
+    .body-verdict {
+      background: var(--green-bg);
+      border: 1.5px solid var(--green-bd);
+      border-radius: var(--radius-md);
+      padding: 14px 16px; margin-top: 4px;
+      font-size: 13px; color: var(--green);
+      line-height: 1.6;
+    }
+    .body-verdict-bad {
+      background: var(--amber-bg);
+      border: 1.5px solid var(--amber-bd);
+    }
+    .size-toggle {
+      display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .size-btn {
+      padding: 5px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--g400);
+      color: var(--g600); background: var(--white);
+      font-family: var(--font-ui); transition: all 0.15s;
+    }
+    .size-btn:hover { border-color: var(--t600); color: var(--t700); }
+    .size-btn.active { background: var(--t700); border-color: var(--t700); color: var(--white); }
+    .size-btn:focus-visible { outline: 2px solid var(--t600); outline-offset: 2px; }
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      border: 1.5px solid var(--g400);
+      border-radius: var(--radius-md);
+      overflow: hidden; margin: 14px 0;
+      font-size: 12.5px;
+    }
+    .compare-table th {
+      padding: 10px 14px; text-align: left;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .compare-table th:first-child { background: var(--g800); color: var(--white); }
+    .compare-table th.inter-h { background: var(--t800); color: var(--white); }
+    .compare-table th.calibri-h { background: var(--amber); color: var(--white); }
+    .compare-table td {
+      padding: 10px 14px; border-top: 1px solid var(--g300);
+      vertical-align: top; color: var(--g800);
+    }
+    .compare-table tr:nth-child(even) td { background: var(--g100); }
+    .compare-table td:first-child { font-weight: 600; color: var(--g700); font-size: 12px; }
+    .win { color: var(--green); font-weight: 600; }
+    .lose { color: var(--red); }
+    .neutral { color: var(--amber); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ── Header ── -->
+  <header class="header" role="banner">
+    <div class="header-bar">
+      <div class="logo-wrap" aria-label="Oritain logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2765 654" role="img" aria-label="Oritain logo">
+<title>Oritain</title>
+<path d="M0 0 C9.7467748 7.00387711 15.31731252 15.5694089 17.375 27.375 C17.46373372 29.06029593 17.50572303 30.74848477 17.50922108 32.43611145 C17.51367892 33.43778414 17.51813676 34.43945683 17.52272969 35.47148323 C17.52245315 37.11138883 17.52245315 37.11138883 17.52217102 38.78442383 C17.52584771 39.95150312 17.5295244 41.11858242 17.5333125 42.32102776 C17.54242052 45.55689109 17.54704491 48.79272461 17.54970181 52.02859855 C17.553613 55.52027911 17.56319082 59.0119451 17.57191467 62.50361633 C17.59165701 70.93473867 17.60174287 79.36586217 17.61064246 87.79700184 C17.61502938 91.77114248 17.62039517 95.74528179 17.62563133 99.71942139 C17.64264206 112.93713097 17.6571348 126.15483974 17.66438007 139.37255859 C17.66628985 142.80094402 17.6682102 146.22932944 17.67016602 149.65771484 C17.67064976 150.50978374 17.6711335 151.36185264 17.6716319 152.2397418 C17.67992691 166.03348389 17.70525558 179.82713911 17.73774669 193.62084329 C17.77086024 207.79481163 17.78883275 221.9687359 17.79202431 236.14274311 C17.79418553 244.09591879 17.80287705 252.04896783 17.82848549 260.00210571 C17.85025135 266.777372 17.85821414 273.55248087 17.84851871 280.32777816 C17.84399082 283.78060086 17.84577097 287.23309918 17.86528015 290.68587685 C17.88303747 294.44075748 17.87587275 298.19482494 17.86274719 301.94970703 C17.87920106 303.56284397 17.87920106 303.56284397 17.89598733 305.20856953 C17.78389469 318.56599298 13.87419304 328.99321116 4.37890625 338.33984375 C-4.72218239 346.23858674 -15.93110239 348.29251186 -27.69921875 347.75 C-42.37170399 346.34844917 -52.80202608 339.32191016 -62.26171875 328.31640625 C-66.67539094 322.82302582 -70.85969147 317.1637599 -75.046875 311.49707031 C-77.62202637 308.03432036 -80.24798361 304.61097321 -82.875 301.1875 C-83.96755012 299.76179706 -85.05999558 298.33601392 -86.15234375 296.91015625 C-86.71421387 296.17684082 -87.27608398 295.44352539 -87.85498047 294.68798828 C-91.05575026 290.50535476 -94.24637562 286.31499426 -97.4375 282.125 C-98.1087793 281.24368408 -98.78005859 280.36236816 -99.47167969 279.4543457 C-100.84004997 277.65774795 -102.2083766 275.86111694 -103.57666016 274.06445312 C-106.92547489 269.66748731 -110.27528027 265.27127638 -113.625 260.875 C-114.95833824 259.12500374 -116.29167157 257.37500373 -117.625 255.625 C-118.285 254.75875 -118.945 253.8925 -119.625 253 C-125.625 245.125 -125.625 245.125 -127.62573242 242.49902344 C-128.95660473 240.7522637 -130.2874966 239.00551886 -131.6184082 237.25878906 C-134.98955736 232.83433629 -138.36034662 228.40961013 -141.73046875 223.984375 C-147.85521214 215.94272719 -153.982149 207.90282762 -160.125 199.875 C-166.95562088 190.94835553 -173.76650802 182.00671793 -180.57666016 173.06445312 C-183.22512428 169.58704182 -185.87421657 166.11010939 -188.52339172 162.63323975 C-190.46329899 160.08722326 -192.40316848 157.541178 -194.34301758 154.99511719 C-195.38538322 153.62700897 -195.38538322 153.62700897 -196.44880676 152.23126221 C-197.16695053 151.28869568 -197.8850943 150.34612915 -198.625 149.375 C-200.05208303 147.50195289 -201.47916636 145.62890602 -202.90625 143.75585938 C-208.765625 136.06542969 -208.765625 136.06542969 -214.625 128.375 C-214.62646656 129.32676463 -214.62793312 130.27852926 -214.62944412 131.25913525 C-214.66609602 154.45509747 -214.7256201 177.65091593 -214.80890274 200.84675884 C-214.84865283 212.06426408 -214.8810658 223.28169958 -214.89599609 234.49926758 C-214.90903349 244.28048747 -214.93605145 254.06155365 -214.97961307 263.84268695 C-215.00218086 269.0181271 -215.01791349 274.19337797 -215.01688385 279.36887169 C-215.01613447 284.2485998 -215.03419638 289.12791025 -215.06616783 294.00753021 C-215.07462786 295.79037633 -215.07644351 297.57326952 -215.07080269 299.35612679 C-215.02952451 314.41878651 -216.64975237 326.97420184 -227.4375 338.2734375 C-235.49400604 345.97259852 -245.32612813 348.781846 -256.265625 348.6484375 C-267.29379716 347.75079558 -275.89618823 343.5533822 -283.3671875 335.49609375 C-292.01991377 324.84161738 -292.77806862 313.07853143 -292.75871277 299.89506531 C-292.76097833 298.75668002 -292.76324388 297.61829474 -292.76557809 296.44541293 C-292.77189572 292.64027467 -292.77109016 288.83517222 -292.77026367 285.0300293 C-292.77271398 282.29796209 -292.77663121 279.56589739 -292.78044128 276.83383179 C-292.78873093 270.18838167 -292.79149536 263.54294043 -292.79205366 256.89748558 C-292.79252959 251.49349774 -292.79458819 246.08951281 -292.79775429 240.68552589 C-292.80655603 225.34934147 -292.81117438 210.01316403 -292.81042381 194.67697706 C-292.81038386 193.85101848 -292.8103439 193.0250599 -292.81030273 192.17407227 C-292.81026185 191.34710017 -292.81022097 190.52012808 -292.81017885 189.66809622 C-292.80977245 176.26768135 -292.81934177 162.86729459 -292.8334411 149.46688785 C-292.8478187 135.69285832 -292.85471053 121.91884248 -292.85384732 108.14480525 C-292.85351585 100.41758175 -292.85624133 92.69038773 -292.86702538 84.96317101 C-292.87614857 78.38411353 -292.87829069 71.8050989 -292.87151595 65.22603782 C-292.86825998 61.87275462 -292.8692561 58.51962029 -292.8768692 55.16633415 C-292.88460414 51.52277847 -292.87993417 47.8794368 -292.87223816 44.23588562 C-292.87738172 43.18780926 -292.88252529 42.1397329 -292.88782471 41.05989665 C-292.82345365 27.21879981 -290.1632295 15.45465912 -280.5 5.125 C-271.69711865 -3.09102259 -261.0449025 -5.19021833 -249.3125 -5.0625 C-247.7958374 -5.04678955 -247.7958374 -5.04678955 -246.24853516 -5.03076172 C-232.13458058 -4.68861898 -221.69231448 -0.50431607 -211.625 9.375 C-207.24955415 14.07635296 -203.44766312 19.22386911 -199.625 24.375 C-198.42793778 25.96809031 -197.22998557 27.56051218 -196.03125 29.15234375 C-194.12952839 31.68186857 -192.23070544 34.21337892 -190.33911133 36.75048828 C-186.10498998 42.42875999 -181.8018814 48.04633995 -177.4375 53.625 C-172.50704443 59.92847637 -167.66002341 66.28628428 -162.87329102 72.69946289 C-159.51350654 77.19874492 -156.11307653 81.66398494 -152.68115234 86.10864258 C-148.76664359 91.18161988 -144.88192879 96.27706213 -141 101.375 C-140.31711914 102.27178467 -139.63423828 103.16856934 -138.93066406 104.0925293 C-137.52759366 105.93532655 -136.12459957 107.7781819 -134.72167969 109.62109375 C-132.01920638 113.17068608 -129.3154871 116.71932797 -126.61157227 120.26782227 C-125.28379808 122.01039331 -123.95616205 123.75306963 -122.62866211 125.49584961 C-119.28471128 129.88572915 -115.93900652 134.27425144 -112.58984375 138.66015625 C-105.39168237 148.09063675 -98.23779133 157.55131569 -91.13745117 167.05566406 C-86.44106283 173.32578602 -81.66063656 179.52600047 -76.80615234 185.67456055 C-73.06872006 190.43313968 -69.47081526 195.28513213 -65.89941406 200.16870117 C-65.39105011 200.86292931 -64.88268616 201.55715744 -64.35891724 202.27242279 C-63.11379232 203.97292623 -61.86932919 205.6739142 -60.625 207.375 C-60.62168985 206.47292911 -60.61837971 205.57085821 -60.61496925 204.64145184 C-60.5336531 182.66462367 -60.44153249 160.68786378 -60.33747292 138.7111311 C-60.2874089 128.08323281 -60.24096535 117.455342 -60.203125 106.82739258 C-60.1701237 97.56115576 -60.13024775 88.29497802 -60.08220994 79.02880651 C-60.05702573 74.12511009 -60.03522081 69.22145244 -60.02165604 64.31770897 C-60.00876211 59.69581681 -59.98662963 55.07405819 -59.95761681 50.45223999 C-59.94859806 48.76207746 -59.94286424 47.07189346 -59.94078636 45.38170815 C-59.91991459 30.9743498 -59.72503077 17.29850894 -49.51171875 6.046875 C-35.76362818 -6.77517838 -16.4107002 -10.08165883 0 0 Z " fill="#FFFFFF" transform="translate(2673.625,156.625)"/>
+<path d="M0 0 C1.18552963 -0.00426498 2.37105927 -0.00852997 3.59251404 -0.01292419 C4.8849855 -0.01247101 6.17745697 -0.01201782 7.50909424 -0.0115509 C8.89109894 -0.01454498 10.27310281 -0.01794808 11.65510559 -0.02172852 C15.40583582 -0.0305554 19.15654322 -0.0329063 22.90728283 -0.0335443 C25.25777357 -0.03425647 27.60825856 -0.03639413 29.95874786 -0.03904152 C38.18044907 -0.04829626 46.40213409 -0.05237695 54.62384033 -0.05158997 C62.24953601 -0.05099173 69.87516037 -0.06149309 77.50083804 -0.07733363 C84.07270344 -0.09049122 90.64454579 -0.09577032 97.21642423 -0.09513456 C101.12987095 -0.09488162 105.04325449 -0.09761704 108.95668793 -0.10831261 C145.60493075 -0.20156905 145.60493075 -0.20156905 163.20928955 3.94621277 C164.32183105 4.20386414 164.32183105 4.20386414 165.45684814 4.46672058 C193.95794907 11.2796842 219.64965171 25.7101975 235.99053955 50.60636902 C253.44757465 79.34045338 257.11726428 114.84044161 249.81817627 147.40348816 C245.80416595 163.83014692 238.83524309 178.04144046 228.08428955 191.13371277 C227.58671143 191.77824402 227.0891333 192.42277527 226.57647705 193.08683777 C215.76980233 206.4458427 200.2196913 214.6594403 185.08428955 222.13371277 C188.81173049 227.31071408 192.79072321 232.18649549 196.95928955 237.00871277 C201.02376673 241.71139829 204.99363601 246.46071697 208.84991455 251.33683777 C211.76620574 254.98730016 214.73712072 258.5912021 217.70928955 262.19621277 C218.60357666 263.28506775 218.60357666 263.28506775 219.51593018 264.3959198 C222.58656033 268.12956408 225.67859465 271.84102896 228.81866455 275.51652527 C239.13709054 287.66351572 249.83446753 300.27548453 249.2678833 317.10636902 C248.36599562 327.06551175 244.58152159 335.5791797 237.2444458 342.49699402 C227.23795839 350.07876296 217.33642903 351.89157707 205.08428955 351.13371277 C191.81935003 349.05501043 180.98322582 341.40874377 173.02178955 330.82121277 C172.06092291 329.57015709 171.09862505 328.32019965 170.1350708 327.07121277 C169.63700928 326.42410339 169.13894775 325.77699402 168.62579346 325.11027527 C166.04442062 321.80036167 163.37251136 318.56532658 160.70928955 315.32121277 C155.65751434 309.14598866 150.78353898 302.8540608 145.96417236 296.49650574 C141.69584485 290.88549241 137.28748357 285.40233169 132.82305908 279.94670105 C127.94905929 273.98729616 123.18706419 267.94558113 118.44903564 261.87785339 C117.02564871 260.05876999 115.59674787 258.24413951 114.1663208 256.43058777 C113.43953125 255.50850525 113.43953125 255.50850525 112.69805908 254.5677948 C111.78687523 253.41204807 110.8751457 252.2567312 109.96270752 251.10197449 C109.33259766 250.30170837 109.33259766 250.30170837 108.6897583 249.48527527 C108.28087875 248.98445435 107.87199921 248.48363342 107.45072937 247.96763611 C106.08428955 246.13371277 106.08428955 246.13371277 105.00706482 244.09156799 C103.57863711 241.61702826 102.29959914 239.95577851 100.08428955 238.13371277 C95.45156078 236.94783777 90.91523222 237.0627909 86.15460205 237.13371277 C84.79551883 237.12618727 83.43645093 237.11514713 82.0774231 237.10075378 C78.51599687 237.07240941 74.95637591 237.09154704 71.39501953 237.12083435 C67.75486674 237.14228229 64.11503447 237.11847135 60.47491455 237.09855652 C53.34437802 237.06617212 46.21476487 237.08398373 39.08428955 237.13371277 C39.093172 238.16164444 39.10205444 239.18957611 39.11120605 240.24865723 C39.192565 249.97253965 39.25238545 259.69635231 39.29153824 269.42049885 C39.31234435 274.41888005 39.3405335 279.41698478 39.38604736 284.41520691 C39.42975526 289.24575679 39.45347903 294.07604203 39.46379852 298.90677452 C39.47114536 300.74263355 39.48549122 302.57847937 39.50720978 304.41422462 C39.65760454 317.66241261 38.94247073 328.51251731 30.0725708 339.12980652 C22.35009786 346.91296687 12.49703328 351.16140215 1.58428955 351.44621277 C-9.97652748 351.31807563 -19.43546655 347.55353481 -27.5914917 339.47355652 C-36.41970134 329.85672269 -38.21957244 319.10667041 -38.18313599 306.43945312 C-38.1876671 305.27797766 -38.19219821 304.11650219 -38.19686663 302.9198305 C-38.20730115 299.71351132 -38.2088426 296.507334 -38.20647788 293.30100334 C-38.20606833 289.83595241 -38.21712204 286.37093445 -38.22659302 282.90589905 C-38.24317478 276.12341412 -38.2487013 269.34096396 -38.24981777 262.55846045 C-38.25076968 257.04197651 -38.2548871 251.52550399 -38.26121902 246.00902367 C-38.27882448 230.35094108 -38.2880591 214.69288585 -38.28655808 199.03479329 C-38.28647816 198.19143819 -38.28639825 197.34808308 -38.28631592 196.47917175 C-38.28623416 195.63478059 -38.2861524 194.79038943 -38.28606816 193.92041066 C-38.28525567 180.24325099 -38.30438573 166.56620156 -38.33259265 152.88907377 C-38.36136132 138.82800558 -38.37513073 124.76699109 -38.3734051 110.70589274 C-38.37274253 102.81872092 -38.37817636 94.93166464 -38.3997612 87.04451942 C-38.41802561 80.32787323 -38.42227747 73.61139495 -38.40874235 66.8947346 C-38.40223878 63.47227559 -38.40199977 60.0501382 -38.41944885 56.62771034 C-38.4349537 52.90581991 -38.42555722 49.18476393 -38.41018677 45.46289062 C-38.42047389 44.39729426 -38.43076102 43.33169789 -38.44135988 42.23381072 C-38.32707272 29.63758616 -34.84766828 19.25618952 -26.0680542 10.23527527 C-18.53210778 3.13380687 -10.30980772 0.01680961 0 0 Z M39.08428955 70.13371277 C39.08428955 102.80371277 39.08428955 135.47371277 39.08428955 169.13371277 C51.58303955 169.17496277 64.08178955 169.21621277 76.95928955 169.25871277 C80.86756592 169.27692078 84.77584229 169.29512878 88.80255127 169.31388855 C92.38679331 169.32058812 92.38679331 169.32058812 95.97103882 169.32460022 C97.53525947 169.32761895 99.09947627 169.3345398 100.66366577 169.34486389 C109.45197961 169.39983579 118.11156906 169.18536185 126.85430908 168.23088074 C127.58584639 168.15107531 128.31738369 168.07126987 129.07108879 167.9890461 C141.77273266 166.45584215 153.95489319 161.26310913 163.08428955 152.13371277 C173.48843305 137.91770635 176.25500096 123.23479081 173.5881958 105.91105652 C170.19824958 93.825994 163.02232271 84.26074938 152.35772705 77.77433777 C141.3471311 72.25590066 129.55787413 69.96436318 117.30328369 70.02018738 C116.00847785 70.02000658 116.00847785 70.02000658 114.68751431 70.01982212 C111.91479788 70.02056389 109.14215008 70.02815838 106.3694458 70.03605652 C104.64902784 70.03752822 102.92860942 70.03854752 101.20819092 70.03910828 C94.8543836 70.04433472 88.50058589 70.05829599 82.14678955 70.07121277 C60.83085205 70.10215027 60.83085205 70.10215027 39.08428955 70.13371277 Z " fill="#FFFFFF" transform="translate(1103.9157104492188,153.8662872314453)"/>
+<path d="M0 0 C2.48040848 2.27315063 4.91609505 4.59061841 7.35229492 6.91113281 C8.11026367 7.60464844 8.86823242 8.29816406 9.64916992 9.01269531 C42.25092696 39.82968463 57.68900786 85.60246268 59.57495117 129.48144531 C60.78777823 173.16202296 46.40493131 217.91307666 17.35229492 250.91113281 C16.61108398 251.76191406 15.86987305 252.61269531 15.10620117 253.48925781 C12.88794519 255.99584862 10.63122609 258.45967693 8.35229492 260.91113281 C7.70260742 261.6265625 7.05291992 262.34199219 6.38354492 263.07910156 C-4.74334854 274.82653331 -18.49553241 284.18740468 -32.64770508 291.91113281 C-33.58815674 292.42667725 -33.58815674 292.42667725 -34.54760742 292.95263672 C-79.04982227 317.01612818 -133.94687538 321.71225456 -182.37475586 307.59375 C-202.19751868 301.64053358 -220.92854067 293.19624935 -237.64770508 280.91113281 C-238.49026855 280.30760986 -238.49026855 280.30760986 -239.34985352 279.69189453 C-247.21774697 274.0231158 -254.21003644 267.61845894 -261.08520508 260.78613281 C-262.20342651 259.67625 -262.20342651 259.67625 -263.34423828 258.54394531 C-266.96078538 254.8798922 -270.44383197 251.12031767 -273.74536133 247.16894531 C-274.32938721 246.47172363 -274.91341309 245.77450195 -275.51513672 245.05615234 C-276.64770508 242.91113281 -276.64770508 242.91113281 -276.46582031 240.32910156 C-275.29109015 236.85714467 -273.05680242 234.4655034 -270.64770508 231.78613281 C-269.62980945 230.62291714 -268.61289428 229.45884284 -267.59692383 228.29394531 C-267.09209473 227.7193457 -266.58726562 227.14474609 -266.06713867 226.55273438 C-264.12812817 224.31023237 -262.2984867 221.98654129 -260.46020508 219.66113281 C-248.90863443 205.50379046 -235.63021434 192.73596959 -222.64770508 179.91113281 C-219.64770508 180.91113281 -219.64770508 180.91113281 -218.13989258 183.64941406 C-217.33938477 185.41865234 -217.33938477 185.41865234 -216.52270508 187.22363281 C-213.07584039 194.49868965 -208.74922871 200.67000181 -203.64770508 206.91113281 C-202.70991211 208.09642578 -202.70991211 208.09642578 -201.75317383 209.30566406 C-185.33423129 229.0429613 -160.61184362 239.39581635 -135.61645508 242.44628906 C-107.73703794 244.87179835 -80.19618123 236.8843884 -58.64770508 218.91113281 C-36.74254141 200.15146268 -25.43543772 173.2474835 -22.64770508 144.91113281 C-20.48442222 114.85738962 -29.00464327 84.98786369 -48.64770508 61.91113281 C-67.6929336 40.70572748 -92.42020394 29.00763109 -120.77270508 27.16113281 C-146.66817963 25.86049346 -171.45767434 33.45186862 -191.64770508 49.91113281 C-192.49848633 50.59820312 -193.34926758 51.28527344 -194.22583008 51.99316406 C-201.78247822 58.42558694 -208.13032407 65.90992719 -212.68286133 74.76660156 C-217.62509016 84.26214718 -222.29944458 88.14926567 -232.41381836 91.99755859 C-236.6930712 93.74760932 -240.75069728 95.94057424 -244.83520508 98.09863281 C-245.72409424 98.5663208 -246.6129834 99.03400879 -247.52880859 99.51586914 C-267.27989332 110.01624332 -286.24352185 122.07574489 -304.05517578 135.6105957 C-308.44058615 138.91113281 -308.44058615 138.91113281 -310.64770508 138.91113281 C-311.66629301 106.24086811 -304.18688992 75.60051424 -288.64770508 46.91113281 C-288.13965332 45.96971436 -288.13965332 45.96971436 -287.62133789 45.00927734 C-281.77947705 34.35467739 -274.55103455 25.11013163 -266.64770508 15.91113281 C-265.80594727 14.92628906 -264.96418945 13.94144531 -264.09692383 12.92675781 C-259.60645421 7.80808778 -254.92267036 3.21089443 -249.64770508 -1.08886719 C-248.66415039 -1.91 -247.6805957 -2.73113281 -246.66723633 -3.57714844 C-220.91549222 -24.71896551 -190.41235083 -37.59946498 -157.64770508 -43.08886719 C-156.95386719 -43.20601074 -156.2600293 -43.3231543 -155.54516602 -43.44384766 C-100.9997605 -52.13855583 -41.35851268 -37.18292493 0 0 Z " fill="#FFFFFF" transform="translate(942.647705078125,193.0888671875)"/>
+<path d="M0 0 C1.65418945 -0.0299707 1.65418945 -0.0299707 3.34179688 -0.06054688 C15.89180833 -0.05314274 26.0386944 4.12450835 35.33984375 12.484375 C39.82138238 17.05018188 43.04105441 21.88562522 45.82421875 27.62109375 C46.16575989 28.3152388 46.50730103 29.00938385 46.85919189 29.7245636 C50.52364772 37.25168832 53.88469459 44.91028193 57.21359253 52.590271 C59.16055359 57.08111195 61.12248257 61.56542222 63.08203125 66.05078125 C63.48962173 66.98474731 63.89721222 67.91871338 64.31715393 68.88098145 C68.8296999 79.2130228 73.41314005 89.51329022 78 99.8125 C79.68659507 103.60138584 81.37274704 107.39046863 83.05859375 111.1796875 C83.47517242 112.11599503 83.8917511 113.05230255 84.32095337 114.01698303 C88.75282466 123.98253193 93.15855675 133.95958576 97.5625 143.9375 C104.45671933 159.55643639 111.37954014 175.16243706 118.31872559 190.76144409 C125.29611745 206.44767607 132.24364585 222.14691298 139.17504883 237.85351562 C142.94596776 246.39653381 146.72470248 254.93589143 150.52734375 263.46484375 C150.88443924 264.26584503 151.24153473 265.06684631 151.60945129 265.89212036 C151.96093735 266.68053314 152.3124234 267.46894592 152.67456055 268.28125 C174.07808785 316.2940117 174.07808785 316.2940117 170.19140625 331.9453125 C166.43983838 341.56408652 160.4364062 348.93802502 151.0625 353.4375 C141.32057012 357.58870036 130.419239 357.96314649 120.40234375 354.47265625 C92.23932479 342.01322382 83.93538635 299.47423481 74.0625 276.4375 C-1.1775 275.9425 -1.1775 275.9425 -77.9375 275.4375 C-78.2675 277.0875 -78.5975 278.7375 -78.9375 280.4375 C-79.60357952 282.24816475 -80.31770602 284.04155095 -81.06713867 285.81933594 C-81.50817429 286.87102966 -81.9492099 287.92272339 -82.40361023 289.00628662 C-83.1222802 290.69700287 -83.1222802 290.69700287 -83.85546875 292.421875 C-84.59776482 294.17712494 -84.59776482 294.17712494 -85.35505676 295.96783447 C-86.40420828 298.44352983 -87.45547729 300.91820561 -88.51000977 303.39160156 C-89.84968422 306.53544647 -91.17654306 309.68451872 -92.50004101 312.83520126 C-93.77679511 315.86765724 -95.06698138 318.89439001 -96.35546875 321.921875 C-96.82446091 323.04092224 -97.29345306 324.15996948 -97.7766571 325.31292725 C-103.33615174 338.26614467 -110.3173963 349.17956829 -123.796875 354.74609375 C-133.32211993 357.82267834 -143.76695786 357.44302415 -152.9375 353.4375 C-163.10344467 348.00028486 -169.1537017 340.5362233 -172.51953125 329.53515625 C-175.8150418 312.99600515 -166.93848411 297.82748702 -160.2427063 283.26596069 C-158.09715815 278.59840159 -155.97142519 273.92182031 -153.84375 269.24609375 C-153.41884781 268.31342178 -152.99394562 267.38074982 -152.5561676 266.41981506 C-148.96229032 258.52037448 -145.45764197 250.5848396 -142 242.625 C-136.47959403 229.93007622 -130.87967608 217.27184556 -125.25 204.625 C-118.54094191 189.55112627 -111.85020625 174.46942183 -105.1875 159.375 C-99.11446274 145.61655567 -93.02020795 131.86785825 -86.90280151 118.12908936 C-81.86769125 106.81745179 -76.87892908 95.48597701 -71.90933228 84.14541626 C-66.47018785 71.73413314 -61.03064459 59.32309793 -55.50302124 46.95089722 C-54.72412232 45.20699492 -53.94757418 43.46204323 -53.17114258 41.71704102 C-38.74987491 9.54425882 -38.74987491 9.54425882 -20.85327148 2.63256836 C-13.88217511 0.25869587 -7.32076859 -0.04690067 0 0 Z M-1.9375 94.4375 C-2.47769775 95.73554565 -2.47769775 95.73554565 -3.02880859 97.05981445 C-10.67101768 115.42107518 -18.32485925 133.77747849 -26 152.125 C-26.37539917 153.02253998 -26.75079834 153.92007996 -27.13757324 154.84481812 C-31.13297529 164.39443927 -35.14139241 173.93823885 -39.19140625 183.46484375 C-39.68940483 184.63641273 -39.68940483 184.63641273 -40.19746399 185.83164978 C-41.75348143 189.49031493 -43.3123434 193.14773683 -44.87524414 196.8034668 C-45.41944268 198.07991149 -45.96363268 199.35635982 -46.5078125 200.6328125 C-46.97977051 201.73641113 -47.45172852 202.84000977 -47.93798828 203.97705078 C-49.00022704 206.14929256 -49.00022704 206.14929256 -48.9375 207.4375 C-17.5875 207.4375 13.7625 207.4375 46.0625 207.4375 C41.1125 195.5575 41.1125 195.5575 36.0625 183.4375 C34.22698701 179.00087189 32.39313624 174.56363216 30.5625 170.125 C24.58173066 155.64513636 18.52879694 141.19561535 12.46875 126.7487793 C7.95942587 115.99482937 3.4869075 105.22667456 -0.9375 94.4375 C-1.2675 94.4375 -1.5975 94.4375 -1.9375 94.4375 Z " fill="#FFFFFF" transform="translate(1998.9375,148.5625)"/>
+<path d="M0 0 C2.31872496 -0.00542573 4.63744647 -0.01255091 6.9561615 -0.02124023 C13.23092851 -0.03942262 19.50543144 -0.0324269 25.78020287 -0.01972389 C32.35872464 -0.00956994 38.93722437 -0.01899622 45.51574707 -0.02526855 C57.26822249 -0.03380122 69.02058721 -0.02060219 80.77304345 -0.00023121 C91.41109214 0.01763781 102.04896618 0.01453308 112.68701172 -0.00390625 C125.06521011 -0.02535206 137.44329729 -0.03325928 149.82151175 -0.0214572 C156.36494226 -0.01523333 162.9082527 -0.01435627 169.45167542 -0.02760315 C175.60451241 -0.03919008 181.75702082 -0.03108357 187.90982246 -0.00802612 C190.16278603 -0.00275427 192.41577743 -0.00422656 194.66872978 -0.01307678 C209.81693856 -0.06707965 221.60462004 0.05397174 233.00976562 11.16992188 C240.38066933 19.18061469 243.6194149 28.56710886 243.23242188 39.51757812 C242.1661486 48.44615213 237.67485123 57.30832738 231.16992188 63.51757812 C223.37825984 68.93900348 216.64238974 71.83833348 207.05322266 71.74462891 C205.86684959 71.74506699 205.86684959 71.74506699 204.6565094 71.74551392 C202.05930357 71.74412786 199.46238968 71.728601 196.86523438 71.71289062 C195.05777137 71.70915792 193.25030633 71.70631216 191.44284058 71.70431519 C186.69830688 71.69669903 181.9538967 71.67706792 177.20941162 71.65490723 C172.36293203 71.63440527 167.51643238 71.62530418 162.66992188 71.61523438 C153.16986777 71.59382008 143.66990512 71.55970856 134.16992188 71.51757812 C134.17268725 72.78648581 134.17545263 74.05539349 134.17830181 75.36275291 C134.24331781 105.50453295 134.29276465 135.64629486 134.32311786 165.78812786 C134.32686985 169.50051635 134.33075283 173.2129047 134.3347168 176.92529297 C134.33550373 177.66434233 134.33629066 178.40339169 134.33710144 179.16483648 C134.35014458 191.12117781 134.3737924 203.07747574 134.40138026 215.03379135 C134.42946486 227.30803162 134.44610459 239.58224921 134.45218736 251.8565203 C134.45629748 259.42642796 134.46926474 266.99621291 134.49367128 274.56608279 C134.51144901 280.37705508 134.51327979 286.18794928 134.50924492 291.99894333 C134.51006902 294.37811029 134.51602002 296.75728198 134.5275383 299.1364212 C134.54252017 302.39111454 134.53885441 305.64528789 134.53068542 308.8999939 C134.53942395 309.83582066 134.54816247 310.77164742 134.5571658 311.73583257 C134.4797577 323.18921336 130.91242243 332.32403826 123.13085938 340.71679688 C114.28647029 349.17053273 104.5347371 351.85314177 92.55664062 351.73242188 C84.30968512 351.20925861 77.82772108 348.26032497 71.16992188 343.51757812 C69.87054687 342.65132813 69.87054687 342.65132813 68.54492188 341.76757812 C61.4754008 335.07013711 57.16380795 326.27193522 56.80077839 316.50580502 C56.78831963 314.65201666 56.79204403 312.7980719 56.80915833 310.94432068 C56.80659505 309.91574277 56.80403178 308.88716485 56.80139083 307.82741791 C56.7964717 304.40032654 56.81291526 300.97368126 56.8293457 297.54663086 C56.83019238 295.08228058 56.82971604 292.61792955 56.82801819 290.15357971 C56.82733628 284.85800438 56.83581407 279.56256641 56.8527317 274.2670269 C56.87717529 266.61071216 56.88493244 258.95445096 56.88869568 251.29810143 C56.89525178 238.87440367 56.91519005 226.4507652 56.94360352 214.02709961 C56.9711659 201.96297501 56.9923888 189.89886655 57.00512695 177.8347168 C57.00591512 177.09033241 57.00670329 176.34594803 57.00751535 175.57900655 C57.01143063 171.84442454 57.01522171 168.10984243 57.01895106 164.37526023 C57.05002076 133.42265642 57.10305752 102.4701263 57.16992188 71.51757812 C55.67773888 71.52757088 55.67773888 71.52757088 54.15541077 71.5377655 C44.75463337 71.59872951 35.35389638 71.64362396 25.95296574 71.67301464 C21.12049649 71.68863293 16.28818755 71.70980077 11.45581055 71.74389648 C6.78737766 71.77662722 2.11909844 71.79445997 -2.54944038 71.80220985 C-4.32553079 71.80772883 -6.10161333 71.81850579 -7.87763786 71.8347683 C-21.37857204 71.95341241 -31.55307309 71.21396141 -41.83007812 61.51757812 C-49.30441388 53.22904457 -52.20084901 44.52053977 -52.03710938 33.41601562 C-51.33561939 23.59515579 -46.96210599 15.57365632 -39.98242188 8.69726562 C-28.14357442 -0.97801423 -14.45368705 -0.05677807 0 0 Z " fill="#FFFFFF" transform="translate(1602.830078125,153.482421875)"/>
+<path d="M0 0 C8.80014501 6.39199722 14.68647321 14.36498512 17.06195545 25.01055431 C17.69153374 30.01452178 17.64087665 34.97216574 17.63371277 40.01081848 C17.63597833 41.17749091 17.63824388 42.34416335 17.64057809 43.54618949 C17.64580718 46.77611868 17.64656402 50.0060128 17.64538372 53.23594487 C17.64517938 56.72275574 17.65070157 60.20955835 17.65544128 63.69636536 C17.66374134 70.52456816 17.66649583 77.35276233 17.66705366 84.18096975 C17.66752913 89.73233382 17.66958541 95.28369504 17.67275429 100.83505821 C17.6815591 116.58055292 17.68617393 132.32604082 17.68542381 148.07153801 C17.68538386 148.92006181 17.6853439 149.76858562 17.68530273 150.64282227 C17.68524141 151.9171653 17.68524141 151.9171653 17.68517885 153.21725263 C17.68477243 166.9845042 17.69434142 180.75172842 17.7084411 194.51897208 C17.72281044 208.66131263 17.72971098 222.80363984 17.72884732 236.94598788 C17.72851555 244.88332855 17.73125419 252.82064054 17.74202538 260.75797462 C17.7511377 267.51610067 17.75329961 274.27418504 17.74651595 281.03231458 C17.74325445 284.47847888 17.74318067 287.92456325 17.7518692 291.37071991 C17.75958232 295.11141985 17.75494856 298.85191019 17.74723816 302.59260559 C17.75238172 303.67510851 17.75752529 304.75761143 17.76282471 305.87291747 C17.70953945 317.58102212 15.46971298 327.89350291 7.38671875 336.828125 C-1.91147977 345.46790186 -11.83157537 349.00850436 -24.484375 348.73828125 C-34.71633708 347.90328953 -44.19660755 343.27572487 -51.3125 335.8671875 C-59.46929185 325.83992565 -60.65039907 314.47321279 -60.64044189 302.06967163 C-60.64341302 300.913283 -60.64638414 299.75689437 -60.6494453 298.56546366 C-60.65660831 295.36413154 -60.65930327 292.16283217 -60.66004276 288.96149325 C-60.66189833 285.50529811 -60.66944821 282.04911448 -60.67617798 278.59292603 C-60.68974181 271.0389991 -60.69578306 263.4850775 -60.70018864 255.93114042 C-60.70295453 251.2109246 -60.70719253 246.49071081 -60.71169281 241.77049637 C-60.72388325 228.6917121 -60.7341828 215.61292946 -60.7375679 202.53413963 C-60.73778747 201.69756751 -60.73800703 200.86099538 -60.73823325 199.99907259 C-60.73845153 199.16054147 -60.73866981 198.32201036 -60.7388947 197.45806921 C-60.73933816 195.75899275 -60.73978472 194.0599163 -60.74023438 192.36083984 C-60.74056652 191.09664905 -60.74056652 191.09664905 -60.74090537 189.80691905 C-60.74485135 176.15807871 -60.76230025 162.50929183 -60.7855939 148.86047213 C-60.80933719 134.83450819 -60.82177112 120.80857104 -60.82293582 106.78258669 C-60.82385094 98.91276107 -60.82956206 91.04300509 -60.84775543 83.1731987 C-60.86319671 76.47040826 -60.86825324 69.767709 -60.86001733 63.06490414 C-60.85612493 59.64870758 -60.85697079 56.23269439 -60.87107468 52.81652069 C-60.88381492 49.10305923 -60.87790547 45.39006388 -60.86749268 41.67660522 C-60.87554908 40.61062272 -60.88360548 39.54464022 -60.89190602 38.44635522 C-60.81173233 26.16480859 -58.14889496 14.66418393 -49.61328125 5.45703125 C-35.99314565 -7.14627693 -16.1100745 -9.71638868 0 0 Z " fill="#FFFFFF" transform="translate(2280.5,156.5078125)"/>
+<path d="M0 0 C7.75259457 6.0044605 11.807167 13.53842294 14.390625 22.8515625 C14.91617413 27.00149165 14.93230394 31.08929524 14.89855957 35.26844788 C14.90479953 36.47135529 14.9110395 37.67426269 14.91746855 38.91362184 C14.93057981 42.22185135 14.92597512 45.52916095 14.91352367 48.83733284 C14.90442266 52.41680877 14.91846771 55.99620797 14.92944336 59.57566833 C14.94717908 66.5753616 14.94341094 73.57488278 14.9317928 80.57458264 C14.92273991 86.26551505 14.92154247 91.95639941 14.92588806 97.64733696 C14.92650099 98.45891555 14.92711393 99.27049413 14.92774543 100.10666601 C14.9290244 101.75562984 14.93032125 103.40459365 14.9316358 105.05355745 C14.94302691 120.49574145 14.92995062 135.93783028 14.90843433 151.37999868 C14.89056129 164.61706822 14.89367198 177.85399744 14.91210938 191.09106445 C14.93353625 206.48152059 14.94193196 221.87189345 14.92966032 237.26236242 C14.92838619 238.9047762 14.9271287 240.54719 14.92588806 242.18960381 C14.92527096 242.99760024 14.92465386 243.80559667 14.92401806 244.63807784 C14.92057086 250.31969847 14.92637981 256.00126608 14.93580627 261.68287849 C14.94704772 268.61035712 14.94394116 275.53765454 14.9226833 282.46511251 C14.91220208 285.99656887 14.90800056 289.52772357 14.92127991 293.0591774 C14.93547968 296.89350749 14.91847551 300.72734831 14.89855957 304.56166077 C14.9119439 306.22262137 14.9119439 306.22262137 14.92559862 307.91713673 C14.81689258 318.72673536 11.34125498 327.19369966 4.203125 335.3515625 C-5.27664829 343.77802764 -14.54002631 347.54491647 -27.30078125 347.19921875 C-39.48250275 345.91920315 -48.33484203 340.21898536 -56.0703125 331 C-60.68936964 324.5520776 -62.72749816 317.60792851 -62.74359608 309.72239494 C-62.74805392 308.70555528 -62.75251176 307.68871561 -62.75710469 306.64106262 C-62.75692033 305.53086419 -62.75673597 304.42066576 -62.75654602 303.27682495 C-62.76022271 302.09200031 -62.7638994 300.90717568 -62.7676875 299.68644726 C-62.77679619 296.4011165 -62.78142004 293.11581511 -62.78407681 289.8304739 C-62.78798764 286.28566148 -62.79756538 282.74086341 -62.80628967 279.19606018 C-62.82603136 270.63739817 -62.83611705 262.07873503 -62.84501746 253.52005595 C-62.84940384 249.48688187 -62.85476971 245.45370909 -62.86000633 241.42053604 C-62.87701577 228.00895142 -62.89150945 214.5973676 -62.89875507 201.18577385 C-62.90066488 197.70718256 -62.90258522 194.22859127 -62.90454102 190.75 C-62.90502476 189.88544402 -62.9055085 189.02088805 -62.9060069 188.13013341 C-62.91430541 174.128112 -62.93964058 160.12617607 -62.97212169 146.12419198 C-63.0052166 131.74005102 -63.023206 117.35595346 -63.02639931 102.97177422 C-63.02856208 94.89905565 -63.0372766 86.82646177 -63.06286049 78.75378036 C-63.08460069 71.87817955 -63.09260161 65.00273371 -63.08289371 58.12710242 C-63.07835866 54.6218725 -63.08018829 51.11696214 -63.09965515 47.61177635 C-63.11736524 43.80364997 -63.11027085 39.99632915 -63.09712219 36.1882019 C-63.10809144 35.0913878 -63.11906068 33.99457371 -63.13036233 32.86452281 C-63.03037184 20.83328083 -59.08955681 11.53724691 -50.76171875 2.9453125 C-36.49402765 -10.44305768 -16.06466082 -10.25511367 0 0 Z " fill="#FFFFFF" transform="translate(1489.609375,158.1484375)"/>
+<path d="M0 0 C2.75329021 1.79562405 4.52627461 3.05254922 6 6 C6.66511746 10.75083902 6.62413755 14.02478507 4 18.125 C3.03152312 19.11517944 2.02814072 20.07192164 1 21 C0.12794922 21.79470703 0.12794922 21.79470703 -0.76171875 22.60546875 C-2.08643468 23.77970985 -3.42315711 24.94049997 -4.76953125 26.08984375 C-8.04413366 28.89418802 -11.23113308 31.79315696 -14.4296875 34.68359375 C-16.11620613 36.203511 -17.80874259 37.71678276 -19.5078125 39.22265625 C-24.75600154 43.88679917 -29.75787493 48.72370833 -34.6875 53.72265625 C-36.62678632 55.63246018 -38.58893545 57.39649482 -40.6875 59.125 C-43.83520088 61.74564399 -46.40373019 64.67989802 -49.05078125 67.796875 C-51.27068212 70.30594131 -53.61503502 72.64750807 -56 75 C-60.21663043 79.17864277 -64.15524076 83.48125906 -68 88 C-68.90285243 89.03975197 -69.80657267 90.07875073 -70.7109375 91.1171875 C-77.74065756 99.21327158 -84.48436008 107.48548014 -91 116 C-91.55526367 116.72396973 -92.11052734 117.44793945 -92.68261719 118.19384766 C-116.94515014 149.92433763 -138.37159362 183.441686 -157.9375 218.25 C-159.005205 220.13802272 -160.07291319 222.02604363 -161.140625 223.9140625 C-162.87062087 226.97613251 -164.56967023 230.05049243 -166.234375 233.1484375 C-169.74946799 239.40530302 -172.67910851 243.61044766 -179.48828125 246.33203125 C-185.48455121 247.92668469 -191.26045878 247.71401256 -196.97949219 245.17749023 C-204.37970932 240.86486974 -208.34112323 232.25720867 -212.125 224.9375 C-213.26368214 222.78412776 -214.40435742 220.63180847 -215.546875 218.48046875 C-216.12115234 217.39556152 -216.69542969 216.3106543 -217.28710938 215.19287109 C-219.89654752 210.32881294 -222.63363428 205.54053975 -225.375 200.75 C-230.28498985 192.13524726 -235.02396098 183.43717913 -239.6875 174.6875 C-244.46309729 165.72833151 -249.28595147 156.80208909 -254.2421875 147.94140625 C-257.671399 141.80987017 -261.06231939 135.65716322 -264.45584106 129.50582886 C-265.54751412 127.52716204 -266.63982619 125.54884895 -267.73217773 123.57055664 C-268.40613072 122.34914508 -269.08004213 121.12771058 -269.75390625 119.90625 C-270.35533447 118.81634766 -270.9567627 117.72644531 -271.57641602 116.60351562 C-273.90817154 112.33909427 -274.70511086 108.8686226 -274 104 C-272.08402034 99.11138744 -269.85727956 96.71030939 -265.5625 93.75 C-264.61503906 93.08484375 -263.66757812 92.4196875 -262.69140625 91.734375 C-258.92175623 89.30516657 -256.22538088 87.70560179 -251.6875 87.625 C-250.96949219 87.59664063 -250.25148438 87.56828125 -249.51171875 87.5390625 C-243.27238082 88.68407319 -238.67262872 92.95562575 -234.34008789 97.31933594 C-233.56314575 98.09562096 -233.56314575 98.09562096 -232.77050781 98.8875885 C-231.08066982 100.57949647 -229.40167582 102.2817365 -227.72265625 103.984375 C-226.5450465 105.16758708 -225.36676737 106.35013329 -224.18785095 107.53204346 C-221.10205193 110.62924107 -218.02537305 113.735344 -214.95056152 116.84344482 C-211.80522423 120.01959084 -208.6512689 123.18715386 -205.49804688 126.35546875 C-199.3236062 132.56198552 -193.15878222 138.77794508 -187 145 C-184.09256068 142.13151817 -181.48240159 139.19658667 -178.9375 136 C-174.73688003 130.81669793 -170.31998928 125.9005891 -165.7734375 121.01953125 C-163.79070011 118.88752881 -161.89146343 116.70081363 -160.00390625 114.484375 C-155.06217374 108.81469141 -149.70062358 103.55149525 -144.37573242 98.24536133 C-142.56639067 96.44137915 -140.76245681 94.63211335 -138.95898438 92.82226562 C-133.14129805 87.00087236 -127.29227129 81.31259411 -121 76 C-119.8079059 74.95539153 -118.6177981 73.90851197 -117.4296875 72.859375 C-109.16625154 65.61448233 -100.7503685 58.64851007 -92 52 C-90.96480225 51.20988525 -90.96480225 51.20988525 -89.90869141 50.40380859 C-66.98858316 32.98371301 -42.70882733 17.92559626 -17.125 4.75 C-16.21548584 4.27143555 -15.30597168 3.79287109 -14.36889648 3.29980469 C-9.41723262 0.80522171 -5.68267375 -0.77226079 0 0 Z " fill="#FFFFFF" transform="translate(735,304)"/>
+<path d="M0 0 C0.87684448 -0.00705963 1.75368896 -0.01411926 2.65710449 -0.02139282 C39.74157576 -0.25199319 39.74157576 -0.25199319 57.55859375 3.203125 C59.08347412 3.49316406 59.08347412 3.49316406 60.63916016 3.7890625 C106.56343751 12.81375749 149.85345363 33.55229635 183.99609375 65.79296875 C186.15331667 67.82194214 188.3511059 69.74134081 190.62109375 71.640625 C234.46786932 109.87066486 258.79300536 171.14383646 263.24609375 227.890625 C264.34070766 248.93913822 263.02452346 269.53656554 259.12109375 290.265625 C258.81328979 291.91594727 258.81328979 291.91594727 258.49926758 293.59960938 C256.02889471 306.02006834 256.02889471 306.02006834 250.87109375 310.578125 C246.54376867 312.70096372 244.34702417 312.73517282 239.55859375 312.203125 C235.44219766 310.42559032 232.79305752 308.09274712 230.55859375 304.203125 C229.84868284 297.59006072 230.94027068 291.36690807 232.43359375 284.953125 C243.73507962 232.38726326 232.44887296 175.46217643 203.82910156 130.1640625 C183.52369946 98.82413366 156.89441037 73.75964396 124.55859375 55.203125 C123.92244141 54.83348633 123.28628906 54.46384766 122.63085938 54.08300781 C71.91879511 24.84677522 9.66639065 18.98687968 -46.4609375 33.5390625 C-106.03090804 49.71856067 -156.06506402 89.38262613 -186.97070312 142.56884766 C-192.55549225 152.57214691 -197.27153758 163.0878126 -201.17578125 173.85546875 C-203.08204454 177.39146948 -205.884361 179.42460237 -209.44140625 181.203125 C-215.01675562 181.57481496 -218.65887634 181.42855215 -223.44140625 178.203125 C-226.66617064 174.54839203 -226.76247468 171.32484945 -226.69580078 166.66894531 C-226.26370422 162.48067734 -224.67636246 158.94246634 -222.94140625 155.140625 C-222.57901855 154.31844482 -222.21663086 153.49626465 -221.84326172 152.64916992 C-220.73213183 150.15597908 -219.59294544 147.6778801 -218.44140625 145.203125 C-217.94495605 144.12756348 -217.94495605 144.12756348 -217.43847656 143.03027344 C-207.33866927 121.37900459 -193.5953319 101.13441673 -177.03515625 83.9140625 C-174.92856747 81.71229652 -172.95180983 79.48001901 -171.00390625 77.140625 C-133.53298932 34.05812148 -73.97064366 8.32160323 -18.44140625 1.203125 C-17.7661792 1.11579605 -17.09095215 1.0284671 -16.39526367 0.93849182 C-10.91584963 0.27704625 -5.51650507 0.02968127 0 0 Z " fill="#FFFFFF" transform="translate(308.44140625,84.796875)"/>
+<path d="M0 0 C0.83917969 0.71800781 1.67835938 1.43601563 2.54296875 2.17578125 C19.05927235 16.59233772 31.090679 34.03934094 40 54 C40.52722656 55.17820312 41.05445313 56.35640625 41.59765625 57.5703125 C44.63365956 64.86010319 46.8525857 71.26561431 43.875 78.875 C41.06296352 82.06197468 38.26835216 83.62873278 34.04296875 84.3203125 C30.38284426 84.53026228 28.14697402 84.06500774 24.75 82.5625 C22.14906256 80.13889921 21.40176496 79.05746974 20.09375 75.921875 C19.75182617 75.12080322 19.40990234 74.31973145 19.05761719 73.49438477 C18.70860352 72.67123779 18.35958984 71.84809082 18 71 C3.2799625 37.97026524 -18.65075761 12.95387838 -52.3125 -1.25 C-84.70585758 -13.499589 -121.44575385 -15.26618961 -153.66699219 -1.30004883 C-180.38701024 10.99882157 -198.75614041 33.21232168 -213.875 57.8125 C-225.29370777 76.38964197 -238.57095193 93.67397968 -253 110 C-253.72292236 110.81984375 -253.72292236 110.81984375 -254.46044922 111.65625 C-267.2740351 126.09702677 -281.33845605 138.71370905 -297 150 C-297.62874023 150.45358887 -298.25748047 150.90717773 -298.90527344 151.37451172 C-306.28932679 156.63677834 -313.98121199 161.27923873 -321.9375 165.625 C-322.71851074 166.06352295 -323.49952148 166.5020459 -324.30419922 166.95385742 C-329.49505929 169.70231858 -333.12431335 170.61152533 -339 170 C-343.36045847 167.77863437 -346.13277421 165.56432971 -348 161 C-348.52706228 156.25643949 -348.65291965 154.26143418 -346.44921875 150.00390625 C-343.44830327 146.3233576 -340.60240746 144.86300843 -336.375 142.875 C-308.64896893 129.00295319 -284.08921744 107.34040355 -265 83 C-264.17242187 81.97777344 -263.34484375 80.95554687 -262.4921875 79.90234375 C-252.46574844 67.46185807 -243.1954147 54.39113666 -234.875 40.75 C-227.95273378 29.42576547 -220.02063314 18.79851602 -210.9375 9.11328125 C-208.92736732 6.97186537 -208.92736732 6.97186537 -206.96484375 4.4296875 C-204.02433523 0.79351196 -200.59857941 -2.03102758 -197 -5 C-196.08347656 -5.76570313 -195.16695312 -6.53140625 -194.22265625 -7.3203125 C-139.12316305 -51.65004347 -52.37428564 -46.02095083 0 0 Z " fill="#FFFFFF" transform="translate(423,211)"/>
+<path d="M0 0 C13.20270623 9.28374732 19.26486712 23.32228947 22.578125 38.6796875 C27.65467983 78.63405423 10.61087304 114.52152711 -13.24291992 145.35668945 C-16.85872631 149.93510417 -20.73343647 154.2478012 -24.703125 158.51953125 C-26.66807034 160.64153855 -28.56248464 162.79908911 -30.4375 165 C-37.34939388 172.93889698 -44.98465647 180.19111821 -53 187 C-53.99257813 187.87011719 -54.98515625 188.74023438 -56.0078125 189.63671875 C-65.02384869 197.51769452 -74.3893271 204.8596166 -84 212 C-85.10698242 212.82250244 -85.10698242 212.82250244 -86.23632812 213.66162109 C-103.84573116 226.68508272 -122.25632494 238.1479015 -141.11083984 249.27880859 C-143.68221503 250.81068244 -146.22883069 252.37504432 -148.76953125 253.95703125 C-155.16873598 257.87343603 -160.92290289 261.39129836 -168.72265625 260.6171875 C-172.75778067 259.52362033 -174.32193257 258.29608299 -177 255 C-179.0047439 250.94730651 -179.41317536 247.25155188 -178.25 242.875 C-176.6388086 239.43135107 -174.87434073 238.03530366 -171.59375 236.171875 C-170.6955957 235.65544434 -169.79744141 235.13901367 -168.87207031 234.60693359 C-167.92428711 234.07664551 -166.97650391 233.54635742 -166 233 C-164.62859863 232.2258374 -164.62859863 232.2258374 -163.22949219 231.43603516 C-161.28730134 230.34133969 -159.34431005 229.24806348 -157.40063477 228.15600586 C-128.97915129 212.08977401 -101.44433187 193.68501154 -77 172 C-75.58384449 170.77024445 -74.16726131 169.54098098 -72.75 168.3125 C-71.49861679 167.20990121 -70.24866875 166.10567192 -69 165 C-68.23558594 164.32839844 -67.47117187 163.65679687 -66.68359375 162.96484375 C-56.5785789 153.99842212 -47.36038583 144.61613917 -39 134 C-38.09365181 132.88313653 -37.18604521 131.76729339 -36.27734375 130.65234375 C-16.46780423 106.17329069 -1.05873462 76.24523498 -4 44 C-5.51092341 35.50639101 -8.46080639 27.02038246 -15.6953125 21.76953125 C-18.02822378 20.40430738 -20.46140436 19.25985851 -22.89453125 18.0859375 C-25.96342858 16.49657172 -27.92701209 15.0980775 -30 12.3125 C-31.32414117 7.92628238 -31.32942545 4.39358898 -30 0 C-21.37075984 -11.26595243 -10.25380195 -6.25296449 0 0 Z " fill="#FFFFFF" transform="translate(355,274)"/>
+<path d="M0 0 C19.93523627 18.87276926 30.53647331 45.55936097 31.5078125 72.8203125 C31.95417014 92.77146082 27.05470543 109.7172947 20.1875 128.2578125 C19.83067139 129.22452881 19.47384277 130.19124512 19.10620117 131.18725586 C18.41255704 133.05694855 17.71136804 134.92386654 17.0012207 136.78735352 C13.17234592 147.04751909 11.94148618 156.52051312 11.98242188 167.42578125 C11.87908641 171.75920409 11.65843088 174.68351108 8.8671875 178.12109375 C4.70162675 182.07869156 1.64876231 181.97662222 -3.9453125 181.91796875 C-8.37345449 181.36835451 -9.84062047 179.96432826 -12.71484375 176.57421875 C-21.33568778 156.46885932 -10.23314517 131.36968851 -3.04394531 112.53662109 C1.11391199 101.58290082 4.90086089 90.63137921 4.66015625 78.76171875 C4.64601685 77.62923706 4.64601685 77.62923706 4.6315918 76.47387695 C4.06909385 55.02051903 -3.4985564 34.86709815 -18.71484375 19.57421875 C-19.38 18.87425781 -20.04515625 18.17429687 -20.73046875 17.453125 C-36.09858381 2.40762304 -57.95048641 -1.72759587 -78.61425781 -1.74047852 C-96.45965114 -1.5309848 -112.21503842 3.59881804 -126.04296875 15.19140625 C-129.3798225 17.95132734 -132.19285858 17.90669282 -136.390625 17.859375 C-139.96563728 17.42076005 -142.04796905 15.91586483 -144.71484375 13.57421875 C-146.55214283 10.59652713 -147.06013733 8.1813669 -147.15234375 4.69921875 C-147.19230469 3.87679687 -147.23226562 3.054375 -147.2734375 2.20703125 C-145.69977887 -5.21007305 -138.05386923 -9.36108662 -132.1640625 -13.25390625 C-91.43393111 -39.23984306 -35.18677797 -31.44027211 0 0 Z " fill="#FFFFFF" transform="translate(397.71484375,248.42578125)"/>
+<path d="M0 0 C0.56750977 0.41169434 1.13501953 0.82338867 1.71972656 1.24755859 C3.53153321 2.56872839 5.3305366 3.90538626 7.125 5.25 C7.9612793 5.86887085 7.9612793 5.86887085 8.81445312 6.50024414 C12.54266865 9.35966473 14.51880368 11.49685374 15.40625 16.11328125 C15.60244317 20.71564602 15.18372756 23.3941182 12.1875 27 C9.15637192 30.23320329 6.82442977 30.90049986 2.375 31.4375 C-3.22113318 31.33593678 -6.67204546 28.25601533 -11 25 C-36.35480554 6.75274103 -64.65232877 -5.64287805 -96 -9 C-96.91652344 -9.10957031 -97.83304688 -9.21914062 -98.77734375 -9.33203125 C-137.08424496 -13.27307047 -177.90801514 -5.32653503 -210.73095703 15.12963867 C-222.48780056 22.43116143 -222.48780056 22.43116143 -228.98046875 21.66796875 C-233.17423175 20.28086339 -235.8318242 17.90122572 -238.1640625 14.10546875 C-239.13007781 11.67237412 -239.1534471 10.15385443 -238.875 7.5625 C-238.81054688 6.82128906 -238.74609375 6.08007812 -238.6796875 5.31640625 C-236.73479431 -1.31187917 -231.07490108 -4.09323721 -225.4375 -7.25 C-224.17655518 -7.96397949 -224.17655518 -7.96397949 -222.89013672 -8.69238281 C-200.02461178 -21.46503863 -176.82129127 -29.53501073 -151 -34 C-150.23719727 -34.13277344 -149.47439453 -34.26554688 -148.68847656 -34.40234375 C-97.96623188 -42.72743324 -41.54457316 -30.43110891 0 0 Z " fill="#FFFFFF" transform="translate(438,165)"/>
+<path d="M0 0 C3.00685978 1.79132072 4.52657334 3.24682123 6.375 6.1875 C7.4026391 10.81187597 7.14816255 15.60434973 5.07714844 19.92553711 C3.85429161 21.80901478 2.55177934 23.59135621 1.1875 25.375 C0.17619698 26.76830648 -0.83147572 28.1642535 -1.8359375 29.5625 C-2.35897461 30.28566406 -2.88201172 31.00882812 -3.42089844 31.75390625 C-6.0774266 35.53251773 -8.50023873 39.45282737 -10.9375 43.375 C-27.91029205 70.47898834 -27.91029205 70.47898834 -37 81 C-37.68191406 81.79148437 -38.36382812 82.58296875 -39.06640625 83.3984375 C-41.33671509 85.9733495 -43.65425291 88.49363647 -46 91 C-46.87140625 91.93714844 -47.7428125 92.87429688 -48.640625 93.83984375 C-71.62384406 117.98722587 -102.36470546 133.86185983 -131.70825195 148.82299805 C-133.59259082 149.79076173 -135.45914045 150.79308575 -137.3203125 151.8046875 C-141.87304654 153.83549889 -146.12896615 153.84591036 -151 153 C-154.13725543 151.54950012 -156.10660069 149.89335082 -158 147 C-159.49458164 142.63301927 -159.33281666 139.15376443 -158.0625 134.75 C-152.83483308 127.77977744 -143.19126776 124.53020467 -135.5625 120.8125 C-111.76687812 109.05805627 -89.35720914 95.30920737 -70 77 C-69.12859375 76.19304687 -68.2571875 75.38609375 -67.359375 74.5546875 C-54.28473173 62.04038609 -44.99623833 47.06823978 -35.5546875 31.7421875 C-13.69805889 -3.71515619 -13.69805889 -3.71515619 0 0 Z " fill="#FFFFFF" transform="translate(245,273)"/>
+<path d="M0 0 C2.69598762 3.95973182 3.37758996 7.17658307 3 11.9375 C1.08467803 17.22743686 -1.11178763 19.15122617 -5.8125 22.125 C-15.69796906 28.63415434 -19.50546678 41.00285026 -23.8125 51.5625 C-30.5001712 67.60037132 -37.94590415 82.42488451 -49 95.9375 C-49.41862305 96.45618652 -49.83724609 96.97487305 -50.26855469 97.50927734 C-60.05630551 109.60066855 -70.70681509 120.37613396 -83 129.9375 C-83.62003906 130.42863281 -84.24007812 130.91976562 -84.87890625 131.42578125 C-112.62142992 153.39529421 -112.62142992 153.39529421 -121.625 153.8125 C-125.86949693 153.31230676 -128.79884196 151.81854223 -132 148.9375 C-134.38014217 145.90822814 -134.36257751 142.68698606 -134.25 138.89453125 C-133.72997959 134.82374649 -131.77353582 132.58917743 -128.71875 130.015625 C-126.10730777 128.01952261 -123.44899136 126.21860334 -120.6875 124.4375 C-108.460644 116.32631789 -96.98574799 107.54806937 -86.44335938 97.32958984 C-85.09818311 96.03219555 -83.72960347 94.75918843 -82.359375 93.48828125 C-64.97986339 76.9558842 -54.61526962 55.33366024 -45.25610352 33.60693359 C-38.28778583 17.43827406 -31.19375759 4.66900898 -14.9375 -3.625 C-9.26918045 -4.46921781 -4.6949509 -3.22777874 0 0 Z " fill="#FFFFFF" transform="translate(307,278.0625)"/>
+<path d="M0 0 C0.74765625 -0.03738281 1.4953125 -0.07476562 2.265625 -0.11328125 C7.12902459 0.72022591 10.41995716 3.62683466 13.3203125 7.46484375 C14.18630946 8.71669924 15.03709052 9.97917326 15.875 11.25 C16.34091553 11.94601318 16.80683105 12.64202637 17.28686523 13.35913086 C47.40485524 59.07492165 59.2232022 104.27074246 49.75 158.3125 C49.36377433 160.58319588 48.97835006 162.85402822 48.59375 165.125 C47.67184637 170.52558922 46.723038 175.92089959 45.75 181.3125 C42.88959269 179.927048 40.58210679 178.4554643 38.125 176.4375 C32.85367253 172.39252263 26.99419409 170.39389803 20.75 168.3125 C20.93175781 167.24628418 21.11351562 166.18006836 21.30078125 165.08154297 C29.89968036 114.19384508 25.61168464 71.80210149 -5.25 28.3125 C-5.93449219 27.37277344 -6.61898438 26.43304688 -7.32421875 25.46484375 C-7.95972656 24.58957031 -8.59523438 23.71429688 -9.25 22.8125 C-9.806875 22.0803125 -10.36375 21.348125 -10.9375 20.59375 C-13.24844807 16.57710217 -13.40164807 13.19205882 -12.625 8.6875 C-10.27598628 2.92173906 -6.09338218 0.196895 0 0 Z " fill="#FFFFFF" transform="translate(470.25,198.6875)"/>
+<path d="M0 0 C3.40102578 1.67969028 5.43576989 4.09232547 7.4375 7.3125 C8.56703281 12.70915677 7.81282116 16.74027717 4.8828125 21.28125 C3.97763904 22.36608642 3.05747903 23.43854256 2.125 24.5 C1.10677443 25.72985222 0.0925731 26.96304523 -0.91796875 28.19921875 C-1.43536621 28.82876465 -1.95276367 29.45831055 -2.48583984 30.10693359 C-10.13636207 39.67193671 -16.50163072 50.30884103 -23.0625 60.625 C-31.09936596 73.26094299 -39.41924603 85.46856999 -49 97 C-49.41942871 97.51498047 -49.83885742 98.02996094 -50.27099609 98.56054688 C-62.40830522 113.43601906 -76.19513524 126.0863421 -92 137 C-92.67740234 137.47083008 -93.35480469 137.94166016 -94.05273438 138.42675781 C-99.73848675 142.20383694 -104.16584985 143.33349271 -111 142 C-114.16469708 140.31875468 -116.37327173 138.25345654 -118 135 C-118.58268197 130.96548054 -118.87130812 126.91527176 -117.15234375 123.13671875 C-113.5313484 118.49697242 -108.46445745 115.3651214 -103.67285156 112.04736328 C-78.54500465 94.54456348 -60.98651316 70.44773933 -44.97265625 44.7421875 C-37.25412753 32.37115071 -29.14399348 20.36467761 -20 9 C-19.401875 8.2471875 -18.80375 7.494375 -18.1875 6.71875 C-12.91320178 0.28410618 -8.20094445 -1.26765387 0 0 Z " fill="#FFFFFF" transform="translate(188,190)"/>
+<path d="M0 0 C1.7953736 1.55545131 3.56498022 3.14097242 5.3125 4.75 C5.8290918 5.22421387 6.34568359 5.69842773 6.87792969 6.18701172 C16.38219655 15.01159659 30.07012089 27.81096714 31.75 41.25 C31.1364516 46.1583872 29.13486497 49.11762627 25.4765625 52.39453125 C21.64051907 54.79725159 17.67949152 54.33319124 13.3125 53.75 C7.56103633 51.38175025 5.32162173 46.85935541 2.21484375 41.75390625 C-9.52122204 23.2220077 -28.26358342 10.31779208 -49.3828125 4.78125 C-65.67252193 1.1687477 -80.191606 2.3961908 -95.5 9 C-100.40168574 11.08828845 -104.53384612 12.6352173 -109.88671875 11.49609375 C-113.91131183 9.82863762 -115.94354886 7.03500652 -118.0625 3.375 C-119.22653047 -1.51392795 -118.40927435 -4.98689489 -115.9375 -9.3125 C-88.01057541 -39.31994046 -27.10777888 -21.44229243 0 0 Z " fill="#FFFFFF" transform="translate(413.6875,492.25)"/>
+<path d="M0 0 C4.09964471 2.08709185 6.28541564 3.76396805 8 8 C8.3359375 10.1484375 8.3359375 10.1484375 8.375 12.375 C8.40335938 13.10460937 8.43171875 13.83421875 8.4609375 14.5859375 C5.93606716 27.80941099 -14.84810178 39.50258535 -25 47 C-25.61133789 47.45262207 -26.22267578 47.90524414 -26.85253906 48.37158203 C-43.09757538 60.33993794 -60.30230109 70.77492034 -77.72773743 80.91845703 C-80.65547324 82.62365335 -83.57563871 84.33951479 -86.48046875 86.08349609 C-89.80781811 88.07772415 -93.15156525 90.04143864 -96.5 92 C-97.99273437 92.90842651 -97.99273437 92.90842651 -99.515625 93.83520508 C-105.95901572 97.546141 -111.52494216 99.40515595 -119 98 C-122.16072279 96.311523 -124.37321569 94.25356863 -126 91 C-126.203125 88.79296875 -126.203125 88.79296875 -126.25 86.1875 C-126.27578125 85.33542969 -126.3015625 84.48335938 -126.328125 83.60546875 C-125.91714724 80.34210963 -124.90992105 78.67702892 -123 76 C-120.57763672 74.29345703 -120.57763672 74.29345703 -117.6796875 72.7578125 C-116.05994019 71.88298218 -116.05994019 71.88298218 -114.4074707 70.99047852 C-113.24175537 70.37487061 -112.07604004 69.7592627 -110.875 69.125 C-108.40348714 67.78998861 -105.93807249 66.44388603 -103.47265625 65.09765625 C-102.84560287 64.75655319 -102.2185495 64.41545013 -101.57249451 64.06401062 C-78.48980807 51.47225301 -55.60567039 37.38214789 -35 21 C-34.08734375 20.278125 -33.1746875 19.55625 -32.234375 18.8125 C-26.40119464 14.11988563 -20.85866703 9.19394437 -15.41015625 4.06640625 C-10.52538257 -0.12167362 -6.31785279 -0.89785776 0 0 Z " fill="#FFFFFF" transform="translate(267,405)"/>
+<path d="M0 0 C13.45010441 12.17110675 13.45010441 12.17110675 14.3125 21.3125 C13.93790854 25.73267921 12.83614013 27.62729281 10 31 C6.53658052 33.8861829 3.50019387 34.55618921 -1.0234375 34.3359375 C-6.41337298 33.41986151 -9.17095344 29.87635376 -12.1875 25.6875 C-17.76711181 18.21106651 -26.72228502 12.53941345 -36 11 C-49.72771712 9.85003417 -60.22416459 12.1033639 -71.359375 20.58203125 C-75.14155686 24.04530133 -78.02654707 27.95675934 -80.9296875 32.16796875 C-83.46568383 35.63702033 -86.10164425 39.05082212 -90 41 C-94.05380289 41.51037087 -98.1774658 41.89274541 -101.921875 40.05859375 C-105.13426316 37.52207934 -107.16467413 34.99100138 -108 31 C-108.2885338 22.77678672 -103.78125305 17.37788087 -99 11 C-98.45085937 10.26394531 -97.90171875 9.52789063 -97.3359375 8.76953125 C-86.29253807 -4.85791484 -70.40504257 -12.31899149 -53.5625 -15.6875 C-33.65867277 -17.43344976 -15.45357948 -12.90882837 0 0 Z " fill="#FFFFFF" transform="translate(388,527)"/>
+<path d="M0 0 C3.46221169 2.08711733 5.05959171 4.08390677 7.3515625 7.39453125 C17.31794089 21.24543472 29.34852124 31.85167106 43.56445312 41.20068359 C50.34523223 45.66180548 55.40651614 49.36067408 59.0390625 56.83203125 C59.6688859 58.05685854 60.30054704 59.2807418 60.93359375 60.50390625 C62.68529509 63.92356739 64.37420732 67.3693295 66.0390625 70.83203125 C60.04449887 76.98434656 60.04449887 76.98434656 54.65234375 77.35546875 C47.54186409 77.27123043 42.83013396 73.4752936 37.2265625 69.45703125 C36.16775879 68.72258789 35.10895508 67.98814453 34.01806641 67.23144531 C31.00384558 65.12626051 28.01638311 62.9889887 25.0390625 60.83203125 C24.33185059 60.32188477 23.62463867 59.81173828 22.89599609 59.28613281 C19.1809643 56.58010965 15.58863952 53.75078158 12.0390625 50.83203125 C11.46510742 50.36345703 10.89115234 49.89488281 10.29980469 49.41210938 C-16.1507777 27.71557833 -16.1507777 27.71557833 -19.66796875 14.09375 C-19.97632787 9.36796724 -19.12861018 6.46284349 -16.1484375 2.76953125 C-11.64897284 -1.95212919 -5.98395538 -2.36042567 0 0 Z " fill="#FFFFFF" transform="translate(417.9609375,441.16796875)"/>
+<path d="M0 0 C3.02644928 4.237029 3.18805988 7.30658211 2.52636719 12.39501953 C1.52312394 17.3600499 -0.39237244 21.95314162 -2.3125 26.625 C-2.75327881 27.7080542 -3.19405762 28.7911084 -3.64819336 29.90698242 C-10.30454992 45.90942593 -17.78878414 61.66407791 -29 75 C-29.66 75.88429688 -30.32 76.76859375 -31 77.6796875 C-33.60132402 80.69762982 -35.44447564 81.77924902 -39.3671875 82.3359375 C-45.08522757 82.42500354 -48.56237048 81.99386657 -53 78 C-55.36425345 74.99095015 -55.26615441 71.8557178 -55.36328125 68.09765625 C-54.57827815 63.56489643 -51.33938626 60.05167777 -48.63891602 56.45068359 C-38.36036299 42.62020255 -31.77156812 27.6961542 -25.98071289 11.53271484 C-23.59321333 5.09785635 -21.93669638 0.67509776 -16 -3 C-10.71101309 -5.38857473 -4.33453393 -3.49170789 0 0 Z " fill="#FFFFFF" transform="translate(331,319)"/>
+<path d="M0 0 C3.34650538 2.73184113 4.58049828 4.19523721 5.54296875 8.3359375 C5.94784568 13.30140923 5.2376956 16.36315772 2 20.1875 C0.69885138 21.49126662 -0.63565945 22.76251464 -2 24 C-2.64839844 24.59554687 -3.29679687 25.19109375 -3.96484375 25.8046875 C-6.58128754 28.13617207 -9.25291016 30.39076602 -11.96875 32.60546875 C-18.48166584 38.04582107 -23.49332003 44.54921388 -28.7265625 51.19140625 C-33.58546594 57.15913637 -33.58546594 57.15913637 -38 58 C-44.52995315 57.89634995 -47.40222493 56.59777507 -52 52 C-53.89665192 48.20669616 -53.59500473 44.12338274 -53 40 C-49.5378299 31.86957595 -42.05462171 25.30837292 -36 19 C-35.50661133 18.47937988 -35.01322266 17.95875977 -34.50488281 17.42236328 C-13.15646294 -5.03316643 -13.15646294 -5.03316643 0 0 Z " fill="#FFFFFF" transform="translate(285,501)"/>
+<path d="M0 0 C3.18950003 2.62664708 4.81739865 4.82719596 6.125 8.75 C6.72357671 16.04356652 6.32221455 23.44539202 6.125 30.75 C6.10469727 32.40201416 6.10469727 32.40201416 6.08398438 34.08740234 C5.70569878 52.69094739 5.70569878 52.69094739 1.55761719 57.60791016 C-2.23363316 60.58393324 -6.46733244 62.30274724 -10.95751953 63.96435547 C-15.15671635 65.684882 -18.47044923 68.81985385 -21.875 71.75 C-22.5659375 72.33265625 -23.256875 72.9153125 -23.96875 73.515625 C-25.61539569 74.91396697 -27.24708112 76.32990056 -28.875 77.75 C-28.19897541 71.3011812 -26.89140955 65.12613915 -25.4375 58.8125 C-22.84363876 47.13457406 -21.02443721 35.76662709 -20.6796875 23.80078125 C-20.6477832 22.76824219 -20.61587891 21.73570312 -20.58300781 20.671875 C-20.52889732 18.64495977 -20.49348015 16.61743287 -20.47949219 14.58984375 C-20.34646439 8.85575022 -19.88617932 5.19347957 -15.875 0.75 C-11.16573117 -2.48587383 -5.0915779 -2.21372952 0 0 Z " fill="#FFFFFF" transform="translate(469.875,311.25)"/>
+<path d="M0 0 C3.40569591 2.14706916 5.80960782 4.10417103 7 8 C7.6047892 14.24948837 7.10825624 16.96948216 3 22 C0.41401031 23.91122613 -2.33883151 25.39213147 -5.1875 26.875 C-5.97906494 27.29700684 -6.77062988 27.71901367 -7.58618164 28.15380859 C-10.04846051 29.4539622 -12.52344428 30.72729821 -15 32 C-15.76763672 32.40669922 -16.53527344 32.81339844 -17.32617188 33.23242188 C-34.48481224 42.29539844 -34.48481224 42.29539844 -43 40 C-46.14854172 38.27863027 -48.36823592 36.26352816 -50 33 C-50.2734375 30.828125 -50.2734375 30.828125 -50.375 28.25 C-50.42398438 27.40953125 -50.47296875 26.5690625 -50.5234375 25.703125 C-49.6910252 21.4043988 -46.90348631 18.30502883 -43.34725952 15.86688232 C-41.48866323 14.83430395 -39.60802354 13.89652381 -37.6875 12.984375 C-36.99615967 12.64247131 -36.30481934 12.30056763 -35.5925293 11.94830322 C-33.40128588 10.86882088 -31.20098722 9.80944843 -29 8.75 C-27.52281853 8.02469677 -26.04624943 7.29814494 -24.5703125 6.5703125 C-7.10758417 -1.99990729 -7.10758417 -1.99990729 0 0 Z " fill="#FFFFFF" transform="translate(159,427)"/>
+</svg>
+      </div>
+      <span class="header-label" aria-label="Document type">Typography · Design Rationale</span>
+    </div>
+    <h1>Typography System Reference</h1>
+    <p class="header-desc">Three stacks. One system. Right font, right context. Interactive design system guide for the Oritain v2 platform.</p>
+    <div class="header-pills" role="list" aria-label="Document audience">
+      <span class="pill" role="listitem">Internal</span>
+      <span class="pill" role="listitem">Product team</span>
+      <span class="pill" role="listitem">Design team</span>
+      <span class="pill" role="listitem">Engineering</span>
+    </div>
+  </header>
+
+  <!-- ── Navigation ── -->
+  <div class="nav-wrap">
+    <nav class="nav" role="tablist" aria-label="Typography sections">
+      <button class="tab-btn" role="tab" aria-selected="true"  aria-controls="panel-stacks"     id="tab-stacks"     onclick="showTab('stacks')">Font Stacks</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-comparison"  id="tab-comparison" onclick="showTab('comparison')">Enterprise vs Marketing</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-decision"    id="tab-decision"   onclick="showTab('decision')">What font where?</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-webfonts"    id="tab-webfonts"   onclick="showTab('webfonts')">Web Font Strategy</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-rules"       id="tab-rules"      onclick="showTab('rules')">Rules &amp; CSS</button>
+    </nav>
+  </div>
+
+  <!-- ── Main content ── -->
+  <main id="main-content" class="main">
+
+    <!-- ════════════════════════════════════════════════════
+         PANEL 1: FONT STACKS
+    ════════════════════════════════════════════════════ -->
+    <section class="tab-panel active" id="panel-stacks" role="tabpanel" aria-labelledby="tab-stacks">
+      <h2 class="sec-title">The three-stack system</h2>
+      <p class="sec-sub">Each context has a different rendering environment, licensing constraint, and legibility requirement. Click any row to explore the stack in detail.</p>
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="stack-list" role="list">
+
+        <!-- Display row -->
+        <div class="stack-row" role="listitem" id="row-display" tabindex="0"
+             aria-expanded="false" aria-controls="detail-display"
+             onclick="toggleStack('display')"
+             onkeydown="if(event.key==='Enter'||event.key===' ')toggleStack('display')">
+          <div class="stack-accent" style="background:var(--t700)" aria-hidden="true"></div>
+          <div class="stack-meta">
+            <div class="stack-name">Display</div>
+            <div class="stack-ctx">Headers · Titles · Hero copy</div>
+          </div>
+          <div class="stack-specimen-wrap" aria-hidden="true">
+            <span class="sp-display">Authenticate every claim.</span>
+          </div>
+          <div class="stack-var-col">
+            <span class="css-var">--font-display</span>
+            <span class="fallback-txt">Montserrat → Gotham → Helvetica</span>
+          </div>
+          <span class="expand-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="stack-detail" id="detail-display" role="region" aria-label="Display stack details">
+          <div class="tag-row">
+            <span class="tag teal">Montserrat Medium (platform)</span>
+            <span class="tag teal">Gotham Medium (brand/print)</span>
+            <span class="tag grey">≥ 18px only</span>
+            <span class="tag grey">One weight only</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Why Montserrat on the platform</label>
+              <p>Closest open-source geometric sans to Gotham. Self-hostable, SIL OFL licensed, zero CDN dependency. Safe for enterprise networks, SOC 2 audits, and air-gapped environments. One woff2 file covers all needs.</p>
+            </div>
+            <div class="detail-item">
+              <label>Why Gotham for brand & print</label>
+              <p>Gotham is Oritain's established brand font. Use it for marketing, presentations, and printed materials — contexts where you fully control the rendering environment and have no CDN risk.</p>
+            </div>
+            <div class="detail-item">
+              <label>Minimum size rule</label>
+              <p>Never below 18px in the UI. At small sizes Montserrat's geometric weight becomes heavy and legibility suffers in data-dense tables and navigation.</p>
+            </div>
+            <div class="detail-item">
+              <label>Weight to load</label>
+              <p>Medium (500) only. Do not load additional weights — it adds unnecessary page weight and the design system does not use them.</p>
+            </div>
+          </div>
+          <div class="code-block" role="region" aria-label="CSS code for display stack">/* Self-host via @font-face */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --font-display: 'Montserrat', 'Gotham Medium', 'Century Gothic', sans-serif;
+}
+
+.page-title    { font-family: var(--font-display); font-size: 32px; font-weight: 500; }
+.section-head  { font-family: var(--font-display); font-size: 24px; font-weight: 500; }
+.stat-number   { font-family: var(--font-display); font-size: 40px; font-weight: 500; }</div>
+        </div>
+
+        <!-- Offline row -->
+        <div class="stack-row" role="listitem" id="row-offline" tabindex="0"
+             aria-expanded="false" aria-controls="detail-offline"
+             onclick="toggleStack('offline')"
+             onkeydown="if(event.key==='Enter'||event.key===' ')toggleStack('offline')">
+          <div class="stack-accent" style="background:var(--t500)" aria-hidden="true"></div>
+          <div class="stack-meta">
+            <div class="stack-name">Offline</div>
+            <div class="stack-ctx">Print · PDF · Word handoffs</div>
+          </div>
+          <div class="stack-specimen-wrap" aria-hidden="true">
+            <span class="sp-offline">Authenticate every claim.</span>
+          </div>
+          <div class="stack-var-col">
+            <span class="css-var">--font-offline</span>
+            <span class="fallback-txt">Calibri → Carlito → Helvetica</span>
+          </div>
+          <span class="expand-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="stack-detail" id="detail-offline" role="region" aria-label="Offline stack details">
+          <div class="tag-row">
+            <span class="tag teal">Calibri (primary)</span>
+            <span class="tag grey">Word · PDF · Print only</span>
+            <span class="tag red">Never in platform UI</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Why Calibri for offline</label>
+              <p>Calibri is the default font in Microsoft Word and Outlook. Forensic reports sent to clients must render as-authored — Inter and Gotham are not bundled with Office and substitute unpredictably, breaking layout and credibility.</p>
+            </div>
+            <div class="detail-item">
+              <label>The critical rule</label>
+              <p>Calibri must <strong>never</strong> appear in platform CSS, web UI, or mobile app bundles. It has no woff2 format and renders poorly on screens below 16px. Its sole purpose is offline document fidelity.</p>
+            </div>
+          </div>
+          <div class="callout amber" role="note">
+            <b>Important:</b> When authoring Word reports or PDF exports, use Calibri 11pt body and 14pt headings. Do not use Inter or Montserrat in Word — they will not render correctly on client machines without those fonts installed.
+          </div>
+        </div>
+
+        <!-- UI row -->
+        <div class="stack-row" role="listitem" id="row-ui" tabindex="0"
+             aria-expanded="false" aria-controls="detail-ui"
+             onclick="toggleStack('ui')"
+             onkeydown="if(event.key==='Enter'||event.key===' ')toggleStack('ui')">
+          <div class="stack-accent" style="background:var(--t300)" aria-hidden="true"></div>
+          <div class="stack-meta">
+            <div class="stack-name">UI</div>
+            <div class="stack-ctx">Web · Mobile · Interface</div>
+          </div>
+          <div class="stack-specimen-wrap" aria-hidden="true">
+            <span class="sp-ui">Authenticate every claim.</span>
+          </div>
+          <div class="stack-var-col">
+            <span class="css-var">--font-ui</span>
+            <span class="fallback-txt">Inter → system-ui → Segoe UI</span>
+          </div>
+          <span class="expand-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="stack-detail" id="detail-ui" role="region" aria-label="UI stack details">
+          <div class="tag-row">
+            <span class="tag teal">Inter (primary)</span>
+            <span class="tag grey">All platform UI</span>
+            <span class="tag grey">Variable font</span>
+            <span class="tag grey">Default when in doubt</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Why Inter</label>
+              <p>Purpose-built for screen UI. Optimised hinting at 11–14px — exactly the range where data-dense tables, form labels, and navigation items live. Available as a variable font: one file covers all weights.</p>
+            </div>
+            <div class="detail-item">
+              <label>Weight usage</label>
+              <p>400 Regular for body and table cells. 500 Medium for labels, navigation, and emphasis. 600 SemiBold for strong hierarchy only. Never 700+ — it clashes with Oritain's clean visual tone.</p>
+            </div>
+          </div>
+          <div class="code-block" role="region" aria-label="CSS code for UI stack">@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Variable.woff2') format('woff2') tech(variations);
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.table-body   { font-family: var(--font-ui); font-size: 13px; font-weight: 400; }
+.table-header { font-family: var(--font-ui); font-size: 12px; font-weight: 500; }
+.nav-label    { font-family: var(--font-ui); font-size: 13px; font-weight: 500; }
+.caption      { font-family: var(--font-ui); font-size: 12px; font-weight: 400; }</div>
+        </div>
+
+
+        <!-- Body row -->
+        <div class="stack-row" role="listitem" id="row-body" tabindex="0"
+             aria-expanded="false" aria-controls="detail-body"
+             onclick="toggleStack('body')"
+             onkeydown="if(event.key==='Enter'||event.key===' ')toggleStack('body')">
+          <div class="stack-accent" style="background:#9B59B6" aria-hidden="true"></div>
+          <div class="stack-meta">
+            <div class="stack-name">Body</div>
+            <div class="stack-ctx">Paragraphs · Descriptions · Reports</div>
+          </div>
+          <div class="stack-specimen-wrap" aria-hidden="true">
+            <span class="sp-ui" style="font-size:14px;line-height:1.5;color:var(--g700)">Provenance verified across 14 supply chain nodes.</span>
+          </div>
+          <div class="stack-var-col">
+            <span class="css-var">--font-body</span>
+            <span class="fallback-txt">Inter → system-ui → Segoe UI</span>
+          </div>
+          <span class="expand-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="stack-detail" id="detail-body" role="region" aria-label="Body stack details">
+          <div class="tag-row" style="margin-bottom:16px">
+            <span class="tag teal">Inter Regular (platform)</span>
+            <span class="tag teal">Calibri (Word/PDF exports)</span>
+            <span class="tag grey">14–16px optimal</span>
+            <span class="tag grey">line-height: 1.6–1.65</span>
+            <span class="tag red">Never Calibri on screen</span>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <p style="font-size:13px;color:var(--g700);line-height:1.6;margin-bottom:8px">
+              Body text is where the Inter vs Calibri distinction matters most practically.
+              Users read provenance summaries, report descriptions, empty states, tooltips,
+              and onboarding copy at 14–16px — precisely the range where Inter's screen-optimised
+              hinting outperforms Calibri's print-oriented design.
+              Toggle between sizes to see the difference.
+            </p>
+          </div>
+
+          <div class="size-toggle" role="group" aria-label="Font size selector">
+            <button class="size-btn active" onclick="setBodySize(14)" aria-pressed="true">14px</button>
+            <button class="size-btn" onclick="setBodySize(15)" aria-pressed="false">15px</button>
+            <button class="size-btn" onclick="setBodySize(16)" aria-pressed="false">16px</button>
+          </div>
+
+          <div class="body-compare">
+            <div class="body-sample">
+              <div class="body-sample-head inter">Inter — Platform body text</div>
+              <div class="body-sample-text" id="inter-specimen"
+                   style="font-family:'Inter',system-ui,sans-serif;font-weight:400">
+                Oritain's scientific analysis confirmed the origin of this cotton shipment
+                to the Xinjiang region with 97.3% confidence. The isotopic and elemental
+                fingerprint matched reference samples collected across 14 verified
+                growing sites between 2022 and 2024. No anomalies detected in the
+                supply chain traceability report.
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Screen hinting</span>
+                <span class="win">Excellent at 11–16px</span>
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Variable font</span>
+                <span class="win">Yes — one file, all weights</span>
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Platform safe</span>
+                <span class="win">Yes — self-hostable, SIL OFL</span>
+              </div>
+            </div>
+            <div class="body-sample">
+              <div class="body-sample-head calibri">Calibri — Word &amp; PDF exports only</div>
+              <div class="body-sample-text" id="calibri-specimen"
+                   style="font-family:'Calibri','Carlito',Georgia,serif;font-weight:400">
+                Oritain's scientific analysis confirmed the origin of this cotton shipment
+                to the Xinjiang region with 97.3% confidence. The isotopic and elemental
+                fingerprint matched reference samples collected across 14 verified
+                growing sites between 2022 and 2024. No anomalies detected in the
+                supply chain traceability report.
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Screen hinting</span>
+                <span class="neutral">Designed for print/Office</span>
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Variable font</span>
+                <span class="lose">No — bundled with Office only</span>
+              </div>
+              <div class="body-metric-row">
+                <span class="metric-label">Platform safe</span>
+                <span class="lose">No — no woff2, no web licence</span>
+              </div>
+            </div>
+          </div>
+
+          <table class="compare-table" role="table" aria-label="Inter vs Calibri comparison for body text">
+            <thead>
+              <tr>
+                <th scope="col">Criterion</th>
+                <th scope="col" class="inter-h">Inter (platform)</th>
+                <th scope="col" class="calibri-h">Calibri (exports)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Screen legibility 14px</td>
+                <td class="win">Excellent — optimised hinting</td>
+                <td class="neutral">Softer — print-oriented design</td>
+              </tr>
+              <tr>
+                <td>Line-height sweet spot</td>
+                <td><code>1.6</code> — crisp and open</td>
+                <td><code>1.5</code> — tighter feels better</td>
+              </tr>
+              <tr>
+                <td>Long-form reading</td>
+                <td class="win">Strong — consistent stroke weight</td>
+                <td class="win">Strong — warm humanist curves</td>
+              </tr>
+              <tr>
+                <td>Mobile rendering</td>
+                <td class="win">Excellent on iOS &amp; Android</td>
+                <td class="lose">Not optimised for mobile screens</td>
+              </tr>
+              <tr>
+                <td>Data-dense contexts</td>
+                <td class="win">Best-in-class at 12–13px</td>
+                <td class="lose">Degrades below 14px on screen</td>
+              </tr>
+              <tr>
+                <td>Microsoft Office</td>
+                <td class="lose">Substitutes unpredictably in Word</td>
+                <td class="win">Native default — renders perfectly</td>
+              </tr>
+              <tr>
+                <td>Web font format</td>
+                <td class="win">woff2 variable font available</td>
+                <td class="lose">No woff2 — system font only</td>
+              </tr>
+              <tr>
+                <td>Licence</td>
+                <td class="win">SIL OFL — free forever</td>
+                <td class="neutral">Bundled with Office — no web use</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="body-verdict" role="note">
+            <strong>Verdict for the platform:</strong> Use Inter for all body text in the platform UI.
+            Its screen-optimised hinting at 14–15px makes a genuine difference for users reading
+            provenance descriptions, report summaries, and status copy. Recommended settings:
+            <code style="background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:3px">font-size: 14px; line-height: 1.6; font-weight: 400;</code>
+          </div>
+
+          <div class="body-verdict body-verdict-bad" role="note" style="margin-top:10px">
+            <strong>Calibri for exports only:</strong> When generating Word documents or PDFs sent
+            to clients, switch to Calibri. It is the Office default — reports author and render
+            exactly as intended on any client machine without font installation.
+            <code style="background:rgba(0,0,0,0.08);padding:1px 5px;border-radius:3px">font-size: 11pt; line-height: 1.5;</code>
+          </div>
+
+          <div class="code-block" style="margin-top:14px" role="region" aria-label="CSS for body text">/* Body text — platform UI */
+:root {
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* Platform body text */
+.body-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #49545F;  /* var(--g700) */
+  max-width: 68ch; /* optimal line length for readability */
+}
+
+/* Compact body — descriptions, tooltips, helper text */
+.body-compact {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #848C94;  /* var(--g600) */
+}
+
+/* Report body — longer summaries */
+.body-report {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #303A44;  /* var(--g800) */
+  max-width: 72ch;
+}
+
+/* Word/PDF export body — Calibri only */
+/* Use in server-side document generation, NOT in CSS */
+/* Calibri 11pt, line-height 1.5, colour #303A44 */</div>
+        </div>
+
+      </div><!-- /stack-list -->
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PANEL 2: ENTERPRISE vs MARKETING
+    ════════════════════════════════════════════════════ -->
+    <section class="tab-panel" id="panel-comparison" role="tabpanel" aria-labelledby="tab-comparison">
+      <h2 class="sec-title">Enterprise SaaS vs Marketing website</h2>
+      <p class="sec-sub">Why the font strategy must differ between the platform and marketing contexts — and the metrics that drive that decision.</p>
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="comp-grid" role="table" aria-label="Font strategy comparison between enterprise SaaS and marketing website">
+        <div class="comp-header" role="row">
+          <div class="comp-col-head" role="columnheader" style="background:var(--g800)">Metric</div>
+          <div class="comp-col-head ent" role="columnheader">🏢 Enterprise SaaS Platform</div>
+          <div class="comp-col-head mkt" role="columnheader">📣 Marketing Website</div>
+        </div>
+
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Recommended font</div>
+          <div class="comp-cell" role="cell"><span class="badge green">✓ Montserrat — self-hosted</span></div>
+          <div class="comp-cell" role="cell"><span class="badge blue">Gotham via Cloud.typography</span></div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Network environment</div>
+          <div class="comp-cell" role="cell" style="color:var(--red);font-size:12px">⚠ Client networks may block external CDN requests. Some environments are air-gapped with no internet access.</div>
+          <div class="comp-cell" role="cell" style="color:var(--green);font-size:12px">✓ Open internet assumed. External CDN requests are standard and expected.</div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Security compliance</div>
+          <div class="comp-cell" role="cell"><span class="badge red">High scrutiny</span><br><span style="font-size:11.5px;color:var(--g700)">SOC 2 / ISO 27001 audits flag third-party font CDNs as undeclared external data flows.</span></div>
+          <div class="comp-cell" role="cell"><span class="badge green">Low scrutiny</span><br><span style="font-size:11.5px;color:var(--g700)">Standard analytics and CDN requests are acceptable in marketing contexts.</span></div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">CDN failure impact</div>
+          <div class="comp-cell" role="cell" style="font-size:12px;color:var(--red)">Critical — heading typography degrades silently during client demos and daily use. No control over uptime.</div>
+          <div class="comp-cell" role="cell" style="font-size:12px;color:var(--amber)">Minor — page reverts to fallback temporarily. Acceptable degradation.</div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Mobile app</div>
+          <div class="comp-cell" role="cell"><span class="badge red">Cloud.typography = web only</span><br><span style="font-size:11.5px;color:var(--g700)">React Native / iOS / Android needs a separate app licence + bundled font files.</span></div>
+          <div class="comp-cell" role="cell"><span class="badge amber">N/A</span></div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Licence cost</div>
+          <div class="comp-cell" role="cell" style="font-size:12px"><strong>Self-hosted Montserrat: $0 forever.</strong><br><span style="color:var(--red)">Cloud.typography: ongoing pageview-tiered subscription that never ends.</span></div>
+          <div class="comp-cell" role="cell" style="font-size:12px;color:var(--amber)">Cloud.typography: manageable subscription cost relative to marketing traffic volumes.</div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Performance</div>
+          <div class="comp-cell" role="cell">
+            <div class="score-wrap">
+              <div class="score-row">
+                <span class="score-label" style="font-size:11px">Self-hosted woff2</span>
+                <div class="score-track"><div class="score-fill" style="width:96%;background:var(--green)"></div></div>
+                <span class="score-val" style="color:var(--green)">Fast</span>
+              </div>
+            </div>
+          </div>
+          <div class="comp-cell" role="cell">
+            <div class="score-wrap">
+              <div class="score-row">
+                <span class="score-label" style="font-size:11px">External CDN request</span>
+                <div class="score-track"><div class="score-fill" style="width:62%;background:var(--amber)"></div></div>
+                <span class="score-val" style="color:var(--amber)">OK</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Risk score</div>
+          <div class="comp-cell" role="cell">
+            <div class="score-wrap">
+              <div class="score-row">
+                <span class="score-label" style="font-size:11px">With Cloud.typography</span>
+                <div class="score-track"><div class="score-fill" style="width:83%;background:var(--red)"></div></div>
+                <span class="score-val" style="color:var(--red)">High</span>
+              </div>
+              <div class="score-row">
+                <span class="score-label" style="font-size:11px">With self-hosted Montserrat</span>
+                <div class="score-track"><div class="score-fill" style="width:7%;background:var(--green)"></div></div>
+                <span class="score-val" style="color:var(--green)">Low</span>
+              </div>
+            </div>
+          </div>
+          <div class="comp-cell" role="cell">
+            <div class="score-wrap">
+              <div class="score-row">
+                <span class="score-label" style="font-size:11px">With Cloud.typography</span>
+                <div class="score-track"><div class="score-fill" style="width:26%;background:var(--amber)"></div></div>
+                <span class="score-val" style="color:var(--amber)">Low</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-row" role="row">
+          <div class="comp-cell metric" role="rowheader">Verdict</div>
+          <div class="comp-cell" role="cell"><span class="badge green">✓ Self-host Montserrat</span></div>
+          <div class="comp-cell" role="cell"><span class="badge amber">Gotham via Cloud.typography — acceptable</span></div>
+        </div>
+      </div>
+
+      <div class="callout teal" role="note" style="margin-top:16px">
+        <b>Bottom line:</b> Using Montserrat on the platform isn't a compromise — it's the correct architectural decision for enterprise SaaS. Gotham remains the brand font. Montserrat is the platform font. They serve different jobs at different risk profiles.
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PANEL 3: DECISION TREE
+    ════════════════════════════════════════════════════ -->
+    <section class="tab-panel" id="panel-decision" role="tabpanel" aria-labelledby="tab-decision">
+      <h2 class="sec-title">What font where?</h2>
+      <p class="sec-sub">Tell us what you are building and we will tell you exactly which font to reach for — with the CSS variable, key rules, and the reasoning behind it.</p>
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="dt-wrap" id="wfw-tree">
+
+        <!-- Q1 -->
+        <div class="dt-node q" id="wfw-q1" role="group" aria-labelledby="wfw-q1-label">
+          <p class="dt-question" id="wfw-q1-label">What are you building?</p>
+          <div class="dt-answers">
+            <button class="dt-btn" onclick="wfw('q1','platform')" aria-pressed="false">Client Portal or App</button>
+            <button class="dt-btn" onclick="wfw('q1','export')"   aria-pressed="false">Document export</button>
+            <button class="dt-btn" onclick="wfw('q1','marketing')" aria-pressed="false">Marketing or public page</button>
+            <button class="dt-btn" onclick="wfw('q1','print')"    aria-pressed="false">Print or presentation</button>
+          </div>
+        </div>
+
+        <!-- Platform branch: Q2 -->
+        <div class="dt-arrow" id="wfw-arr-platform" style="display:none" aria-hidden="true">↓</div>
+        <div class="dt-node q" id="wfw-q2-platform" style="display:none" role="group" aria-labelledby="wfw-q2-platform-label">
+          <p class="dt-question" id="wfw-q2-platform-label">What kind of text is it?</p>
+          <div class="dt-answers">
+            <button class="dt-btn" onclick="wfw('q2-platform','heading')"   aria-pressed="false">Heading or title</button>
+            <button class="dt-btn" onclick="wfw('q2-platform','body')"      aria-pressed="false">Body or description</button>
+            <button class="dt-btn" onclick="wfw('q2-platform','ui')"        aria-pressed="false">UI label, table, nav</button>
+            <button class="dt-btn" onclick="wfw('q2-platform','code')"      aria-pressed="false">Code or data</button>
+          </div>
+        </div>
+
+        <!-- Export branch: Q2 -->
+        <div class="dt-arrow" id="wfw-arr-export" style="display:none" aria-hidden="true">↓</div>
+        <div class="dt-node q" id="wfw-q2-export" style="display:none" role="group" aria-labelledby="wfw-q2-export-label">
+          <p class="dt-question" id="wfw-q2-export-label">What kind of export?</p>
+          <div class="dt-answers">
+            <button class="dt-btn" onclick="wfw('q2-export','word')"   aria-pressed="false">Word or PDF report</button>
+            <button class="dt-btn" onclick="wfw('q2-export','server')" aria-pressed="false">Server-generated PDF</button>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="dt-arrow" id="wfw-arr-result" style="display:none" aria-hidden="true">↓</div>
+
+        <!-- Result: Heading -->
+        <div class="dt-result montserrat" id="wfw-res-heading" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--green)">--font-display · Montserrat Medium</div>
+          <p class="dt-res-body" style="color:var(--green)">Page titles, section headings, hero copy, stat numbers. Self-hosted, SIL OFL, no CDN dependency. Minimum 18px — never use the display font below this size.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag teal">font-family: var(--font-display)</span>
+            <span class="tag teal">font-weight: 500</span>
+            <span class="tag grey">min 18px</span>
+            <span class="tag grey">Gotham for brand/print only</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Body -->
+        <div class="dt-result montserrat" id="wfw-res-body" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--green)">--font-body · Inter Regular</div>
+          <p class="dt-res-body" style="color:var(--green)">Paragraphs, descriptions, empty states, tooltips, onboarding copy. Inter's screen-optimised hinting at 14–15px significantly outperforms Calibri for on-screen reading. Never use Calibri in the platform UI.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag teal">font-family: var(--font-body)</span>
+            <span class="tag teal">font-size: 14–15px</span>
+            <span class="tag teal">line-height: 1.6</span>
+            <span class="tag teal">font-weight: 400</span>
+            <span class="tag grey">max-width: 68ch</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: UI -->
+        <div class="dt-result montserrat" id="wfw-res-ui" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--green)">--font-ui · Inter Medium / Regular</div>
+          <p class="dt-res-body" style="color:var(--green)">Table headers and cells, navigation labels, form inputs, buttons, badges, captions. Inter is the default for everything in the platform interface. When in doubt, reach for Inter.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag teal">font-family: var(--font-ui)</span>
+            <span class="tag teal">400 body · 500 labels · 600 strong</span>
+            <span class="tag grey">Never 700+</span>
+            <span class="tag grey">Never Calibri</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Code -->
+        <div class="dt-result print" id="wfw-res-code" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--t900)">--font-mono · JetBrains Mono / Fira Code</div>
+          <p class="dt-res-body" style="color:var(--t900)">Code snippets, data values, tokens, API keys, hash strings. Use a monospace stack. Not defined in the three-stack system — add as a fourth utility variable if needed in the platform.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag teal">JetBrains Mono → Fira Code → Courier New</span>
+            <span class="tag grey">font-size: 12–13px</span>
+            <span class="tag grey">font-weight: 400</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Word/PDF export -->
+        <div class="dt-result cloud" id="wfw-res-word" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--amber)">--font-offline · Calibri</div>
+          <p class="dt-res-body" style="color:var(--amber)">Word documents and PDF reports sent directly to clients must use Calibri. It is the Office default — reports render exactly as authored on any client machine without font installation. Do not use Inter or Montserrat in Word exports.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">Calibri 11pt body</span>
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">Calibri 14pt headings</span>
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">line-height 1.5</span>
+            <span class="tag grey">Word / PDF only</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Server PDF -->
+        <div class="dt-result cloud" id="wfw-res-server" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--amber)">--font-offline · Calibri (embed in generator)</div>
+          <p class="dt-res-body" style="color:var(--amber)">For server-generated PDFs (ReportLab, Puppeteer, WeasyPrint), embed the Calibri TTF directly in your PDF generation stack. This ensures fidelity across all client environments. Use Inter only if the PDF is never opened in Word.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">Embed calibri.ttf directly</span>
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">11pt body · 14pt headings</span>
+            <span class="tag grey">ReportLab · Puppeteer · WeasyPrint</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Marketing -->
+        <div class="dt-result cloud" id="wfw-res-marketing" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--amber)">Gotham Medium via Cloud.typography</div>
+          <p class="dt-res-body" style="color:var(--amber)">Marketing and public-facing pages are the one context where Cloud.typography is acceptable — you control the environment and enterprise network restrictions don't apply. Ensure the domain is whitelisted, font-display: swap is set, and Montserrat is declared as fallback.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">Cloud.typography CDN</span>
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">Whitelist domain first</span>
+            <span class="tag" style="background:var(--amber-bg);color:var(--amber)">font-display: swap</span>
+            <span class="tag grey">Montserrat as fallback</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+        <!-- Result: Print -->
+        <div class="dt-result print" id="wfw-res-print" role="alert" aria-live="polite">
+          <div class="dt-res-title" style="color:var(--t900)">Gotham Medium — brand font, you control rendering</div>
+          <p class="dt-res-body" style="color:var(--t900)">For print, PowerPoint decks, and Oritain-authored materials, use Gotham Medium from the licensed brand asset library. You control rendering entirely — no CDN, no web licence needed. This is the brand font's natural home.</p>
+          <div class="tag-row" style="justify-content:center;margin-top:12px">
+            <span class="tag teal">Licensed OTF from brand assets</span>
+            <span class="tag teal">Gotham Medium only</span>
+            <span class="tag grey">No web embedding</span>
+            <span class="tag grey">PowerPoint · Print · PDF</span>
+          </div>
+          <button class="dt-reset-btn" onclick="wfwReset()">← Start again</button>
+        </div>
+
+      </div><!-- /wfw-tree -->
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PANEL 4: WEB FONT STRATEGY
+    ════════════════════════════════════════════════════ -->
+    <section class="tab-panel" id="panel-webfonts" role="tabpanel" aria-labelledby="tab-webfonts">
+      <h2 class="sec-title">Web font strategy for enterprise SaaS</h2>
+      <p class="sec-sub">Why Cloud.typography is a liability for the Oritain platform — and the right approach instead.</p>
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="callout amber" role="note">
+        <b>The core problem:</b> Cloud.typography is a third-party CDN dependency. For enterprise SaaS, every external dependency is a potential point of failure, a security review flag, and a network access problem. The risks below are not theoretical — they affect real Oritain clients today.
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card danger">
+          <h3>🔒 Network restrictions</h3>
+          <p>Enterprise and government clients run on locked-down networks that block external CDN requests by default. Cloud.typography fails silently — reverting to your fallback stack at the worst moment.</p>
+        </div>
+        <div class="info-card danger">
+          <h3>📋 SOC 2 &amp; security audits</h3>
+          <p>Third-party font CDNs are flagged as undeclared external data flows in SOC 2 and ISO 27001 audits. Every pageview pings Hoefler's servers — a data flow that must be declared and justified.</p>
+        </div>
+        <div class="info-card warning">
+          <h3>✈️ Air-gapped environments</h3>
+          <p>Some Oritain clients — food safety regulators, government agencies — operate in restricted environments with no external internet access. Cloud.typography will never load for these users.</p>
+        </div>
+        <div class="info-card warning">
+          <h3>🛡️ CSP headers</h3>
+          <p>Strict Content Security Policy headers block external font-src by default. Every environment (prod, staging, dev) needs explicit allowlisting — easy to miss, causes silent failures that are hard to debug.</p>
+        </div>
+        <div class="info-card warning">
+          <h3>📱 Mobile apps</h3>
+          <p>Cloud.typography is web-only. A React Native or native iOS/Android app needs a separate desktop/app licence and bundled font files — two licences, two delivery mechanisms, ongoing cost.</p>
+        </div>
+        <div class="info-card safe">
+          <h3>💡 The right approach: self-hosted Montserrat</h3>
+          <p>Montserrat Medium is the closest open-source geometric sans to Gotham. SIL OFL licensed, free forever, self-hosted. One woff2 file. No CDN. No subscription. No security flags. Works everywhere.</p>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--g900);margin-bottom:12px">Implementation checklist</h3>
+      <div class="checklist" id="checklist" role="list" aria-label="Implementation checklist"></div>
+
+      <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--g900);margin:20px 0 8px">Complete font setup — CSS</h3>
+      <div class="code-block" role="region" aria-label="Complete CSS font setup code">/* 1. Self-host Montserrat Medium */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/static/fonts/Montserrat-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 2. Self-host Inter variable font */
+@font-face {
+  font-family: 'Inter';
+  src: url('/static/fonts/Inter-Variable.woff2') format('woff2') tech(variations);
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3. Preload in HTML &lt;head&gt; */
+&lt;link rel="preload" href="/static/fonts/Montserrat-Medium.woff2" as="font" crossorigin&gt;
+&lt;link rel="preload" href="/static/fonts/Inter-Variable.woff2" as="font" crossorigin&gt;
+
+/* 4. CSS custom properties */
+:root {
+  --font-display: 'Montserrat', 'Gotham Medium', 'Century Gothic', sans-serif;
+  --font-ui:      'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-offline: 'Calibri', 'Carlito', Helvetica, Arial, sans-serif;
+}
+
+/* 5. Content Security Policy — no external font sources needed */
+Content-Security-Policy: font-src 'self';</div>
+
+      <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--g900);margin:20px 0 8px">Fallback chain — --font-display</h3>
+      <div class="chain-wrap" id="chain-wrap" role="list" aria-label="CSS fallback chain for display font"></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PANEL 5: RULES & CSS
+    ════════════════════════════════════════════════════ -->
+    <section class="tab-panel" id="panel-rules" role="tabpanel" aria-labelledby="tab-rules">
+      <h2 class="sec-title">Usage rules &amp; type scale</h2>
+      <p class="sec-sub">The rules every engineer and designer working on the Oritain platform must know.</p>
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="two-col">
+        <div class="rule-card">
+          <div class="rule-head do" id="do-head">✓ DO</div>
+          <div id="do-list" role="list" aria-labelledby="do-head"></div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-head dont" id="dont-head">✗ DON'T</div>
+          <div id="dont-list" role="list" aria-labelledby="dont-head"></div>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--g900);margin-bottom:12px">Type scale reference</h3>
+      <div class="scale-table" id="scale-table" role="table" aria-label="Type scale reference"></div>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <p>Oritain Platform v2 · Typography System · Internal Reference · Design team</p>
+  </footer>
+
+  <script>
+    // ── Tab switching ─────────────────────────────────────────────────
+    const panels = {'stacks':'panel-stacks','comparison':'panel-comparison','decision':'panel-decision','webfonts':'panel-webfonts','rules':'panel-rules'};
+    function showTab(id) {
+      Object.keys(panels).forEach(k => {
+        document.getElementById(panels[k]).classList.toggle('active', k===id);
+        const btn = document.getElementById('tab-'+k);
+        btn.setAttribute('aria-selected', k===id ? 'true' : 'false');
+      });
+    }
+
+    // ── Stack toggle ──────────────────────────────────────────────────
+    let openStack = null;
+    function toggleStack(name) {
+      const detail = document.getElementById('detail-'+name);
+      const row = document.getElementById('row-'+name);
+      const isOpen = openStack === name;
+      if (openStack) {
+        document.getElementById('detail-'+openStack).classList.remove('open');
+        document.getElementById('row-'+openStack).classList.remove('is-open');
+        document.getElementById('row-'+openStack).setAttribute('aria-expanded','false');
+      }
+      if (!isOpen) {
+        detail.classList.add('open');
+        row.classList.add('is-open');
+        row.setAttribute('aria-expanded','true');
+        openStack = name;
+      } else {
+        openStack = null;
+      }
+    }
+
+    // ── What font where? decision tree ──────────────────────────────
+    const wfwResults = {
+      'heading': 'wfw-res-heading',
+      'body':    'wfw-res-body',
+      'ui':      'wfw-res-ui',
+      'code':    'wfw-res-code',
+      'word':    'wfw-res-word',
+      'server':  'wfw-res-server',
+      'marketing':'wfw-res-marketing',
+      'print':   'wfw-res-print',
+    };
+    const wfwQ2Branches = ['platform','export'];
+
+    function wfw(q, answer) {
+      // Update button pressed state
+      const node = document.getElementById('wfw-' + q.replace('q2-','q2-'));
+      if (node) {
+        node.querySelectorAll('.dt-btn').forEach(b => {
+          b.classList.remove('chosen');
+          b.setAttribute('aria-pressed','false');
+        });
+      }
+      if (event && event.target) {
+        event.target.classList.add('chosen');
+        event.target.setAttribute('aria-pressed','true');
+      }
+
+      // Hide all results and sub-questions
+      Object.values(wfwResults).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('show');
+      });
+      ['wfw-arr-platform','wfw-q2-platform',
+       'wfw-arr-export','wfw-q2-export',
+       'wfw-arr-result'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+
+      if (q === 'q1') {
+        if (answer === 'platform') {
+          document.getElementById('wfw-arr-platform').style.display = 'block';
+          document.getElementById('wfw-q2-platform').style.display  = 'block';
+        } else if (answer === 'export') {
+          document.getElementById('wfw-arr-export').style.display = 'block';
+          document.getElementById('wfw-q2-export').style.display  = 'block';
+        } else {
+          // Direct result for marketing and print
+          document.getElementById('wfw-arr-result').style.display = 'block';
+          const resId = answer === 'marketing' ? 'wfw-res-marketing' : 'wfw-res-print';
+          document.getElementById(resId).classList.add('show');
+        }
+      } else if (q === 'q2-platform') {
+        document.getElementById('wfw-arr-result').style.display = 'block';
+        document.getElementById('wfw-res-' + answer).classList.add('show');
+      } else if (q === 'q2-export') {
+        document.getElementById('wfw-arr-result').style.display = 'block';
+        document.getElementById('wfw-res-' + answer).classList.add('show');
+      }
+    }
+
+    function wfwReset() {
+      Object.values(wfwResults).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('show');
+      });
+      ['wfw-arr-platform','wfw-q2-platform',
+       'wfw-arr-export','wfw-q2-export',
+       'wfw-arr-result'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      document.querySelectorAll('.dt-btn').forEach(b => {
+        b.classList.remove('chosen');
+        b.setAttribute('aria-pressed','false');
+      });
+    }
+
+    // ── Build checklist ───────────────────────────────────────────────
+    const checks = [
+      'Download Montserrat-Medium.woff2 and Inter-Variable.woff2',
+      'Add font files to /static/fonts/ in the platform repo',
+      'Add @font-face declarations with font-display: swap',
+      'Add <link rel="preload"> for both fonts in the base HTML template',
+      'Set CSS custom properties (--font-display, --font-ui, --font-offline)',
+      'Update Content Security Policy: font-src &quot;self&quot;',
+      'Remove any Cloud.typography or Google Fonts CDN script tags from platform code',
+      'Test with network throttled and with external CDN blocked',
+      'Verify rendering on iOS Safari, Chrome Android, and Edge (Windows)',
+      'Update the Figma component library to use Montserrat Medium for display tokens',
+    ];
+    const cl = document.getElementById('checklist');
+    checks.forEach((txt,i) => {
+      const div = document.createElement('div');
+      div.className = 'check-item'; div.role = 'listitem';
+      const cb = document.createElement('input');
+      cb.type='checkbox'; cb.className='check-cb'; cb.id='chk'+i;
+      cb.setAttribute('aria-label', txt);
+      const lbl = document.createElement('label');
+      lbl.className='check-label'; lbl.htmlFor='chk'+i; lbl.textContent=txt;
+      cb.addEventListener('change', function() {
+        div.classList.toggle('done', this.checked);
+      });
+      div.appendChild(cb); div.appendChild(lbl);
+      cl.appendChild(div);
+    });
+
+    // ── Build fallback chain ──────────────────────────────────────────
+    const chain = [
+      {'name':'"Montserrat"','note':'Primary · Self-hosted','bg':'var(--t700)','fg':'white'},
+      {'name':'"Gotham Medium"','note':'Licensed fallback','bg':'var(--t500)','fg':'white'},
+      {'name':'"Century Gothic"','note':'System geometric','bg':'var(--g700)','fg':'white'},
+      {'name':'"Trebuchet MS"','note':'Wide coverage','bg':'var(--g500)','fg':'white'},
+      {'name':'sans-serif','note':'OS catch-all','bg':'var(--g300)','fg':'var(--g700)'},
+    ];
+    const cw = document.getElementById('chain-wrap');
+    chain.forEach((c,i) => {
+      const div = document.createElement('div');
+      div.className='chain-item'; div.role='listitem';
+      div.style.background=c.bg;
+      div.innerHTML=`<div class="chain-name" style="color:${c.fg}">${c.name}</div><div class="chain-note" style="color:${c.fg}">${c.note}</div>`;
+      if(i<chain.length-1) div.innerHTML+=`<span class="chain-arrow" aria-hidden="true">›</span>`;
+      cw.appendChild(div);
+    });
+
+    // ── Build do/don't lists ──────────────────────────────────────────
+    const dos = [
+      'Use --font-display (Montserrat Medium) for all platform headings at 18px and above',
+      'Use --font-ui (Inter) as the default for all platform interface text',
+      'Self-host both Montserrat and Inter via your own CDN or app bundle',
+      'Use font-display: swap on all @font-face declarations',
+      'Serve .woff2 format only — smallest size, supported by all modern browsers',
+      'Preload display and UI fonts in &lt;head&gt; to prevent layout shift on first paint',
+      'Use Inter 400 for body, 500 for labels, 600 for strong hierarchy only',
+      'Use Calibri exclusively in Word/PDF exports — never in CSS or app code',
+      'Set Content Security Policy font-src to &quot;self&quot; — no external font sources needed',
+      'Test font loading with CDN blocked to simulate enterprise firewall conditions',
+      'Use Inter 400 at 14–15px with line-height 1.6 for all platform body text',
+      'Set max-width: 68ch on body text containers for optimal line length',
+      'Use Calibri 11pt in Word and PDF exports — it renders natively in Office',
+    ];
+    const donts = [
+      'Use Gotham or Cloud.typography anywhere in the platform or mobile app',
+      'Use any display font below 18px — legibility degrades in UI contexts',
+      'Use font-weight 700 or above in the UI — clashes with Oritain’s clean visual tone',
+      'Load multiple font weights — one weight per stack only',
+      'Use Calibri in any web or mobile UI component',
+      'Mix display and UI fonts within the same text element or component',
+      'Assume fonts loaded — always verify on enterprise demo environments',
+      'Load fonts from any external CDN in the platform (Google Fonts, Cloud.typography)',
+      'Forget to whitelist new domains in Cloud.typography if used on the marketing site',
+      'Skip the font-display: swap property — it causes invisible text on slow connections',
+      'Use Calibri for body text in the platform UI — it has no woff2 and renders poorly on screen',
+      'Use Inter in Word or PDF exports — it substitutes unpredictably on client machines',
+      'Go below line-height 1.5 for body text — it becomes cramped and hard to scan',
+    ];
+    const dl = document.getElementById('do-list');
+    const dntl = document.getElementById('dont-list');
+    dos.forEach(t => {
+      const div=document.createElement('div'); div.className='rule-item'; div.role='listitem';
+      div.innerHTML=`<span class="rule-icon do" aria-hidden="true">✓</span><span>${t}</span>`;
+      dl.appendChild(div);
+    });
+    donts.forEach(t => {
+      const div=document.createElement('div'); div.className='rule-item'; div.role='listitem';
+      div.innerHTML=`<span class="rule-icon dont" aria-hidden="true">✗</span><span>${t}</span>`;
+      dntl.appendChild(div);
+    });
+
+    // ── Build type scale ──────────────────────────────────────────────
+    const scale = [
+      {'token':'32 / 500','fam':'Montserrat','fw':600,'sz':'28px','label':'Gotham Medium','use':'Page title · hero stat'},
+      {'token':'24 / 500','fam':'Montserrat','fw':600,'sz':'22px','label':'Gotham Medium','use':'Section heading'},
+      {'token':'18 / 500','fam':'Montserrat','fw':600,'sz':'17px','label':'Gotham Medium','use':'Card title · modal heading'},
+      {'token':'14 / 500','fam':'Inter','fw':500,'sz':'14px','label':'Inter Medium','use':'Table header · nav label'},
+      {'token':'13 / 400','fam':'Inter','fw':400,'sz':'13px','label':'Inter Regular','use':'Table body · form input'},
+      {'token':'12 / 400','fam':'Inter','fw':400,'sz':'12px','label':'Inter Regular','use':'Caption · badge · metadata'},
+      {'token':'15 / 400','fam':'Inter','fw':400,'sz':'15px','label':'Inter Regular','use':'Body paragraph · report summary'},
+      {'token':'14 / 400','fam':'Inter','fw':400,'sz':'14px','label':'Inter Regular','use':'Compact body · description · tooltip'},
+      {'token':'13 / 400','fam':'Inter','fw':400,'sz':'13px','label':'Inter Regular','use':'Helper text · compact description'},
+    ];
+    const st = document.getElementById('scale-table');
+    scale.forEach((s,i) => {
+      const row=document.createElement('div');
+      row.className='scale-row'; row.role='row';
+      if(i%2===0) row.style.background='var(--g100)';
+      row.innerHTML=`
+        <div class="scale-token" role="cell"><span class="scale-badge">${s.token}</span></div>
+        <div class="scale-specimen" role="cell" aria-label="Type specimen"><span style="font-family:'${s.fam}',sans-serif;font-weight:${s.fw};font-size:${s.sz};color:var(--g900)">Authenticate every claim, every batch.</span></div>
+        <div class="scale-font" role="cell">${s.label}</div>
+        <div class="scale-use" role="cell">${s.use}</div>
+      `;
+      st.appendChild(row);
+    });
+
+    // ── Body text size toggle ─────────────────────────────────────────────
+    function setBodySize(size) {
+      document.getElementById('inter-specimen').style.fontSize = size + 'px';
+      document.getElementById('calibri-specimen').style.fontSize = size + 'px';
+      document.querySelectorAll('.size-btn').forEach(b => {
+        const isActive = b.textContent.trim() === size + 'px';
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+  </script>
+</body>
+</html>
