@@ -30,7 +30,7 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-ui);
-      background: var(--g300);
+      background: var(--white);
       color: var(--g900);
       font-size: 14px;
       line-height: 1.5;
@@ -128,8 +128,8 @@
     }
 
     /* ── Main content ─────────────────────────────────────── */
-    .main { padding: 32px 40px 48px; max-width: 960px; margin: 0 auto; }
-    .tab-panel { display: none; }
+    .main { padding: 0; width: 100%; }
+    .tab-panel { display: none; max-width: 960px; margin: 0 auto; padding: 32px 40px 48px; }
     .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform:none; } }
 
@@ -458,7 +458,8 @@
       .header { padding: 20px 20px 24px; }
       .header h1 { font-size: 22px; }
       .nav { padding: 0 16px; }
-      .main { padding: 20px 16px 40px; }
+      .main { padding: 0; }
+      .tab-panel { padding: 20px 16px 40px; }
       .stack-row { grid-template-columns: 110px 1fr; }
       .stack-var-col { display: none; }
       .detail-grid, .info-grid, .two-col { grid-template-columns: 1fr; }
@@ -552,6 +553,8 @@
     .win { color: var(--green); font-weight: 600; }
     .lose { color: var(--red); }
     .neutral { color: var(--amber); font-weight: 500; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -610,6 +613,7 @@
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-decision"    id="tab-decision"   onclick="showTab('decision')">What font where?</button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-webfonts"    id="tab-webfonts"   onclick="showTab('webfonts')">Web Font Strategy</button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-rules"       id="tab-rules"      onclick="showTab('rules')">Rules &amp; CSS</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-risk" id="tab-risk" onclick="showTab('risk')">⚠ Font Risk</button>
     </nav>
   </div>
 
@@ -1358,19 +1362,698 @@ Content-Security-Policy: font-src 'self';</div>
 
   </main>
 
+  <!-- FONT RISK — full width, outside main container -->
+  <div id="risk-fullwidth" style="display:none;width:100%;">
+    <section id="panel-risk" role="tabpanel" aria-labelledby="tab-risk" style="width:100%;">
+      <iframe
+        id="risk-iframe"
+        title="Font infrastructure risk analysis"
+        srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot; data-theme=&quot;dark&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>Gotham CDN Risk · Oritain v2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap');
+
+:root {
+  --teal:#23B1D8; --teal2:#16A3CB; --teal3:#0090B9;
+  --red:#E24B4A; --amber:#EF9F27; --green:#3DB87A;
+  --bg:#071521; --bg2:#0C1C2B; --bg3:#111F2F;
+  --border:rgba(255,255,255,0.07);
+  --b-teal:rgba(35,177,216,0.22); --b-red:rgba(226,75,74,0.28);
+  --b-amber:rgba(239,159,39,0.28); --b-green:rgba(61,184,122,0.25);
+  --text:#E4EDF5; --muted:#5E7A91; --dim:#2E4459;
+  --r:14px; --rs:8px;
+}
+[data-theme=&quot;light&quot;] {
+  --teal:#0090B9; --teal2:#007BA0; --teal3:#006A8C;
+  --red:#CC3A39; --amber:#C97E10; --green:#2A9960;
+  --bg:#F4F7FA; --bg2:#FFFFFF; --bg3:#EBF0F5;
+  --border:rgba(0,0,0,0.08);
+  --b-teal:rgba(0,144,185,0.2); --b-red:rgba(204,58,57,0.22);
+  --b-amber:rgba(201,126,16,0.22); --b-green:rgba(42,153,96,0.2);
+  --text:#071521; --muted:#4A6070; --dim:#AAB8C2;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:44px 44px;}
+.page{position:relative;z-index:1;width:100%;max-width:1100px;margin:0 auto;padding:40px 44px 80px;box-sizing:border-box;}
+
+/* THEME TOGGLE */
+.theme-bar{display:none!important;}
+.theme-bar:hover{border-color:var(--b-teal);}
+.tbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+.tbi{width:32px;height:18px;border-radius:9px;background:var(--bg3);border:0.5px solid var(--border);position:relative;transition:background .3s;flex-shrink:0;}
+.tbk{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:var(--teal);transition:transform .25s ease,background .3s;}
+[data-theme=&quot;light&quot;] .tbk{transform:translateX(14px);}
+
+/* HEADER */
+.eyebrow{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;}
+.ed{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 2s ease-in-out infinite;}
+h1{font-size:clamp(30px,4.5vw,50px);font-weight:300;letter-spacing:-.025em;line-height:1.12;color:var(--text);margin-bottom:14px;}
+h1 strong{font-weight:800;color:var(--teal);}
+.sub{font-size:15px;color:var(--muted);max-width:550px;margin-bottom:64px;line-height:1.75;}
+.sl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:18px;}
+
+/* FLOW */
+.fw{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:36px 32px 28px;margin-bottom:12px;position:relative;overflow:hidden;transition:background .3s,border-color .3s;}
+.fd{display:flex;align-items:center;}
+.fn{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fnb{width:118px;border:0.5px solid var(--border);border-radius:var(--rs);background:var(--bg3);padding:14px 12px 12px;text-align:center;position:relative;transition:transform .25s,border-color .25s,background .3s;}
+.fnb:hover{transform:translateY(-2px);}
+.fnb.safe{border-color:var(--b-teal);}
+.fnb.threat{border-color:var(--b-red);background:rgba(226,75,74,0.05);}
+[data-theme=&quot;light&quot;] .fnb.threat{background:rgba(204,58,57,0.04);}
+.fni{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.fni.t{background:rgba(35,177,216,0.12);}
+.fni.r{background:rgba(226,75,74,0.12);}
+[data-theme=&quot;light&quot;] .fni.t{background:rgba(0,144,185,0.1);}
+[data-theme=&quot;light&quot;] .fni.r{background:rgba(204,58,57,0.08);}
+.fnn{font-size:12px;font-weight:600;color:var(--text);}
+.fns{font-size:10px;color:var(--muted);margin-top:1px;}
+.fp{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;}
+.pt{background:var(--teal);animation:blink 1.8s ease-in-out infinite;}
+.pr{background:var(--red);animation:blink 1s ease-in-out infinite;}
+.cn{flex:1;position:relative;padding:0 4px;display:flex;flex-direction:column;gap:14px;justify-content:center;}
+.cl{position:relative;height:1.5px;}
+.ct{position:absolute;inset:0;background:var(--border);}
+.cf{position:absolute;top:0;left:-40%;height:1.5px;width:40%;border-radius:1px;}
+.cf.safe{background:linear-gradient(90deg,transparent,var(--teal3),transparent);animation:flow 1.8s linear infinite;}
+.cf.danger{background:linear-gradient(90deg,transparent,var(--red),transparent);animation:flow .85s linear infinite;}
+.clb{position:absolute;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.clb.safe{top:-14px;left:50%;transform:translateX(-50%);color:var(--teal2);}
+.clb.danger{bottom:-14px;left:50%;transform:translateX(-50%);color:var(--red);}
+
+/* IMPACT HEADER */
+.ih{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:28px;padding:32px 0 26px;border-bottom:0.5px solid var(--border);margin-bottom:0;}
+.iw{font-size:clamp(54px,8vw,92px);font-weight:800;letter-spacing:-.045em;line-height:.9;}
+.ir{color:var(--red);} .ia{color:var(--amber);} .ig{color:var(--green);}
+.id{font-size:14px;color:var(--muted);line-height:1.75;padding-bottom:4px;max-width:400px;}
+
+/* LEAK ROWS */
+.lrows{display:flex;flex-direction:column;gap:3px;margin-top:3px;}
+.lr{background:var(--bg2);border:0.5px solid var(--b-red);border-radius:var(--r);overflow:hidden;
+  display:grid;grid-template-columns:300px 1fr;min-height:180px;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .45s ease,transform .45s ease,box-shadow .25s,border-color .25s,background .3s;}
+.lr.visible{opacity:1;transform:none;}
+.lr:hover{border-color:rgba(226,75,74,0.55);box-shadow:0 4px 36px rgba(226,75,74,0.07);}
+.lrl{padding:28px 28px 24px;border-right:0.5px solid var(--b-red);background:rgba(226,75,74,0.03);display:flex;flex-direction:column;justify-content:space-between;transition:background .3s;}
+[data-theme=&quot;light&quot;] .lrl{background:rgba(204,58,57,0.03);}
+.lrn{font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.2;margin-bottom:8px;}
+.lrtype{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-bottom:8px;}
+.lrchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:14px;}
+.chip{font-size:11px;font-weight:600;letter-spacing:.03em;padding:5px 11px;border-radius:5px;}
+.cr{background:rgba(226,75,74,0.1);color:var(--red);border:0.5px solid rgba(226,75,74,0.25);}
+.ca{background:rgba(239,159,39,0.1);color:var(--amber);border:0.5px solid rgba(239,159,39,0.25);}
+.ct2{background:rgba(35,177,216,0.1);color:var(--teal);border:0.5px solid rgba(35,177,216,0.25);}
+.cg{background:rgba(61,184,122,0.1);color:var(--green);border:0.5px solid rgba(61,184,122,0.25);}
+[data-theme=&quot;light&quot;] .cr{background:rgba(204,58,57,0.07);}
+[data-theme=&quot;light&quot;] .ca{background:rgba(201,126,16,0.08);}
+[data-theme=&quot;light&quot;] .ct2{background:rgba(0,144,185,0.08);}
+[data-theme=&quot;light&quot;] .cg{background:rgba(42,153,96,0.08);}
+.sev{display:flex;align-items:center;gap:7px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border);}
+.sd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.svl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;}
+.lrr{padding:28px 32px;display:flex;flex-direction:column;justify-content:space-between;}
+.lrvis{flex:1;position:relative;min-height:86px;}
+.lrbody{font-size:13px;color:var(--muted);line-height:1.75;margin-top:14px;}
+
+/* COMPLIANCE ROWS */
+.crows{display:flex;flex-direction:column;gap:3px;margin-top:3px;}
+.crow{background:var(--bg2);border:0.5px solid var(--b-amber);border-radius:var(--r);overflow:hidden;
+  display:grid;grid-template-columns:260px 1fr;min-height:160px;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .45s ease,transform .45s ease,box-shadow .25s,background .3s;}
+.crow.visible{opacity:1;transform:none;}
+.crow:hover{border-color:rgba(239,159,39,0.5);box-shadow:0 4px 32px rgba(239,159,39,0.06);}
+.crowl{padding:28px 24px;border-right:0.5px solid var(--b-amber);background:rgba(239,159,39,0.03);display:flex;flex-direction:column;gap:12px;justify-content:center;transition:background .3s;}
+[data-theme=&quot;light&quot;] .crowl{background:rgba(201,126,16,0.03);}
+.cpill{display:inline-block;font-size:17px;font-weight:800;letter-spacing:.05em;padding:7px 16px;border-radius:6px;
+  background:rgba(239,159,39,0.1);color:var(--amber);border:0.5px solid rgba(239,159,39,0.3);width:fit-content;}
+[data-theme=&quot;light&quot;] .cpill{background:rgba(201,126,16,0.08);}
+.ccons{display:flex;flex-direction:column;gap:5px;}
+.ccon{font-size:11px;font-weight:500;color:rgba(239,159,39,0.55);display:flex;align-items:center;gap:7px;}
+[data-theme=&quot;light&quot;] .ccon{color:rgba(201,126,16,0.6);}
+.ccon::before{content:'';width:3px;height:3px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.crowr{padding:28px 32px;display:flex;flex-direction:column;justify-content:space-between;}
+.cbody{font-size:13px;color:var(--muted);line-height:1.75;}
+.cimpact{margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--amber);opacity:.65;}
+
+/* RESOLUTION */
+.rgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.rc{background:var(--bg2);border-radius:var(--r);padding:26px 22px 22px;position:relative;overflow:hidden;
+  opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease,box-shadow .25s,background .3s;}
+.rc.visible{opacity:1;transform:none;}
+.rc:hover{box-shadow:0 6px 30px rgba(0,0,0,.18);}
+.rc.safe{border:0.5px solid var(--b-teal);}
+.rc.safe::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+.rc.warn{border:0.5px solid var(--b-amber);}
+.rc.warn::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);}
+.rcrole{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+.rt{color:var(--teal);} .ra{color:var(--amber);}
+.rcname{font-size:28px;font-weight:800;letter-spacing:-.025em;color:var(--text);margin-bottom:8px;}
+.rcdet{font-size:12px;color:var(--muted);line-height:1.6;}
+.rbadge{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;letter-spacing:.05em;padding:5px 12px;border-radius:5px;}
+.rbt{background:rgba(35,177,216,0.1);color:var(--teal);border:0.5px solid rgba(35,177,216,0.25);}
+.rba{background:rgba(239,159,39,0.1);color:var(--amber);border:0.5px solid rgba(239,159,39,0.25);}
+[data-theme=&quot;light&quot;] .rbt{background:rgba(0,144,185,0.08);}
+[data-theme=&quot;light&quot;] .rba{background:rgba(201,126,16,0.08);}
+
+/* CALLOUT */
+.callout{border-left:2px solid var(--teal);border-radius:0 var(--rs) var(--rs) 0;background:rgba(35,177,216,0.05);padding:16px 20px;font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:10px;transition:background .3s;}
+.callout.warn{border-left-color:var(--amber);background:rgba(239,159,39,0.05);}
+.callout strong{color:var(--text);font-weight:600;}
+.callout code{font-size:11px;background:var(--bg3);padding:1px 6px;border-radius:3px;font-family:monospace;}
+.rule{border:none;border-top:0.5px solid var(--border);margin:52px 0 32px;}
+.footer{display:flex;gap:10px;align-items:center;padding-top:20px;border-top:0.5px solid var(--border);font-size:11px;color:var(--dim);}
+.fdot{width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0;}
+
+/* ANIMS */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.22}}
+@keyframes flow{0%{left:-40%}100%{left:140%}}
+@keyframes fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes ping{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+@keyframes scan{0%,100%{transform:translateY(0)}50%{transform:translateY(38px)}}
+@keyframes bar-in{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1)}}
+.au{opacity:0;animation:fade-up .55s ease forwards;}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}.d5{animation-delay:.45s}
+</style>
+</head>
+<body>
+
+<div class=&quot;theme-bar&quot; onclick=&quot;toggleTheme()&quot;>
+  <div class=&quot;tbi&quot;><div class=&quot;tbk&quot;></div></div>
+  <span class=&quot;tbl&quot; id=&quot;tbl&quot;>Dark</span>
+</div>
+
+<div class=&quot;page&quot;>
+
+  <div class=&quot;eyebrow au d1&quot;><span class=&quot;ed&quot;></span>Typography infrastructure · Risk overview</div>
+  <h1 class=&quot;au d2&quot;>Why a <strong>Gotham CDN</strong><br>is a liability for Oritain v2</h1>
+  <p class=&quot;sub au d3&quot;>Every page load fires a font request to a third-party CDN — entirely outside your infrastructure boundary. On a data-heavy enterprise SaaS handling supply chain provenance, that's not a minor inconvenience.</p>
+
+  <!-- 01 FLOW -->
+  <p class=&quot;sl au d4&quot;>01 · The request split</p>
+  <div class=&quot;fw au d5&quot;>
+    <div class=&quot;fd&quot;>
+      <div class=&quot;fn&quot;>
+        <div class=&quot;fnb safe&quot;>
+          <span class=&quot;fp pt&quot;></span>
+          <div class=&quot;fni t&quot;><svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot;><rect x=&quot;1&quot; y=&quot;2&quot; width=&quot;14&quot; height=&quot;10&quot; rx=&quot;2&quot; stroke=&quot;#23B1D8&quot; stroke-width=&quot;1.2&quot;/><path d=&quot;M5 14h6M8 12v2&quot; stroke=&quot;#23B1D8&quot; stroke-width=&quot;1.2&quot; stroke-linecap=&quot;round&quot;/></svg></div>
+          <div class=&quot;fnn&quot;>Browser</div><div class=&quot;fns&quot;>User session</div>
+        </div>
+      </div>
+      <div class=&quot;cn&quot; style=&quot;flex:1.1&quot;>
+        <div class=&quot;cl&quot;><div class=&quot;ct&quot;></div><div class=&quot;cf safe&quot;></div><span class=&quot;clb safe&quot;>API data</span></div>
+      </div>
+      <div class=&quot;fn&quot;>
+        <div class=&quot;fnb safe&quot;>
+          <div class=&quot;fni t&quot;><svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot;><rect x=&quot;2&quot; y=&quot;2&quot; width=&quot;12&quot; height=&quot;12&quot; rx=&quot;2&quot; stroke=&quot;#23B1D8&quot; stroke-width=&quot;1.2&quot;/><path d=&quot;M5 8h6M8 5v6&quot; stroke=&quot;#23B1D8&quot; stroke-width=&quot;1.2&quot; stroke-linecap=&quot;round&quot;/></svg></div>
+          <div class=&quot;fnn&quot;>Oritain v2</div><div class=&quot;fns&quot;>Your servers</div>
+        </div>
+      </div>
+      <div class=&quot;cn&quot; style=&quot;flex:1.5&quot;>
+        <div class=&quot;cl&quot;><div class=&quot;ct&quot;></div><div class=&quot;cf safe&quot;></div><span class=&quot;clb safe&quot;>controlled</span></div>
+        <div class=&quot;cl&quot;><div class=&quot;ct&quot;></div><div class=&quot;cf danger&quot;></div><span class=&quot;clb danger&quot;>leaks here ↓</span></div>
+      </div>
+      <div class=&quot;fn&quot;>
+        <div class=&quot;fnb threat&quot;>
+          <span class=&quot;fp pr&quot;></span>
+          <div class=&quot;fni r&quot;><svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot;><path d=&quot;M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z&quot; stroke=&quot;#E24B4A&quot; stroke-width=&quot;1.2&quot;/><path d=&quot;M8 7v2.5M8 5.5v.5&quot; stroke=&quot;#E24B4A&quot; stroke-width=&quot;1.4&quot; stroke-linecap=&quot;round&quot;/></svg></div>
+          <div class=&quot;fnn&quot; style=&quot;color:var(--red)&quot;>Gotham CDN</div><div class=&quot;fns&quot;>Third-party</div>
+        </div>
+      </div>
+    </div>
+    <p style=&quot;margin-top:22px;font-size:12px;color:var(--muted);line-height:1.65;padding-top:18px;border-top:0.5px solid var(--border);&quot;>Every page load fires two paths simultaneously — one to your controlled servers, one silently to a third-party CDN for the Gotham font files. That second path carries metadata your team never consented to share.</p>
+  </div>
+
+  <!-- 02 EXPOSED -->
+  <hr class=&quot;rule&quot;>
+  <p class=&quot;sl&quot;>02 · Data exposure</p>
+  <div class=&quot;ih au&quot;>
+    <div class=&quot;iw ir&quot;>EXPOSED.</div>
+    <p class=&quot;id&quot;>Four categories of client metadata leave your infrastructure boundary on every single page load — silently, automatically, without consent.</p>
+  </div>
+
+  <div class=&quot;lrows&quot;>
+
+    <div class=&quot;lr&quot; data-observe>
+      <div class=&quot;lrl&quot;>
+        <div>
+          <div class=&quot;lrtype&quot; style=&quot;color:var(--red)&quot;>Leak type 01</div>
+          <div class=&quot;lrn&quot;>IP Address</div>
+        </div>
+        <div class=&quot;lrchips&quot;>
+          <span class=&quot;chip cr&quot;>Office location</span>
+          <span class=&quot;chip cr&quot;>Country origin</span>
+          <span class=&quot;chip cr&quot;>Activity map</span>
+        </div>
+        <div class=&quot;sev&quot;>
+          <span class=&quot;sd&quot; style=&quot;background:var(--red)&quot;></span>
+          <span class=&quot;svl&quot; style=&quot;color:var(--red)&quot;>Critical severity</span>
+        </div>
+      </div>
+      <div class=&quot;lrr&quot;>
+        <div class=&quot;lrvis&quot;>
+          <svg width=&quot;100%&quot; height=&quot;86&quot; viewBox=&quot;0 0 540 86&quot; fill=&quot;none&quot;>
+            <circle cx=&quot;90&quot; cy=&quot;43&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.2)&quot;/>
+            <circle cx=&quot;130&quot; cy=&quot;30&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.2)&quot;/>
+            <circle cx=&quot;110&quot; cy=&quot;58&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.2)&quot;/>
+            <circle cx=&quot;200&quot; cy=&quot;36&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.18)&quot;/>
+            <circle cx=&quot;240&quot; cy=&quot;55&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.18)&quot;/>
+            <circle cx=&quot;350&quot; cy=&quot;33&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.15)&quot;/>
+            <circle cx=&quot;400&quot; cy=&quot;60&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.15)&quot;/>
+            <circle cx=&quot;460&quot; cy=&quot;38&quot; r=&quot;1.5&quot; fill=&quot;rgba(226,75,74,0.12)&quot;/>
+            <circle cx=&quot;270&quot; cy=&quot;43&quot; r=&quot;22&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;0.5&quot; stroke-dasharray=&quot;3 3&quot; opacity=&quot;.3&quot;/>
+            <circle cx=&quot;270&quot; cy=&quot;43&quot; r=&quot;12&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;1&quot; opacity=&quot;.5&quot;/>
+            <circle cx=&quot;270&quot; cy=&quot;43&quot; r=&quot;4&quot; fill=&quot;var(--red)&quot; opacity=&quot;.85&quot;/>
+            <circle cx=&quot;270&quot; cy=&quot;43&quot; r=&quot;30&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;0.5&quot; opacity=&quot;0&quot; style=&quot;animation:ping 2.2s ease-out infinite&quot;/>
+            <circle cx=&quot;270&quot; cy=&quot;43&quot; r=&quot;42&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;0.5&quot; opacity=&quot;0&quot; style=&quot;animation:ping 2.2s ease-out infinite .65s&quot;/>
+            <line x1=&quot;282&quot; y1=&quot;35&quot; x2=&quot;440&quot; y2=&quot;14&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;0.6&quot; stroke-dasharray=&quot;3 2&quot; opacity=&quot;.4&quot;/>
+            <circle cx=&quot;440&quot; cy=&quot;14&quot; r=&quot;3&quot; fill=&quot;var(--red)&quot; opacity=&quot;.5&quot;/>
+            <text x=&quot;447&quot; y=&quot;18&quot; font-size=&quot;9&quot; fill=&quot;rgba(226,75,74,0.5)&quot; font-family=&quot;Inter,sans-serif&quot; font-weight=&quot;700&quot; letter-spacing=&quot;.07em&quot;>CDN</text>
+          </svg>
+        </div>
+        <div class=&quot;lrbody&quot;>Office, field operative region, or country location is pinpointed on every load. Accumulated across thousands of sessions this becomes a complete client activity map — which offices are active, which markets are under investigation, when operators are working.</div>
+      </div>
+    </div>
+
+    <div class=&quot;lr&quot; data-observe>
+      <div class=&quot;lrl&quot;>
+        <div>
+          <div class=&quot;lrtype&quot; style=&quot;color:var(--red)&quot;>Leak type 02</div>
+          <div class=&quot;lrn&quot;>Referrer Header</div>
+        </div>
+        <div class=&quot;lrchips&quot;>
+          <span class=&quot;chip cr&quot;>Client IDs</span>
+          <span class=&quot;chip cr&quot;>Route paths</span>
+          <span class=&quot;chip cr&quot;>Report identifiers</span>
+        </div>
+        <div class=&quot;sev&quot;>
+          <span class=&quot;sd&quot; style=&quot;background:var(--red)&quot;></span>
+          <span class=&quot;svl&quot; style=&quot;color:var(--red)&quot;>Critical severity</span>
+        </div>
+      </div>
+      <div class=&quot;lrr&quot;>
+        <div class=&quot;lrvis&quot;>
+          <svg width=&quot;100%&quot; height=&quot;86&quot; viewBox=&quot;0 0 540 86&quot; fill=&quot;none&quot;>
+            <rect x=&quot;10&quot; y=&quot;24&quot; width=&quot;480&quot; height=&quot;30&quot; rx=&quot;4&quot; stroke=&quot;rgba(226,75,74,0.25)&quot; stroke-width=&quot;0.5&quot; fill=&quot;rgba(226,75,74,0.03)&quot;/>
+            <text x=&quot;20&quot; y=&quot;43&quot; font-size=&quot;10&quot; fill=&quot;rgba(226,75,74,0.35)&quot; font-family=&quot;monospace&quot;>https://app.oritain.com/</text>
+            <text x=&quot;224&quot; y=&quot;43&quot; font-size=&quot;10&quot; fill=&quot;var(--red)&quot; font-family=&quot;monospace&quot; font-weight=&quot;700&quot;>client/NZL-0142/trace</text>
+            <text x=&quot;10&quot; y=&quot;16&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.4)&quot; font-family=&quot;Inter,sans-serif&quot; font-weight=&quot;700&quot; letter-spacing=&quot;.08em&quot;>HTTP REFERER → EXTERNAL CDN SERVER</text>
+            <path d=&quot;M270 54 L270 72 L470 72&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;0.7&quot; stroke-dasharray=&quot;4 2&quot; opacity=&quot;.45&quot; fill=&quot;none&quot;/>
+            <circle cx=&quot;470&quot; cy=&quot;72&quot; r=&quot;3&quot; fill=&quot;var(--red)&quot; opacity=&quot;.6&quot;/>
+            <text x=&quot;476&quot; y=&quot;76&quot; font-size=&quot;9&quot; fill=&quot;rgba(226,75,74,0.5)&quot; font-family=&quot;Inter,sans-serif&quot; font-weight=&quot;600&quot;>CDN receives full URL</text>
+          </svg>
+        </div>
+        <div class=&quot;lrbody&quot;>The full page URL — including client identifiers, report paths, and query parameters — travels in the HTTP Referer header to an external server on every font request. No opt-out, no configuration. It's browser-native behaviour.</div>
+      </div>
+    </div>
+
+    <div class=&quot;lr&quot; data-observe style=&quot;border-color:var(--b-amber)&quot;>
+      <div class=&quot;lrl&quot; style=&quot;border-right-color:var(--b-amber);background:rgba(239,159,39,0.03)&quot;>
+        <div>
+          <div class=&quot;lrtype&quot; style=&quot;color:var(--amber)&quot;>Leak type 03</div>
+          <div class=&quot;lrn&quot;>User-Agent &amp; Fingerprint</div>
+        </div>
+        <div class=&quot;lrchips&quot;>
+          <span class=&quot;chip ca&quot;>Browser + OS</span>
+          <span class=&quot;chip ca&quot;>Device class</span>
+          <span class=&quot;chip ca&quot;>Client profile</span>
+        </div>
+        <div class=&quot;sev&quot;>
+          <span class=&quot;sd&quot; style=&quot;background:var(--amber)&quot;></span>
+          <span class=&quot;svl&quot; style=&quot;color:var(--amber)&quot;>High severity</span>
+        </div>
+      </div>
+      <div class=&quot;lrr&quot;>
+        <div class=&quot;lrvis&quot;>
+          <svg width=&quot;100%&quot; height=&quot;86&quot; viewBox=&quot;0 0 540 86&quot; fill=&quot;none&quot;>
+            <path d=&quot;M210 78 Q206 60 215 45 Q224 32 234 45 Q244 60 240 78&quot; stroke=&quot;rgba(226,75,74,0.12)&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot;/>
+            <path d=&quot;M202 80 Q195 56 208 38 Q226 22 242 38 Q255 56 248 80&quot; stroke=&quot;rgba(226,75,74,0.18)&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot;/>
+            <path d=&quot;M194 82 Q184 52 200 32 Q224 12 248 32 Q264 52 256 82&quot; stroke=&quot;rgba(226,75,74,0.24)&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot;/>
+            <path d=&quot;M186 84 Q173 48 192 26 Q224 4 256 26 Q275 48 264 84&quot; stroke=&quot;rgba(226,75,74,0.18)&quot; stroke-width=&quot;1.5&quot; fill=&quot;none&quot;/>
+            <line x1=&quot;168&quot; y1=&quot;50&quot; x2=&quot;280&quot; y2=&quot;50&quot; stroke=&quot;var(--red)&quot; stroke-width=&quot;1&quot; opacity=&quot;.35&quot; style=&quot;animation:scan 2.4s ease-in-out infinite&quot;/>
+            <rect x=&quot;298&quot; y=&quot;18&quot; width=&quot;138&quot; height=&quot;52&quot; rx=&quot;5&quot; fill=&quot;rgba(226,75,74,0.04)&quot; stroke=&quot;rgba(226,75,74,0.2)&quot; stroke-width=&quot;0.5&quot;/>
+            <text x=&quot;308&quot; y=&quot;34&quot; font-size=&quot;9&quot; fill=&quot;rgba(226,75,74,0.55)&quot; font-family=&quot;monospace&quot;>Chrome 124</text>
+            <text x=&quot;308&quot; y=&quot;47&quot; font-size=&quot;9&quot; fill=&quot;rgba(226,75,74,0.55)&quot; font-family=&quot;monospace&quot;>macOS 14.4</text>
+            <text x=&quot;308&quot; y=&quot;60&quot; font-size=&quot;9&quot; fill=&quot;rgba(226,75,74,0.55)&quot; font-family=&quot;monospace&quot;>Retina 1440×900</text>
+            <line x1=&quot;280&quot; y1=&quot;36&quot; x2=&quot;298&quot; y2=&quot;34&quot; stroke=&quot;rgba(226,75,74,0.25)&quot; stroke-width=&quot;0.6&quot;/>
+            <line x1=&quot;280&quot; y1=&quot;50&quot; x2=&quot;298&quot; y2=&quot;47&quot; stroke=&quot;rgba(226,75,74,0.25)&quot; stroke-width=&quot;0.6&quot;/>
+            <line x1=&quot;280&quot; y1=&quot;64&quot; x2=&quot;298&quot; y2=&quot;60&quot; stroke=&quot;rgba(226,75,74,0.25)&quot; stroke-width=&quot;0.6&quot;/>
+          </svg>
+        </div>
+        <div class=&quot;lrbody&quot;>Browser, OS, screen size, and device class — combined with IP and timing from the same CDN log — builds a fully traceable client profile without a single line of tracking code written by your team.</div>
+      </div>
+    </div>
+
+    <div class=&quot;lr&quot; data-observe style=&quot;border-color:var(--b-amber)&quot;>
+      <div class=&quot;lrl&quot; style=&quot;border-right-color:var(--b-amber);background:rgba(239,159,39,0.03)&quot;>
+        <div>
+          <div class=&quot;lrtype&quot; style=&quot;color:var(--amber)&quot;>Leak type 04</div>
+          <div class=&quot;lrn&quot;>Session Timing</div>
+        </div>
+        <div class=&quot;lrchips&quot;>
+          <span class=&quot;chip ca&quot;>Active hours</span>
+          <span class=&quot;chip ca&quot;>Op cycles</span>
+          <span class=&quot;chip ca&quot;>Seasonal intel</span>
+        </div>
+        <div class=&quot;sev&quot;>
+          <span class=&quot;sd&quot; style=&quot;background:var(--amber)&quot;></span>
+          <span class=&quot;svl&quot; style=&quot;color:var(--amber)&quot;>High severity</span>
+        </div>
+      </div>
+      <div class=&quot;lrr&quot;>
+        <div class=&quot;lrvis&quot;>
+          <svg width=&quot;100%&quot; height=&quot;86&quot; viewBox=&quot;0 0 540 86&quot; fill=&quot;none&quot;>
+            <text x=&quot;10&quot; y=&quot;12&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.4)&quot; font-family=&quot;Inter,sans-serif&quot; font-weight=&quot;700&quot; letter-spacing=&quot;.1em&quot;>SESSION ACTIVITY PATTERN VISIBLE TO CDN</text>
+            <text x=&quot;10&quot;  y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Mon</text>
+            <text x=&quot;78&quot;  y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Tue</text>
+            <text x=&quot;146&quot; y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Wed</text>
+            <text x=&quot;214&quot; y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Thu</text>
+            <text x=&quot;282&quot; y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Fri</text>
+            <text x=&quot;350&quot; y=&quot;80&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.3)&quot; font-family=&quot;monospace&quot;>Sat</text>
+            <rect x=&quot;10&quot;  y=&quot;58&quot; width=&quot;50&quot; height=&quot;16&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.2)&quot; style=&quot;animation:bar-in .8s ease .1s both&quot;/>
+            <rect x=&quot;78&quot;  y=&quot;42&quot; width=&quot;50&quot; height=&quot;32&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.3)&quot; style=&quot;animation:bar-in .8s ease .2s both&quot;/>
+            <rect x=&quot;146&quot; y=&quot;50&quot; width=&quot;50&quot; height=&quot;24&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.28)&quot; style=&quot;animation:bar-in .8s ease .3s both&quot;/>
+            <rect x=&quot;214&quot; y=&quot;26&quot; width=&quot;50&quot; height=&quot;48&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.45)&quot; style=&quot;animation:bar-in .8s ease .4s both&quot;/>
+            <rect x=&quot;282&quot; y=&quot;20&quot; width=&quot;50&quot; height=&quot;54&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.55)&quot; style=&quot;animation:bar-in .8s ease .5s both&quot;/>
+            <rect x=&quot;350&quot; y=&quot;50&quot; width=&quot;50&quot; height=&quot;24&quot; rx=&quot;2&quot; fill=&quot;rgba(226,75,74,0.18)&quot; style=&quot;animation:bar-in .8s ease .6s both&quot;/>
+            <text x=&quot;286&quot; y=&quot;16&quot; font-size=&quot;8&quot; font-weight=&quot;700&quot; fill=&quot;rgba(226,75,74,0.65)&quot; font-family=&quot;monospace&quot;>↑ harvest peak</text>
+            <line x1=&quot;420&quot; y1=&quot;20&quot; x2=&quot;420&quot; y2=&quot;72&quot; stroke=&quot;rgba(226,75,74,0.1)&quot; stroke-width=&quot;0.5&quot; stroke-dasharray=&quot;3 2&quot;/>
+            <text x=&quot;428&quot; y=&quot;40&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.35)&quot; font-family=&quot;monospace&quot;>harvest</text>
+            <text x=&quot;428&quot; y=&quot;52&quot; font-size=&quot;8&quot; fill=&quot;rgba(226,75,74,0.35)&quot; font-family=&quot;monospace&quot;>window</text>
+          </svg>
+        </div>
+        <div class=&quot;lrbody&quot;>Request timestamps reveal exactly when clients are active — harvest investigation cycles, compliance filing windows, active origin trace operations. For Oritain's agri and pharma users, this operational pattern is itself sensitive intelligence.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class=&quot;callout&quot; style=&quot;margin-top:12px&quot;>
+    <strong>Scale multiplier.</strong> Oritain v2 is data-heavy — dashboard views, report pages, compliance screens, origin trace flows. Each one fires a CDN request. At enterprise scale that's thousands of metadata exposures per day, from clients who contractually expect confidentiality.
+  </div>
+
+  <!-- 03 BREACH -->
+  <hr class=&quot;rule&quot;>
+  <p class=&quot;sl&quot;>03 · Compliance exposure</p>
+  <div class=&quot;ih au&quot;>
+    <div class=&quot;iw ia&quot;>BREACH.</div>
+    <p class=&quot;id&quot;>Three independent compliance frameworks violated by a single unregistered third-party font request.</p>
+  </div>
+
+  <div class=&quot;crows&quot;>
+
+    <div class=&quot;crow&quot; data-observe>
+      <div class=&quot;crowl&quot;>
+        <span class=&quot;cpill&quot;>GDPR</span>
+        <div class=&quot;ccons&quot;>
+          <span class=&quot;ccon&quot;>Article 28 violation</span>
+          <span class=&quot;ccon&quot;>No DPA with CDN provider</span>
+          <span class=&quot;ccon&quot;>EU data transferred without consent</span>
+        </div>
+      </div>
+      <div class=&quot;crowr&quot;>
+        <p class=&quot;cbody&quot;>Third-party font requests are data transfers under EU law. Without a Data Processing Agreement with the CDN provider, every EU client session is an unregistered, unconsented transfer. This is an ongoing Article 28 violation occurring on every page load, for every EU-based client.</p>
+        <div class=&quot;cimpact&quot;>→ Fines up to 4% of global annual revenue</div>
+      </div>
+    </div>
+
+    <div class=&quot;crow&quot; data-observe>
+      <div class=&quot;crowl&quot;>
+        <span class=&quot;cpill&quot;>SOC 2</span>
+        <div class=&quot;ccons&quot;>
+          <span class=&quot;ccon&quot;>Uncontrolled data egress</span>
+          <span class=&quot;ccon&quot;>Not in vendor register</span>
+          <span class=&quot;ccon&quot;>Flagged during audit</span>
+        </div>
+      </div>
+      <div class=&quot;crowr&quot;>
+        <p class=&quot;cbody&quot;>External asset fetches are uncontrolled data egress events. Any third-party request not documented in your vendor register is flagged during SOC 2 audit. Self-hosting eliminates this surface entirely — the request simply doesn't appear in the audit trail.</p>
+        <div class=&quot;cimpact&quot;>→ SOC 2 Type II certification at risk</div>
+      </div>
+    </div>
+
+    <div class=&quot;crow&quot; data-observe>
+      <div class=&quot;crowl&quot;>
+        <span class=&quot;cpill&quot;>Client SLAs</span>
+        <div class=&quot;ccons&quot;>
+          <span class=&quot;ccon&quot;>Infrastructure boundary breached</span>
+          <span class=&quot;ccon&quot;>Silent on every single load</span>
+          <span class=&quot;ccon&quot;>Contractual breach trigger</span>
+        </div>
+      </div>
+      <div class=&quot;crowr&quot;>
+        <p class=&quot;cbody&quot;>Enterprise clients in agri, pharma, and supply chain require that no session metadata leaves their contracted infrastructure boundary. A font CDN request breaks this silently — not as a system failure, but as standard browser behaviour. Every load. Every day. Without notification.</p>
+        <div class=&quot;cimpact&quot;>→ Contract termination clause trigger</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 04 SOLVED -->
+  <hr class=&quot;rule&quot;>
+  <p class=&quot;sl&quot;>04 · Resolution — font stack decisions</p>
+  <div class=&quot;ih au&quot; style=&quot;margin-bottom:4px&quot;>
+    <div class=&quot;iw ig&quot;>SOLVED.</div>
+    <p class=&quot;id&quot;>The CDN risk is real but conditional. Here's exactly what changes — and what doesn't.</p>
+  </div>
+
+  <!-- GOTHAM ROW — full width, side by side split -->
+  <div style=&quot;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:3px;background:.3s;&quot; class=&quot;gotham-row res-reveal&quot;>
+
+    <!-- Header band -->
+    <div style=&quot;padding:20px 28px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;&quot;>
+      <div style=&quot;display:flex;align-items:center;gap:14px;&quot;>
+        <span style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)&quot;>Display / Headers · Marketing + Platform</span>
+      </div>
+      <div style=&quot;display:flex;gap:8px;align-items:center;&quot;>
+        <span style=&quot;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em&quot;>Implementation decides the risk:</span>
+        <span class=&quot;chip cg&quot;>self-hosted = safe</span>
+        <span class=&quot;chip ca&quot;>CDN-loaded = risk</span>
+      </div>
+    </div>
+
+    <!-- Font name bar -->
+    <div style=&quot;padding:22px 28px 0;display:flex;align-items:baseline;gap:16px;&quot;>
+      <div style=&quot;font-size:42px;font-weight:800;letter-spacing:-.03em;color:var(--text);&quot;>Gotham</div>
+      <div style=&quot;font-size:13px;color:var(--muted);padding-bottom:6px;&quot;>Display · Brand · Headers ≥ 18px</div>
+    </div>
+
+    <!-- Two column split -->
+    <div style=&quot;display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0 0 0 0;&quot;>
+
+      <!-- LEFT: self-hosted = safe -->
+      <div style=&quot;padding:20px 28px 28px;border-right:0.5px solid var(--border);position:relative;&quot;>
+        <div style=&quot;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);&quot;></div>
+        <div style=&quot;display:flex;align-items:center;gap:8px;margin-bottom:14px;&quot;>
+          <span style=&quot;width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;&quot;></span>
+          <span style=&quot;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);&quot;>If self-hosted (engineering owns)</span>
+        </div>
+        <div style=&quot;font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:16px;&quot;>Serve the <code style=&quot;font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:monospace&quot;>.woff2</code> or <code style=&quot;font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:monospace&quot;>.ttf</code> file from Oritain's own infrastructure. Font request never leaves your servers. Zero external call, zero egress, zero compliance exposure. Safe for the SaaS platform, the marketing site, and air-gapped environments.</div>
+        <div style=&quot;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;&quot;>
+          <span class=&quot;chip cg&quot;>zero egress</span>
+          <span class=&quot;chip cg&quot;>SOC 2 clean</span>
+          <span class=&quot;chip cg&quot;>GDPR safe</span>
+          <span class=&quot;chip cg&quot;>platform approved</span>
+        </div>
+        <div style=&quot;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green);opacity:.65;&quot;>→ No design change needed. Engineering task only.</div>
+      </div>
+
+      <!-- RIGHT: CDN loaded = risk -->
+      <div style=&quot;padding:20px 28px 28px;position:relative;&quot;>
+        <div style=&quot;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);&quot;></div>
+        <div style=&quot;display:flex;align-items:center;gap:8px;margin-bottom:14px;&quot;>
+          <span style=&quot;width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:blink 1.1s ease-in-out infinite;&quot;></span>
+          <span style=&quot;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);&quot;>If via cloud.typography.com (current risk)</span>
+        </div>
+        <div style=&quot;font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:16px;&quot;>Every page load fires a request to Hoefler&amp;Co's CDN — exposing IP, Referer headers, session timing, and fingerprint data. This is the scenario the entire document above describes. Acceptable on the public marketing site. <strong style=&quot;color:var(--text);font-weight:600;&quot;>Not acceptable inside the authenticated platform</strong> where client data is in scope.</div>
+        <div style=&quot;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;&quot;>
+          <span class=&quot;chip cr&quot;>IP exposed</span>
+          <span class=&quot;chip cr&quot;>client IDs in referrer</span>
+          <span class=&quot;chip cr&quot;>GDPR risk</span>
+          <span class=&quot;chip cr&quot;>SOC 2 flag</span>
+        </div>
+        <!-- Fallback -->
+        <div style=&quot;background:rgba(239,159,39,0.06);border:0.5px solid var(--b-amber);border-radius:var(--rs);padding:12px 14px;&quot;>
+          <div style=&quot;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;&quot;>Fallback if self-hosting isn't confirmed</div>
+          <div style=&quot;font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;&quot;>Montserrat Medium</div>
+          <div style=&quot;font-size:12px;color:var(--muted);line-height:1.5;&quot;>Closest open-source geometric to Gotham. SIL OFL licensed. Self-hostable. One <code style=&quot;font-size:10px;background:var(--bg3);padding:1px 4px;border-radius:3px;font-family:monospace&quot;>.woff2</code> covers all needs. Zero CDN dependency by design.</div>
+          <div style=&quot;margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;&quot;>
+            <span class=&quot;chip cg&quot;>free + open</span>
+            <span class=&quot;chip cg&quot;>zero egress</span>
+            <span class=&quot;chip ca&quot;>not brand-exact</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- INTER + CALIBRI ROW — the unconditional decisions -->
+  <div style=&quot;display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;&quot;>
+
+    <!-- INTER -->
+    <div style=&quot;background:var(--bg2);border:0.5px solid var(--b-teal);border-radius:var(--r);overflow:hidden;position:relative;transition:background .3s;&quot; class=&quot;res-reveal&quot;>
+      <div style=&quot;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);&quot;></div>
+      <div style=&quot;padding:24px 24px 22px;&quot;>
+        <div style=&quot;display:flex;align-items:center;gap:8px;margin-bottom:4px;&quot;>
+          <span style=&quot;width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0;&quot;></span>
+          <span style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);&quot;>UI / Web / Mobile · Unconditional</span>
+        </div>
+        <div style=&quot;font-size:32px;font-weight:800;letter-spacing:-.025em;color:var(--text);margin:10px 0 10px;&quot;>Inter</div>
+        <div style=&quot;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;&quot;>Replaces Calibri in all web and platform contexts. Bundled as a static asset — SIL OFL licensed, no CDN, no attribution, no licence concern. This change is unconditional. It doesn't depend on what engineering decides about Gotham.</div>
+        <div style=&quot;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;&quot;>
+          <span class=&quot;chip cg&quot;>replaces calibri</span>
+          <span class=&quot;chip cg&quot;>zero egress</span>
+          <span class=&quot;chip cg&quot;>OFL licensed</span>
+          <span class=&quot;chip cg&quot;>design decision ✓</span>
+        </div>
+        <div style=&quot;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);opacity:.7;&quot;>→ The one clear design call. No caveats.</div>
+      </div>
+    </div>
+
+    <!-- CALIBRI -->
+    <div style=&quot;background:var(--bg2);border:0.5px solid var(--b-amber);border-radius:var(--r);overflow:hidden;position:relative;transition:background .3s;&quot; class=&quot;res-reveal&quot;>
+      <div style=&quot;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);&quot;></div>
+      <div style=&quot;padding:24px 24px 22px;&quot;>
+        <div style=&quot;display:flex;align-items:center;gap:8px;margin-bottom:4px;&quot;>
+          <span style=&quot;width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;&quot;></span>
+          <span style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);&quot;>Offline exports only · Scoped</span>
+        </div>
+        <div style=&quot;font-size:32px;font-weight:800;letter-spacing:-.025em;color:var(--text);margin:10px 0 10px;&quot;>Calibri</div>
+        <div style=&quot;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;&quot;>Word and Excel export documents only, where it lives natively on the user's machine. Never loaded via <code style=&quot;font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:monospace&quot;>@font-face</code> — that would violate Microsoft's EULA unconditionally. On non-Windows machines it silently falls back to a generic serif anyway, breaking visual consistency.</div>
+        <div style=&quot;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;&quot;>
+          <span class=&quot;chip ca&quot;>offline exports only</span>
+          <span class=&quot;chip cr&quot;>no web embedding</span>
+          <span class=&quot;chip cr&quot;>EULA violation if used in CSS</span>
+        </div>
+        <div style=&quot;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);opacity:.7;&quot;>→ Stays. Scoped strictly to document exports.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAKEAWAY -->
+  <div style=&quot;margin-top:48px;border-radius:var(--r);overflow:hidden;position:relative;background:var(--bg2);border:0.5px solid var(--b-teal);&quot;>
+    <!-- top accent line -->
+    <div style=&quot;height:2px;background:linear-gradient(90deg,var(--teal3),var(--teal),#53B8D5,var(--teal),var(--teal3));&quot;></div>
+    <!-- inner glow -->
+    <div style=&quot;position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 80% at 50% 100%,rgba(35,177,216,0.06) 0%,transparent 70%);&quot;></div>
+    <div style=&quot;position:relative;padding:40px 44px 40px;&quot;>
+      <div style=&quot;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;display:flex;align-items:center;gap:8px;&quot;>
+        <span style=&quot;width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 2s ease-in-out infinite;&quot;></span>
+        The real takeaway
+      </div>
+      <div style=&quot;font-size:clamp(18px,2.5vw,26px);font-weight:300;line-height:1.5;color:var(--text);letter-spacing:-.01em;max-width:780px;&quot;>
+        The Gotham CDN risk is an <strong style=&quot;font-weight:700;color:var(--teal);&quot;>engineering implementation question</strong> —
+        not a font choice. The only unconditional design decision is
+        <strong style=&quot;font-weight:700;color:var(--teal);&quot;>Calibri → Inter for web UI</strong>.
+        Everything else follows from a single Slack to engineering:
+        <em style=&quot;font-style:normal;color:var(--muted);&quot;>&quot;Are we self-hosting the Gotham file, or loading it from cloud.typography.com?&quot;</em>
+      </div>
+      <div style=&quot;margin-top:28px;padding-top:24px;border-top:0.5px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;&quot;>
+        <div>
+          <div style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px;&quot;>Design owns</div>
+          <div style=&quot;font-size:13px;color:var(--muted);line-height:1.6;&quot;>Calibri → Inter swap. Unconditional. No licence, no CDN, no caveats.</div>
+        </div>
+        <div>
+          <div style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;&quot;>Engineering owns</div>
+          <div style=&quot;font-size:13px;color:var(--muted);line-height:1.6;&quot;>How Gotham is served. Self-host = zero risk. CDN = the problem above.</div>
+        </div>
+        <div>
+          <div style=&quot;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;&quot;>Fallback if uncertain</div>
+          <div style=&quot;font-size:13px;color:var(--muted);line-height:1.6;&quot;>Montserrat Medium. Open-source Gotham substitute. Zero CDN dependency.</div>
+        </div>
+      </div>
+    </div>
+    <div style=&quot;padding:14px 44px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;&quot;>
+      <span style=&quot;font-size:11px;color:var(--dim);&quot;>Oritain v2 · Typography rationale</span>
+      <span style=&quot;font-size:11px;color:var(--dim);&quot;>Ask engineering before presenting this as a blocker.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const h=document.documentElement;
+  const dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('tbl').textContent=dark?'Light':'Dark';
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      const sibs=Array.from(el.parentElement.children).filter(c=>c.hasAttribute('data-observe'));
+      const idx=sibs.indexOf(el);
+      setTimeout(()=>el.classList.add('visible'),idx*90);
+      obs.unobserve(el);
+    }
+  });
+},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('[data-observe]').forEach(el=>obs.observe(el));
+
+// Separate observer for resolution cards — no stagger, just fade in on scroll
+const obsRes=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='none';
+      obsRes.unobserve(e.target);
+    }
+  });
+},{threshold:0.05,rootMargin:'0px 0px -10px 0px'});
+document.querySelectorAll('.res-reveal').forEach((el,i)=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(14px)';
+  el.style.transition=`opacity .45s ease ${i*0.1}s, transform .45s ease ${i*0.1}s, background .3s`;
+  obsRes.observe(el);
+});
+&lt;/script&gt;
+</body>
+</html>
+"
+        style="width:100%;border:none;display:block;min-height:92vh;"
+        aria-label="Font infrastructure risk — interactive analysis"
+      ></iframe>
+    </section>
+  </div>
+
   <footer role="contentinfo">
     <p>Oritain Platform v2 · Typography System · Internal Reference · Design team</p>
   </footer>
 
   <script>
-    // ── Tab switching ─────────────────────────────────────────────────
+    // ── Tab switching ─────────────────────────────────────────────
     const panels = {'stacks':'panel-stacks','comparison':'panel-comparison','decision':'panel-decision','webfonts':'panel-webfonts','rules':'panel-rules'};
     function showTab(id) {
-      Object.keys(panels).forEach(k => {
-        document.getElementById(panels[k]).classList.toggle('active', k===id);
-        const btn = document.getElementById('tab-'+k);
-        btn.setAttribute('aria-selected', k===id ? 'true' : 'false');
-      });
+      const riskWrap = document.getElementById('risk-fullwidth');
+      const mainEl   = document.getElementById('main-content');
+      if (id === 'risk') {
+        Object.keys(panels).forEach(k => {
+          document.getElementById(panels[k]).classList.remove('active');
+          document.getElementById('tab-'+k).setAttribute('aria-selected','false');
+        });
+        document.getElementById('tab-risk').setAttribute('aria-selected','true');
+        mainEl.style.display   = 'none';
+        riskWrap.style.display = 'block';
+      } else {
+        mainEl.style.display   = '';
+        riskWrap.style.display = 'none';
+        document.getElementById('tab-risk').setAttribute('aria-selected','false');
+        Object.keys(panels).forEach(k => {
+          document.getElementById(panels[k]).classList.toggle('active', k===id);
+          document.getElementById('tab-'+k).setAttribute('aria-selected', k===id ? 'true' : 'false');
+        });
+      }
     }
 
     // ── Stack toggle ──────────────────────────────────────────────────
@@ -1599,6 +2282,10 @@ Content-Security-Policy: font-src 'self';</div>
         b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
     }
+
+
+
+
   </script>
 </body>
 </html>
