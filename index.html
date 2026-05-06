@@ -37,7 +37,6 @@
     min-height: 100vh;
   }
 
-  /* subtle texture overlay */
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: 0;
@@ -47,7 +46,6 @@
     pointer-events: none;
   }
 
-  /* ── NAV ── */
   .nav {
     position: sticky; top: 0; z-index: 100;
     display: flex; align-items: center; gap: 12px;
@@ -56,20 +54,14 @@
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(200,190,170,0.4);
   }
-
   .nav-wordmark {
     font-size: 14px; font-weight: 800;
     letter-spacing: -0.5px; color: var(--text);
     display: flex; align-items: center; gap: 8px;
   }
-
   .nav-wordmark span.dot { color: var(--yellow-2); }
-  .nav-logo-svg { width: 28px; height: 23px; display: block; flex-shrink: 0; }
-
   .nav-sep { width: 1px; height: 14px; background: rgba(180,170,150,0.5); }
-
   .nav-sub { font-size: 12px; font-weight: 300; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
-
   .nav-link {
     margin-left: auto;
     font-size: 11px; font-weight: 700;
@@ -84,40 +76,28 @@
   }
   .nav-link:hover { box-shadow: var(--neo-shadow-out); color: var(--text); }
 
-  /* ── MAIN ── */
   .main {
     position: relative; z-index: 1;
     max-width: 860px; margin: 0 auto;
     padding: 56px 32px 120px;
   }
 
-  /* ── PAGE HEADER ── */
   .page-header { margin-bottom: 60px; }
-
   .page-kicker {
     font-size: 10px; font-weight: 500;
     letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--text-3); margin-bottom: 16px;
   }
-
   .page-title {
     font-size: 72px; font-weight: 100;
     letter-spacing: -3px; line-height: 0.9;
-    color: var(--text);
-    margin-bottom: 6px;
+    color: var(--text); margin-bottom: 6px;
   }
-
-  .page-title strong {
-    font-weight: 800;
-    color: var(--text);
-  }
-
+  .page-title strong { font-weight: 800; }
   .page-sub {
     font-size: 13px; font-weight: 300;
-    color: var(--text-3);
-    letter-spacing: 0.02em;
-    margin-top: 16px;
-    max-width: 360px; line-height: 1.6;
+    color: var(--text-3); letter-spacing: 0.02em;
+    margin-top: 16px; max-width: 360px; line-height: 1.6;
   }
 
   .fy-chip {
@@ -131,7 +111,6 @@
     border-radius: var(--r-pill);
     box-shadow: var(--neo-shadow-pill);
   }
-
   .fy-chip::before {
     content: '';
     width: 6px; height: 6px;
@@ -139,293 +118,247 @@
     background: var(--dark);
   }
 
-  /* ── SUMMARY STRIP ── */
   .summary {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 12px; margin-bottom: 60px;
   }
-  @media (max-width: 640px) { .summary { grid-template-columns: repeat(2,1fr); } }
-
-  .sum-card {
-    border-radius: var(--r);
-    padding: 22px 20px;
-    text-align: center;
-  }
-
-  .sum-card.neo {
-    background: var(--bg);
-    box-shadow: var(--neo-shadow-card);
-  }
-
+  .sum-card { border-radius: var(--r); padding: 22px 20px; text-align: center; }
+  .sum-card.neo { background: var(--bg); box-shadow: var(--neo-shadow-card); }
   .sum-card.yellow {
     background: var(--yellow);
     border: 1.5px solid rgba(26,23,20,0.12);
     box-shadow: 8px 8px 20px rgba(180,155,0,0.35), -4px -4px 12px rgba(255,250,200,0.8);
   }
-
-  .sum-n {
-    font-size: 32px; font-weight: 800;
-    letter-spacing: -1px; line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .sum-card.neo .sum-n   { color: var(--text); }
+  .sum-n { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+  .sum-card.neo .sum-n    { color: var(--text); }
   .sum-card.yellow .sum-n { color: var(--dark); }
-
-  .sum-l {
-    font-size: 10px; font-weight: 400;
-    letter-spacing: 0.06em; text-transform: uppercase;
-  }
+  .sum-l { font-size: 10px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
   .sum-card.neo .sum-l    { color: var(--text-2); }
   .sum-card.yellow .sum-l { color: rgba(26,23,20,0.55); }
 
-  /* ── QUARTER ── */
+  /* ── Quarter ── */
   .quarter { margin-bottom: 44px; }
-
-  .q-header {
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 16px;
-  }
-
+  .q-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
   .q-num {
     font-size: 11px; font-weight: 700;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--text-3);
-    padding: 5px 12px;
-    border-radius: var(--r-pill);
-    background: var(--bg);
+    color: var(--text-3); padding: 5px 12px;
+    border-radius: var(--r-pill); background: var(--bg);
     box-shadow: var(--neo-shadow-pill);
   }
-
   .q-num.active {
-    background: var(--yellow);
-    color: var(--dark);
+    background: var(--yellow); color: var(--dark);
     box-shadow: 3px 3px 7px rgba(180,155,0,0.35), -2px -2px 5px rgba(255,250,200,0.8);
   }
-
-  .q-title {
-    font-size: 28px; font-weight: 200;
-    letter-spacing: -0.8px; color: var(--text);
-    line-height: 1;
-  }
-
+  .q-title { font-size: 28px; font-weight: 200; letter-spacing: -0.8px; color: var(--text); line-height: 1; }
   .q-title.active { font-weight: 700; }
+  .q-range { font-size: 12px; font-weight: 300; color: var(--text-2); margin-left: auto; letter-spacing: 0.02em; }
 
-  .q-range {
-    font-size: 12px; font-weight: 300;
-    color: var(--text-2);
-    margin-left: auto;
-    letter-spacing: 0.02em;
-  }
-
-  /* PROGRESS ROW */
-  .q-prog-row {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 16px;
-  }
-
+  .q-prog-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
   .q-bar-wrap {
-    flex: 1; height: 4px;
-    border-radius: var(--r-pill);
-    background: var(--bg);
-    box-shadow: var(--neo-shadow-in);
-    overflow: hidden;
+    flex: 1; height: 4px; border-radius: var(--r-pill);
+    background: var(--bg); box-shadow: var(--neo-shadow-in); overflow: hidden;
   }
-
   .q-bar {
     height: 100%; border-radius: var(--r-pill);
     background: linear-gradient(90deg, var(--yellow-2), var(--yellow));
     transition: width 1s ease;
   }
+  .q-pct { font-size: 12px; font-weight: 700; color: var(--text-2); min-width: 36px; text-align: right; letter-spacing: -0.3px; }
 
-  .q-pct {
-    font-size: 12px; font-weight: 700;
-    color: var(--text-2); min-width: 36px; text-align: right;
-    letter-spacing: -0.3px;
+  /* ── Now/Next/Later lanes ── */
+  .lanes { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+  .lane-label {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px; margin-top: 18px;
   }
+  .lane-label:first-child { margin-top: 0; }
+  .lane-badge {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: var(--r-pill);
+  }
+  .lane-badge.now    { background: var(--dark); color: var(--yellow); }
+  .lane-badge.next   { background: var(--bg); box-shadow: var(--neo-shadow-pill); color: var(--text-2); }
+  .lane-badge.later  { background: var(--bg); box-shadow: var(--neo-shadow-pill); color: var(--text-3); opacity: 0.7; }
+  .lane-date { font-size: 11px; font-weight: 300; color: var(--text-3); letter-spacing: 0.02em; }
 
-  /* ── THEME CARDS ── */
+  /* ── Theme cards ── */
   .themes { display: flex; flex-direction: column; gap: 10px; }
-
-  .theme-card {
-    border-radius: var(--r);
-    padding: 18px 22px;
-    position: relative;
-  }
-
-  /* Neomorphic light card */
-  .theme-card.neo {
-    background: var(--bg);
-    box-shadow: var(--neo-shadow-card);
-  }
-
-  /* Yellow accent card */
+  .theme-card { border-radius: var(--r); padding: 18px 22px; position: relative; }
+  .theme-card.neo { background: var(--bg); box-shadow: var(--neo-shadow-card); }
   .theme-card.yellow {
     background: var(--yellow);
     border: 1.5px solid rgba(26,23,20,0.12);
     box-shadow: 8px 8px 20px rgba(180,155,0,0.3), -4px -4px 12px rgba(255,252,200,0.85);
   }
-
-  /* Faded / upcoming */
   .theme-card.faded {
     background: var(--bg);
     box-shadow: 4px 4px 10px rgba(160,150,130,0.25), -3px -3px 8px rgba(255,252,245,0.7);
     opacity: 0.6;
   }
 
-  .theme-top {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .theme-name {
-    font-size: 15px; font-weight: 600;
-    letter-spacing: -0.3px; flex: 1;
-  }
-
+  .theme-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .theme-name { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; flex: 1; }
   .theme-card.yellow .theme-name { color: var(--dark); }
   .theme-card.yellow .theme-pct  { color: rgba(26,23,20,0.55); }
+  .theme-pct { font-size: 13px; font-weight: 300; color: var(--text-3); letter-spacing: -0.2px; }
 
-  .theme-pct {
-    font-size: 13px; font-weight: 300;
-    color: var(--text-3);
-    letter-spacing: -0.2px;
-  }
-
-  /* Progress bar */
-  .prog-wrap {
-    height: 3px;
-    border-radius: var(--r-pill);
-    overflow: hidden;
-    margin-bottom: 14px;
-    background: rgba(0,0,0,0.08);
-  }
-
-  .theme-card.neo .prog-wrap {
-    box-shadow: inset 1px 1px 3px rgba(150,140,120,0.4);
-    background: rgba(0,0,0,0.06);
-  }
-
+  .prog-wrap { height: 3px; border-radius: var(--r-pill); overflow: hidden; margin-bottom: 14px; background: rgba(0,0,0,0.08); }
+  .theme-card.neo .prog-wrap { box-shadow: inset 1px 1px 3px rgba(150,140,120,0.4); background: rgba(0,0,0,0.06); }
   .pf { height: 100%; border-radius: var(--r-pill); }
-  .pf-yellow  { background: linear-gradient(90deg, var(--yellow-2), var(--yellow)); }
-  .pf-dark    { background: var(--dark); }
-  .pf-mid     { background: rgba(26,23,20,0.3); }
+  .pf-yellow { background: linear-gradient(90deg, var(--yellow-2), var(--yellow)); }
+  .pf-dark   { background: var(--dark); }
+  .pf-mid    { background: rgba(26,23,20,0.3); }
 
-  /* ── PILLS ── */
   .theme-items { display: flex; flex-wrap: wrap; gap: 7px; }
+  .ti { font-size: 11px; font-weight: 400; padding: 5px 12px; border-radius: var(--r-pill); letter-spacing: 0.01em; transition: all 0.15s; }
+  .ti-active { background: transparent; border: 1.5px solid var(--dark); color: var(--dark); font-weight: 500; }
+  .ti-done   { background: var(--dark); border: 1.5px solid var(--dark); color: var(--yellow); font-weight: 500; }
+  .ti-next   { background: transparent; border: 1px solid rgba(26,23,20,0.28); color: var(--text-2); }
+  .theme-card.yellow .ti-active { background: var(--dark); border-color: var(--dark); color: var(--yellow); }
+  .theme-card.yellow .ti-done   { background: rgba(26,23,20,0.85); border-color: var(--dark); color: var(--yellow); }
+  .theme-card.yellow .ti-next   { background: transparent; border: 1px solid rgba(26,23,20,0.25); color: rgba(26,23,20,0.45); }
+  .theme-card.faded .ti-next    { border-color: rgba(26,23,20,0.22); color: var(--text-2); }
 
-  .ti {
-    font-size: 11px; font-weight: 400;
-    padding: 5px 12px;
+  /* ── KPI toggle ── */
+  .kpi-toggle {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid rgba(26,23,20,0.08);
+    cursor: pointer; user-select: none;
+    width: fit-content;
+  }
+  .theme-card.yellow .kpi-toggle { border-top-color: rgba(26,23,20,0.12); }
+  .kpi-toggle-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .theme-card.yellow .kpi-toggle-label { color: rgba(26,23,20,0.45); }
+  .kpi-toggle-count {
+    font-size: 10px; font-weight: 500;
+    color: var(--text-3); padding: 1px 7px;
     border-radius: var(--r-pill);
-    letter-spacing: 0.01em;
+    background: rgba(26,23,20,0.06);
+  }
+  .theme-card.yellow .kpi-toggle-count { background: rgba(26,23,20,0.1); color: rgba(26,23,20,0.45); }
+  .kpi-chevron {
+    width: 14px; height: 14px; color: var(--text-3);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .kpi-chevron.open { transform: rotate(180deg); }
+
+  .kpi-panel {
+    display: none; margin-top: 12px;
+    flex-direction: column; gap: 8px;
+  }
+  .kpi-panel.open { display: flex; }
+
+  .kpi-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    background: rgba(26,23,20,0.04);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .theme-card.yellow .kpi-row { background: rgba(26,23,20,0.07); }
+  .kpi-row:hover { background: rgba(26,23,20,0.07); }
+  .theme-card.yellow .kpi-row:hover { background: rgba(26,23,20,0.12); }
+  .kpi-row.checked { background: rgba(26,23,20,0.08); }
+  .theme-card.yellow .kpi-row.checked { background: rgba(26,23,20,0.14); }
+
+  .kpi-check {
+    width: 16px; height: 16px; flex-shrink: 0;
+    border-radius: 4px;
+    border: 1.5px solid rgba(26,23,20,0.25);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
     transition: all 0.15s;
   }
-
-  /* Active = black outline */
-  .ti-active {
-    background: transparent;
-    border: 1.5px solid var(--dark);
-    color: var(--dark);
-    font-weight: 500;
-  }
-
-  /* Done = filled dark */
-  .ti-done {
-    background: var(--dark);
-    border: 1.5px solid var(--dark);
-    color: var(--yellow);
-    font-weight: 500;
-  }
-
-  /* Next / faded = legible but quiet */
-  .ti-next {
-    background: transparent;
-    border: 1px solid rgba(26,23,20,0.28);
-    color: var(--text-2);
-  }
-
-  /* On yellow card — invert */
-  .theme-card.yellow .ti-active {
+  .kpi-row.checked .kpi-check {
     background: var(--dark);
     border-color: var(--dark);
-    color: var(--yellow);
   }
-
-  .theme-card.yellow .ti-next {
-    background: transparent;
-    border: 1px solid rgba(26,23,20,0.25);
-    color: rgba(26,23,20,0.45);
+  .theme-card.yellow .kpi-row.checked .kpi-check {
+    background: var(--dark);
+    border-color: var(--dark);
   }
+  .kpi-check svg { display: none; }
+  .kpi-row.checked .kpi-check svg { display: block; }
 
-  /* On faded card */
-  .theme-card.faded .ti-next {
-    border-color: rgba(26,23,20,0.22);
-    color: var(--text-2);
+  .kpi-text { flex: 1; }
+  .kpi-name-text {
+    font-size: 12px; font-weight: 500;
+    color: var(--text); line-height: 1.3;
+    margin-bottom: 2px;
   }
-
-  /* ── DIVIDER ── */
-  .q-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(180,170,150,0.4), transparent);
-    margin: 4px 0 20px;
+  .theme-card.yellow .kpi-name-text { color: var(--dark); }
+  .kpi-row.checked .kpi-name-text { text-decoration: line-through; color: var(--text-3); }
+  .theme-card.yellow .kpi-row.checked .kpi-name-text { color: rgba(26,23,20,0.4); }
+  .kpi-desc-text {
+    font-size: 11px; font-weight: 300;
+    color: var(--text-3); line-height: 1.4;
   }
+  .theme-card.yellow .kpi-desc-text { color: rgba(26,23,20,0.45); }
 
-  /* ── EDIT HINT ── */
+  .kpi-okr-tag {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: var(--r-pill);
+    background: rgba(26,23,20,0.08);
+    color: var(--text-3); flex-shrink: 0; margin-top: 2px;
+    white-space: nowrap;
+  }
+  .theme-card.yellow .kpi-okr-tag { background: rgba(26,23,20,0.12); color: rgba(26,23,20,0.45); }
+
+  /* validated state */
+  .theme-card.validated {
+    position: relative;
+  }
+  .validated-badge {
+    display: none;
+    position: absolute; top: 14px; right: 16px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--dark); color: var(--yellow);
+    padding: 3px 10px; border-radius: var(--r-pill);
+  }
+  .theme-card.all-checked .validated-badge { display: block; }
+
+  .q-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(180,170,150,0.4), transparent); margin: 4px 0 20px; }
+
   .edit-hint {
     display: flex; align-items: center; gap: 8px;
-    font-size: 11px; font-weight: 300;
-    color: var(--text-2);
+    font-size: 11px; font-weight: 300; color: var(--text-2);
     margin-top: 48px; padding-top: 20px;
     border-top: 1px solid rgba(180,170,150,0.3);
     letter-spacing: 0.02em;
   }
-
   code {
-    font-size: 10px;
-    background: var(--bg);
+    font-size: 10px; background: var(--bg);
     box-shadow: var(--neo-shadow-pill);
     padding: 2px 7px; border-radius: 6px;
     color: var(--text-2); font-family: monospace;
   }
 
-  /* ── MOBILE ── */
   @media (max-width: 640px) {
-
     .main { padding: 32px 16px 80px; }
-
-    /* Nav */
     .nav { padding: 12px 16px; gap: 8px; }
     .nav-wordmark { font-size: 12px; }
-    .nav-sub { font-size: 10px; letter-spacing: 0.04em; }
+    .nav-sub { font-size: 10px; }
     .nav-link { font-size: 10px; padding: 5px 10px; }
-
-    /* Title */
     .page-title { font-size: 44px; letter-spacing: -1.5px; }
-    .page-sub   { font-size: 13px; }
-    .fy-chip    { font-size: 10px; padding: 5px 12px; }
-
-    /* Summary strip — 2x2 grid */
-    .summary { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 36px; }
+    .summary { grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 36px; }
     .sum-n { font-size: 24px; }
-    .sum-l { font-size: 10px; }
-
-    /* Quarter header */
     .q-header { flex-wrap: wrap; gap: 8px; }
-    .q-name   { font-size: 18px; }
-    .q-range  { margin-left: 0; font-size: 11px; }
-    .q-badge  { margin-left: auto; }
-
-    /* Theme cards */
+    .q-range { margin-left: 0; font-size: 11px; }
     .theme-card { padding: 14px 16px; }
     .theme-name { font-size: 13px; }
-    .theme-pct  { font-size: 12px; }
-
-    /* Pills — wrap nicely */
-    .theme-items { gap: 5px; }
     .ti { font-size: 11px; padding: 4px 9px; }
-
-    /* Hide edit hint on mobile — it's for devs */
     .edit-hint { display: none; }
   }
 </style>
@@ -448,27 +381,14 @@
     <span class="fy-chip">April 2026 → March 2027</span>
   </div>
 
-  <!-- SUMMARY -->
   <div class="summary">
-    <div class="sum-card yellow">
-      <div class="sum-n">Q1</div>
-      <div class="sum-l">Current</div>
-    </div>
-    <div class="sum-card neo">
-      <div class="sum-n">4</div>
-      <div class="sum-l">Quarters</div>
-    </div>
-    <div class="sum-card neo">
-      <div class="sum-n">5</div>
-      <div class="sum-l">Workstreams</div>
-    </div>
-    <div class="sum-card neo">
-      <div class="sum-n">18%</div>
-      <div class="sum-l">Year done</div>
-    </div>
+    <div class="sum-card yellow"><div class="sum-n">Q1</div><div class="sum-l">Current</div></div>
+    <div class="sum-card neo"><div class="sum-n">4</div><div class="sum-l">Quarters</div></div>
+    <div class="sum-card neo"><div class="sum-n">6</div><div class="sum-l">Workstreams</div></div>
+    <div class="sum-card neo"><div class="sum-n">18%</div><div class="sum-l">Year done</div></div>
   </div>
 
-  <!-- ── Q1 CURRENT ── -->
+  <!-- ── Q1 ── -->
   <div class="quarter">
     <div class="q-header">
       <span class="q-num active">Q1</span>
@@ -479,63 +399,191 @@
       <div class="q-bar-wrap"><div class="q-bar" style="width:35%"></div></div>
       <span class="q-pct">35%</span>
     </div>
+
+    <!-- NOW -->
+    <div class="lane-label">
+      <span class="lane-badge now">Now</span>
+      <span class="lane-date">May — next 2 weeks</span>
+    </div>
     <div class="themes">
 
       <div class="theme-card yellow">
-        <div class="theme-top">
-          <span class="theme-name">Design system & Figma</span>
-          <span class="theme-pct">40%</span>
-        </div>
-        <div class="prog-wrap"><div class="pf pf-dark" style="width:40%"></div></div>
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Mini MVP & prototype</span><span class="theme-pct">20%</span></div>
+        <div class="prog-wrap"><div class="pf pf-dark" style="width:20%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-active">Font finalisation</span>
-          <span class="ti ti-active">Design tokens</span>
-          <span class="ti ti-active">Figma file reorg</span>
-          <span class="ti ti-next">Component audit</span>
-          <span class="ti ti-next">Handoff docs</span>
+          <span class="ti ti-active">Scope definition</span>
+          <span class="ti ti-active">Core flows built</span>
+          <span class="ti ti-next">Upsell mechanics</span>
+          <span class="ti ti-next">Tier visibility</span>
+          <span class="ti ti-next">Prototype review</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">3 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Prototype signed off by stakeholders</div>
+              <div class="kpi-desc-text">Engineering-ready with core flows covered</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR2</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Tier value visible at point of use</div>
+              <div class="kpi-desc-text">In-product signals surfacing upgrade paths</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 1 · KR1</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Handoff package ready by end of May</div>
+              <div class="kpi-desc-text">Specs, annotations, and assets complete</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR1</span>
+          </div>
         </div>
       </div>
 
       <div class="theme-card neo">
-        <div class="theme-top">
-          <span class="theme-name">OOE & automation</span>
-          <span class="theme-pct">30%</span>
-        </div>
-        <div class="prog-wrap"><div class="pf pf-yellow" style="width:30%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-active">Client portal vision</span>
-          <span class="ti ti-active">Automation flows</span>
-          <span class="ti ti-next">Self-submission (photos)</span>
-          <span class="ti ti-next">Validations</span>
-          <span class="ti ti-next">Who does what</span>
-        </div>
-      </div>
-
-      <div class="theme-card neo">
-        <div class="theme-top">
-          <span class="theme-name">Platform simplification</span>
-          <span class="theme-pct">20%</span>
-        </div>
-        <div class="prog-wrap"><div class="pf pf-yellow" style="width:20%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-active">Simplification pass</span>
-          <span class="ti ti-next">Copy + tone of voice</span>
-          <span class="ti ti-next">Onboarding tier UX</span>
-          <span class="ti ti-next">UX polish round</span>
-        </div>
-      </div>
-
-      <div class="theme-card yellow">
-        <div class="theme-top">
-          <span class="theme-name">Engineering & handoff</span>
-          <span class="theme-pct">25%</span>
-        </div>
-        <div class="prog-wrap"><div class="pf pf-dark" style="width:25%"></div></div>
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Engineering handoff</span><span class="theme-pct">15%</span></div>
+        <div class="prog-wrap"><div class="pf pf-yellow" style="width:15%"></div></div>
         <div class="theme-items">
           <span class="ti ti-active">Engineering meetings</span>
-          <span class="ti ti-next">Dev discussions</span>
           <span class="ti ti-next">Spec documentation</span>
           <span class="ti ti-next">Handoff package</span>
+          <span class="ti ti-next">Dev kickoff (late May)</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">2 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Eng kickoff completed by end of May</div>
+              <div class="kpi-desc-text">Team unblocked and building before June</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR1</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">CI/CD first pass green</div>
+              <div class="kpi-desc-text">Initial build passes pipeline checks</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme-card neo">
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">OOE automation prototype</span><span class="theme-pct">10%</span></div>
+        <div class="prog-wrap"><div class="pf pf-yellow" style="width:10%"></div></div>
+        <div class="theme-items">
+          <span class="ti ti-done">User interviews ✓</span>
+          <span class="ti ti-active">New flow design</span>
+          <span class="ti ti-next">Automation prototype</span>
+          <span class="ti ti-next">Impact scoring</span>
+          <span class="ti ti-next">Validation sessions</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">2 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">New OOE flow prototype complete</div>
+              <div class="kpi-desc-text">Covers key automation touchpoints end-to-end</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR2</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Impact score model defined</div>
+              <div class="kpi-desc-text">Scoring logic agreed with product and commercial</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 3 · KR2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NEXT -->
+    <div class="lane-label">
+      <span class="lane-badge next">Next</span>
+      <span class="lane-date">Late May → 10 June</span>
+    </div>
+    <div class="themes">
+
+      <div class="theme-card neo">
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Typography & design system</span><span class="theme-pct">40%</span></div>
+        <div class="prog-wrap"><div class="pf pf-yellow" style="width:40%"></div></div>
+        <div class="theme-items">
+          <span class="ti ti-done">Font finalisation</span>
+          <span class="ti ti-active">Timber commodity design</span>
+          <span class="ti ti-active">Cotton commodity design</span>
+          <span class="ti ti-next">Design system in Claude</span>
+          <span class="ti ti-next">Design tokens</span>
+          <span class="ti ti-next">Component audit</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">2 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Commodity design pattern established</div>
+              <div class="kpi-desc-text">Timber + Cotton covered, extensible to new commodities</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR1</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Design system adopted by eng</div>
+              <div class="kpi-desc-text">Tokens and components used in first build sprint</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR3</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LATER -->
+    <div class="lane-label">
+      <span class="lane-badge later">Later</span>
+      <span class="lane-date">Post June · Q1 tail</span>
+    </div>
+    <div class="themes">
+
+      <div class="theme-card faded">
+        <div class="theme-top"><span class="theme-name">Platform copy & tone</span><span class="theme-pct">—</span></div>
+        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
+        <div class="theme-items">
+          <span class="ti ti-next">Copy audit</span>
+          <span class="ti ti-next">Tone of voice pass</span>
+          <span class="ti ti-next">Microcopy standards</span>
         </div>
       </div>
 
@@ -553,30 +601,67 @@
     <div class="themes">
 
       <div class="theme-card faded">
-        <div class="theme-top">
-          <span class="theme-name">Intelligence Hub</span>
-          <span class="theme-pct">—</span>
-        </div>
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Upsell & tier logic</span><span class="theme-pct">—</span></div>
         <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-next">What's Happening feed</span>
-          <span class="ti ti-next">Events by commodity</span>
-          <span class="ti ti-next">The Science</span>
-          <span class="ti ti-next">Resources hub</span>
-          <span class="ti ti-next">Notification dot</span>
+          <span class="ti ti-next">Self-serve upgrade journeys</span>
+          <span class="ti ti-next">Contextual tier signals</span>
+          <span class="ti ti-next">Expansion triggers</span>
+          <span class="ti ti-next">Sales-free upgrade flow</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">3 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">≥X% users encounter tier signals in-product</div>
+              <div class="kpi-desc-text">Contextual value surfaced at point of use</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 1 · KR1</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">≥X% upgrade journeys without sales</div>
+              <div class="kpi-desc-text">Self-serve discovery evidenced</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 1 · KR2</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Reusable design system ships</div>
+              <div class="kpi-desc-text">Core product areas covered: nav, tiers, upsell</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR1</span>
+          </div>
         </div>
       </div>
 
       <div class="theme-card faded">
-        <div class="theme-top">
-          <span class="theme-name">Client portal v1</span>
-          <span class="theme-pct">—</span>
-        </div>
+        <div class="theme-top"><span class="theme-name">Platform simplification</span><span class="theme-pct">—</span></div>
         <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-next">Portal scoping</span>
-          <span class="ti ti-next">OOE flows</span>
-          <span class="ti ti-next">Internal tooling</span>
+          <span class="ti ti-next">Global wishlist (batch 1)</span>
+          <span class="ti ti-next">Onboarding tier UX</span>
+          <span class="ti ti-next">UX polish round</span>
+          <span class="ti ti-next">Navigation simplification</span>
+        </div>
+      </div>
+
+      <div class="theme-card faded">
+        <div class="theme-top"><span class="theme-name">OOE continued</span><span class="theme-pct">—</span></div>
+        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
+        <div class="theme-items">
+          <span class="ti ti-next">Automation flows (complex)</span>
+          <span class="ti ti-next">Self-submission (photos)</span>
+          <span class="ti ti-next">Validations</span>
+          <span class="ti ti-next">Who does what</span>
         </div>
       </div>
 
@@ -592,16 +677,52 @@
     </div>
     <div class="q-divider"></div>
     <div class="themes">
+
       <div class="theme-card faded">
-        <div class="theme-top">
-          <span class="theme-name">Platform at scale</span>
-          <span class="theme-pct">—</span>
-        </div>
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Commercial signals</span><span class="theme-pct">—</span></div>
         <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-next">Add Q3 initiatives</span>
+          <span class="ti ti-next">Usage threshold signals</span>
+          <span class="ti ti-next">Unmet needs triggers</span>
+          <span class="ti ti-next">Programme triggers</span>
+          <span class="ti ti-next">Account team integration</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">2 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">≥X qualified upsell actions triggered</div>
+              <div class="kpi-desc-text">Product signals driving expansion in-platform</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 1 · KR3</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">≥X% new features on reusable components</div>
+              <div class="kpi-desc-text">Standardised patterns adopted cross-team</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 2 · KR3</span>
+          </div>
         </div>
       </div>
+
+      <div class="theme-card faded">
+        <div class="theme-top"><span class="theme-name">Simplification continued</span><span class="theme-pct">—</span></div>
+        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
+        <div class="theme-items">
+          <span class="ti ti-next">Global wishlist (batch 2)</span>
+          <span class="ti ti-next">Cross-team pattern adoption</span>
+          <span class="ti ti-next">Iteration cycle reduction</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -614,16 +735,50 @@
     </div>
     <div class="q-divider"></div>
     <div class="themes">
+
       <div class="theme-card faded">
-        <div class="theme-top">
-          <span class="theme-name">End of year</span>
-          <span class="theme-pct">—</span>
-        </div>
+        <div class="validated-badge">Validated ✓</div>
+        <div class="theme-top"><span class="theme-name">Expansion mechanics</span><span class="theme-pct">—</span></div>
         <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-next">Add Q4 initiatives</span>
+          <span class="ti ti-next">Signals operationalised</span>
+          <span class="ti ti-next">Account team workflows</span>
+          <span class="ti ti-next">User-completed upgrades</span>
+          <span class="ti ti-next">End of year review</span>
+        </div>
+        <div class="kpi-toggle" onclick="toggleKpi(this)">
+          <span class="kpi-toggle-label">Success metrics</span>
+          <span class="kpi-toggle-count">3 KPIs</span>
+          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="kpi-panel">
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">≥X upgrade actions completed by users</div>
+              <div class="kpi-desc-text">Without manual sales prompts</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 1 · KR4</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Signals inform ≥X% of upsell conversations</div>
+              <div class="kpi-desc-text">Product intelligence embedded in commercial team workflows</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 3 · KR1</span>
+          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)">
+            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="kpi-text">
+              <div class="kpi-name-text">Commercial signals set operationalised</div>
+              <div class="kpi-desc-text">Defined triggers actively surfacing expansion opportunities</div>
+            </div>
+            <span class="kpi-okr-tag">Obj 3 · KR2</span>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -635,5 +790,28 @@
   </p>
 
 </main>
+
+<script>
+  function toggleKpi(toggleEl) {
+    const chevron = toggleEl.querySelector('.kpi-chevron');
+    const panel = toggleEl.nextElementSibling;
+    const isOpen = panel.classList.contains('open');
+    panel.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function toggleCheck(rowEl) {
+    rowEl.classList.toggle('checked');
+    const card = rowEl.closest('.theme-card');
+    const allRows = card.querySelectorAll('.kpi-row');
+    const checkedRows = card.querySelectorAll('.kpi-row.checked');
+    if (allRows.length > 0 && allRows.length === checkedRows.length) {
+      card.classList.add('all-checked');
+    } else {
+      card.classList.remove('all-checked');
+    }
+  }
+</script>
+
 </body>
 </html>
