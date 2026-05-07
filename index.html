@@ -190,7 +190,7 @@
   .edit-hint { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 300; color: var(--text-2); margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(180,170,150,0.3); letter-spacing: 0.02em; }
   code { font-size: 10px; background: var(--bg); box-shadow: var(--neo-shadow-pill); padding: 2px 7px; border-radius: 6px; color: var(--text-2); font-family: monospace; }
 
-  /* ── PASSWORD GATE ── */
+  /* ── AUTH GATE ── */
   .gate {
     position: fixed; inset: 0; z-index: 999;
     background: var(--bg);
@@ -198,55 +198,68 @@
     padding: 24px;
   }
   .gate::before {
-    content: '';
-    position: fixed; inset: 0;
+    content: ''; position: fixed; inset: 0;
     background:
       radial-gradient(ellipse 55% 40% at 90% 5%,  rgba(245,216,66,0.12) 0%, transparent 55%),
       radial-gradient(ellipse 45% 35% at 5%  95%, rgba(245,216,66,0.06) 0%, transparent 55%);
     pointer-events: none;
   }
   .gate-card {
-    background: var(--bg);
-    border-radius: var(--r);
+    background: var(--bg); border-radius: var(--r);
     box-shadow: var(--neo-shadow-card);
     padding: 48px 40px 40px;
-    width: 100%; max-width: 380px;
-    position: relative; z-index: 1;
-    text-align: center;
+    width: 100%; max-width: 400px;
+    position: relative; z-index: 1; text-align: center;
   }
   .gate-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
-  .gate-title  { font-size: 42px; font-weight: 100; letter-spacing: -2px; line-height: 0.9; color: var(--text); margin-bottom: 4px; }
+  .gate-title { font-size: 42px; font-weight: 100; letter-spacing: -2px; line-height: 0.9; color: var(--text); margin-bottom: 4px; }
   .gate-title strong { font-weight: 800; }
-  .gate-sub    { font-size: 12px; font-weight: 300; color: var(--text-3); margin-top: 12px; margin-bottom: 32px; line-height: 1.6; }
-  .gate-input-wrap { margin-bottom: 14px; }
+  .gate-sub { font-size: 12px; font-weight: 300; color: var(--text-3); margin-top: 12px; margin-bottom: 32px; line-height: 1.6; }
+  .gate-field { margin-bottom: 12px; position: relative; }
   .gate-input {
-    width: 100%;
-    background: var(--bg);
-    border: none; border-radius: var(--r-sm);
-    padding: 13px 16px;
-    font-family: 'Geist', sans-serif;
-    font-size: 14px; color: var(--text);
-    outline: none;
-    box-shadow: var(--neo-shadow-in);
-    transition: box-shadow 0.15s;
-    text-align: center; letter-spacing: 0.08em;
+    width: 100%; background: var(--bg); border: none;
+    border-radius: var(--r-sm); padding: 13px 16px;
+    font-family: 'Geist', sans-serif; font-size: 13px; color: var(--text);
+    outline: none; box-shadow: var(--neo-shadow-in); transition: box-shadow 0.15s;
+    text-align: left;
   }
   .gate-input:focus { box-shadow: inset 4px 4px 10px rgba(140,130,110,0.45), inset -3px -3px 8px rgba(255,252,245,0.95); }
-  .gate-input::placeholder { color: var(--text-3); letter-spacing: 0.04em; }
+  .gate-input::placeholder { color: var(--text-3); }
+  .gate-eye {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-3);
+    padding: 0; display: flex; align-items: center;
+  }
   .gate-btn {
-    width: 100%;
-    background: var(--dark); border: none;
-    border-radius: var(--r-sm);
-    padding: 13px;
-    font-family: 'Geist', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    width: 100%; margin-top: 8px;
+    background: var(--dark);
+    border: none; border-radius: var(--r-sm); padding: 14px;
+    font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--yellow); cursor: pointer;
     box-shadow: 4px 4px 10px rgba(26,23,20,0.4), -2px -2px 6px rgba(80,70,50,0.3);
     transition: all 0.15s;
   }
-  .gate-btn:hover { box-shadow: 2px 2px 6px rgba(26,23,20,0.5), -1px -1px 4px rgba(80,70,50,0.4); }
-  .gate-error { font-size: 11px; font-weight: 500; color: var(--blush-dark, #7A2E18); margin-top: 10px; opacity: 0; transition: opacity 0.2s; letter-spacing: 0.02em; }
-  .gate-error.show { opacity: 1; }
+  .gate-btn:hover { box-shadow: 2px 2px 6px rgba(26,23,20,0.5); }
+  .gate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .gate-forgot { font-size: 11px; color: var(--text-2); text-decoration: none; display: inline-block; margin-top: 14px; }
+  .gate-forgot:hover { color: var(--text); }
+  .gate-footer { font-size: 11px; color: var(--text-3); margin-top: 20px; font-weight: 300; }
+  .gate-error { font-size: 11px; font-weight: 500; color: #7A2E18; margin-top: 10px; min-height: 16px; }
+  .gate-user-bar {
+    display: none; align-items: center; gap: 8px;
+    justify-content: flex-end; padding: 6px 32px 0;
+    position: relative; z-index: 200;
+  }
+  .gate-user-bar.visible { display: flex; }
+  .gate-user-email { font-size: 11px; color: var(--text-3); font-weight: 300; }
+  .gate-signout {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-2); background: var(--bg); border: none;
+    border-radius: var(--r-pill); padding: 4px 12px; cursor: pointer;
+    box-shadow: var(--neo-shadow-pill); transition: box-shadow 0.15s;
+  }
+  .gate-signout:hover { box-shadow: var(--neo-shadow-out); }
   .gate.hidden { display: none; }
 
   @media (max-width: 640px) {
@@ -269,16 +282,30 @@
 </head>
 <body>
 
+<div id="user-bar" class="gate-user-bar">
+  <span class="gate-user-email" id="user-email-display"></span>
+  <button class="gate-signout" onclick="signOut()">Sign out</button>
+</div>
+
 <div class="gate" id="gate">
   <div class="gate-card">
     <p class="gate-kicker">Andy · Oritain</p>
     <h1 class="gate-title">Road<strong>map</strong></h1>
-    <p class="gate-sub">This page is private.<br>Enter the password to continue.</p>
-    <div class="gate-input-wrap">
-      <input class="gate-input" id="gate-input" type="password" placeholder="Password" />
+    <p class="gate-sub">This page is private.<br>Sign in to continue.</p>
+    <div class="gate-field">
+      <input class="gate-input" id="gate-email" type="email" placeholder="Email address" />
     </div>
-    <button class="gate-btn" onclick="checkPassword()">Enter →</button>
-    <p class="gate-error" id="gate-error">Incorrect password. Try again.</p>
+    <div class="gate-field">
+      <input class="gate-input" id="gate-password" type="password" placeholder="Password" style="padding-right:44px" />
+      <button class="gate-eye" onclick="togglePw()" tabindex="-1">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+      </button>
+    </div>
+    <p class="gate-error" id="gate-error"></p>
+    <button class="gate-btn" id="gate-btn" onclick="signIn()">Sign in →</button>
+    <br>
+    <a class="gate-forgot" href="#" onclick="forgotPassword(event)">Forgot password?</a>
+    <p class="gate-footer">Private access only — Oritain Design Team</p>
   </div>
 </div>
 
@@ -655,20 +682,80 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  function checkPassword() {
-    const val = document.getElementById('gate-input').value;
-    const err = document.getElementById('gate-error');
-    if (val === 'Andy_2407') {
-      document.getElementById('gate').classList.add('hidden');
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://aiqdizvifkiylkwbesix.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpcWRpenZpZmtpeWxrd2Jlc2l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NDEyODMsImV4cCI6MjA5MTUxNzI4M30.78rwjJ67B80tcBhD4nvVvpgIwwpPIsl3tIm-WqrPrzY'
+  );
+
+  function togglePw() {
+    const f = document.getElementById('gate-password');
+    f.type = f.type === 'password' ? 'text' : 'password';
+  }
+
+  async function signIn() {
+    const email = document.getElementById('gate-email').value.trim();
+    const password = document.getElementById('gate-password').value;
+    const errEl = document.getElementById('gate-error');
+    const btn = document.getElementById('gate-btn');
+    errEl.textContent = '';
+    if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; return; }
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = error.message;
+      btn.textContent = 'Sign in →'; btn.disabled = false;
     } else {
-      err.classList.add('show');
-      document.getElementById('gate-input').value = '';
-      setTimeout(() => err.classList.remove('show'), 2500);
+      showApp(data.user.email);
     }
   }
-  document.getElementById('gate-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPassword();
+
+  async function forgotPassword(e) {
+    e.preventDefault();
+    const email = document.getElementById('gate-email').value.trim();
+    const errEl = document.getElementById('gate-error');
+    if (!email) { errEl.textContent = 'Enter your email above first.'; return; }
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://andycoritain.github.io/andy-oritain-updates/index.html'
+    });
+    errEl.style.color = error ? '#7A2E18' : '#1E4E2A';
+    errEl.textContent = error ? error.message : 'Reset link sent — check your email.';
+  }
+
+  async function signOut() {
+    await db.auth.signOut();
+    document.getElementById('gate').classList.remove('hidden');
+    document.getElementById('user-bar').classList.remove('visible');
+    document.getElementById('gate-password').value = '';
+    document.getElementById('gate-error').textContent = '';
+    document.getElementById('gate-btn').textContent = 'Sign in →';
+    document.getElementById('gate-btn').disabled = false;
+  }
+
+  function showApp(email) {
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('user-bar').classList.add('visible');
+    document.getElementById('user-email-display').textContent = email;
+  }
+
+  // Restore session on every page load
+  db.auth.getSession().then(({ data: { session } }) => {
+    if (session) showApp(session.user.email);
+  });
+
+  // Listen for auth state changes
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) showApp(session.user.email);
+    if (event === 'SIGNED_OUT') {
+      document.getElementById('gate').classList.remove('hidden');
+      document.getElementById('user-bar').classList.remove('visible');
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !document.getElementById('gate').classList.contains('hidden')) signIn();
   });
 
   function toggleKpi(toggleEl) {
