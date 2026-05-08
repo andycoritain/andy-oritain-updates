@@ -6,95 +6,115 @@
 <title>Andy · Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --bg:        #EEEAE2;
-    --bg-light:  #F4F0E8;
     --text:      #1A1714;
     --text-2:    #6A6258;
     --text-3:    #ACA49A;
     --yellow:    #F5D842;
     --yellow-2:  #EEC800;
-    --yellow-dim:#F7E680;
     --dark:      #1A1714;
-    --neo-shadow-out: 6px 6px 14px rgba(160,150,130,0.45), -4px -4px 10px rgba(255,252,245,0.85);
-    --neo-shadow-in:  inset 3px 3px 8px rgba(160,150,130,0.4), inset -3px -3px 8px rgba(255,252,245,0.9);
+    --neo-shadow-out:  6px 6px 14px rgba(160,150,130,0.45), -4px -4px 10px rgba(255,252,245,0.85);
+    --neo-shadow-in:   inset 3px 3px 8px rgba(160,150,130,0.4), inset -3px -3px 8px rgba(255,252,245,0.9);
     --neo-shadow-card: 8px 8px 20px rgba(150,140,120,0.4), -5px -5px 14px rgba(255,252,245,0.9);
     --neo-shadow-pill: 3px 3px 7px rgba(150,140,120,0.35), -2px -2px 5px rgba(255,252,245,0.85);
-    --r:   18px;
-    --r-sm: 12px;
-    --r-pill: 99px;
+    --r: 18px; --r-sm: 12px; --r-pill: 99px;
   }
 
-  body {
-    font-family: 'Geist', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
+  html, body { background: #EEEAE2; font-family: 'Geist', sans-serif; color: #1A1714; font-size: 14px; line-height: 1.5; min-height: 100vh; }
 
   body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 55% 40% at 90% 5%,  rgba(245,216,66,0.12) 0%, transparent 55%),
-      radial-gradient(ellipse 45% 35% at 5%  95%, rgba(245,216,66,0.06) 0%, transparent 55%);
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 55% 40% at 90% 5%, rgba(245,216,66,0.12) 0%, transparent 55%), radial-gradient(ellipse 45% 35% at 5% 95%, rgba(245,216,66,0.06) 0%, transparent 55%);
     pointer-events: none;
   }
 
-  .nav {
-    position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 32px;
-    background: rgba(238,234,226,0.9);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(200,190,170,0.4);
+  /* ── GATE ── */
+  #gate {
+    position: fixed; inset: 0; z-index: 999;
+    background: #EEEAE2;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
   }
+  #gate.hidden { display: none; }
+
+  .gate-card {
+    background: #EEEAE2; border-radius: 18px;
+    box-shadow: 8px 8px 20px rgba(150,140,120,0.4), -5px -5px 14px rgba(255,252,245,0.9);
+    padding: 52px 44px 44px; width: 100%; max-width: 400px; text-align: center;
+  }
+  .gate-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #ACA49A; margin-bottom: 16px; }
+  .gate-title  { font-size: 40px; font-weight: 100; letter-spacing: -2px; line-height: 0.9; color: #1A1714; margin-bottom: 4px; }
+  .gate-title strong { font-weight: 800; }
+  .gate-sub    { font-size: 12px; font-weight: 300; color: #ACA49A; margin-top: 12px; margin-bottom: 32px; line-height: 1.6; }
+  .gate-field  { margin-bottom: 12px; }
+  .gate-pw-wrap { margin-bottom: 12px; position: relative; }
+  .gate-input {
+    width: 100%; background: #EEEAE2; border: none; border-radius: 12px;
+    padding: 13px 16px; font-family: 'Geist', sans-serif; font-size: 13px; color: #1A1714;
+    outline: none; box-shadow: inset 3px 3px 8px rgba(150,140,120,0.4), inset -3px -3px 8px rgba(255,252,245,0.9);
+    transition: box-shadow 0.15s;
+  }
+  .gate-pw-wrap .gate-input { padding-right: 44px; }
+  .gate-input:focus { box-shadow: inset 4px 4px 10px rgba(140,130,110,0.45), inset -3px -3px 8px rgba(255,252,245,0.95); }
+  .gate-input::placeholder { color: #ACA49A; }
+  .gate-eye { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #ACA49A; padding: 0; display: flex; align-items: center; }
+  .gate-btn {
+    width: 100%; margin-top: 8px; background: #1A1714; border: none; border-radius: 12px; padding: 14px;
+    font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #F5D842; cursor: pointer; box-shadow: 4px 4px 10px rgba(26,23,20,0.4), -2px -2px 6px rgba(80,70,50,0.3); transition: box-shadow 0.15s;
+  }
+  .gate-btn:hover { box-shadow: 2px 2px 6px rgba(26,23,20,0.5); }
+  .gate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .gate-forgot { font-size: 11px; color: #6A6258; text-decoration: none; display: inline-block; margin-top: 14px; }
+  .gate-forgot:hover { color: #1A1714; }
+  .gate-footer { font-size: 11px; color: #ACA49A; margin-top: 24px; font-weight: 300; }
+  .gate-error  { font-size: 11px; font-weight: 500; color: #7A2E18; margin-top: 10px; min-height: 16px; }
+
+  /* ── USER BAR ── */
+  #user-bar {
+    display: none; width: 100%; align-items: center; gap: 12px;
+    justify-content: flex-end; padding: 7px 32px;
+    background: #ffffff; border-bottom: 1px solid rgba(26,23,20,0.08);
+    position: relative; z-index: 200;
+  }
+  #user-bar.visible { display: flex; }
+  #user-bar .ub-email { font-size: 11px; color: rgba(26,23,20,0.45); font-weight: 400; }
+  #user-bar .ub-signout { font-size: 11px; font-weight: 500; color: #1A1714; background: none; border: none; cursor: pointer; padding: 0; text-decoration: none; }
+  #user-bar .ub-signout:hover { text-decoration: underline; }
+
+  /* ── NAV ── */
+  .nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 12px; padding: 14px 32px; background: rgba(238,234,226,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(200,190,170,0.4); }
   .nav-wordmark { font-size: 14px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
   .nav-wordmark span.dot { color: var(--yellow-2); }
   .nav-sep { width: 1px; height: 14px; background: rgba(180,170,150,0.5); }
   .nav-sub { font-size: 12px; font-weight: 300; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
-  .nav-link {
-    margin-left: auto; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--text-2); text-decoration: none;
-    display: flex; align-items: center; gap: 6px;
-    padding: 7px 16px; border-radius: var(--r-pill);
-    background: var(--bg); box-shadow: var(--neo-shadow-pill);
-    transition: box-shadow 0.15s;
-  }
+  .nav-link { margin-left: auto; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: var(--r-pill); background: var(--bg); box-shadow: var(--neo-shadow-pill); transition: box-shadow 0.15s; }
   .nav-link:hover { box-shadow: var(--neo-shadow-out); color: var(--text); }
 
+  /* ── MAIN ── */
   .main { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 56px 32px 120px; }
 
   .page-header { margin-bottom: 60px; }
   .page-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
   .page-title { font-size: 72px; font-weight: 100; letter-spacing: -3px; line-height: 0.9; color: var(--text); margin-bottom: 6px; }
   .page-title strong { font-weight: 800; }
-  .page-sub { font-size: 13px; font-weight: 300; color: var(--text-3); letter-spacing: 0.02em; margin-top: 16px; max-width: 360px; line-height: 1.6; }
+  .page-sub { font-size: 13px; font-weight: 300; color: var(--text-3); margin-top: 16px; max-width: 360px; line-height: 1.6; }
 
-  .fy-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 20px; background: var(--yellow); color: var(--dark);
-    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 6px 14px; border-radius: var(--r-pill); box-shadow: var(--neo-shadow-pill);
-  }
+  .fy-chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; background: var(--yellow); color: var(--dark); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 14px; border-radius: var(--r-pill); box-shadow: var(--neo-shadow-pill); }
   .fy-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--dark); }
 
-  .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 60px; }
+  .summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 60px; }
   .sum-card { border-radius: var(--r); padding: 22px 20px; text-align: center; }
   .sum-card.neo { background: var(--bg); box-shadow: var(--neo-shadow-card); }
   .sum-card.yellow { background: var(--yellow); border: 1.5px solid rgba(26,23,20,0.12); box-shadow: 8px 8px 20px rgba(180,155,0,0.35), -4px -4px 12px rgba(255,250,200,0.8); }
   .sum-n { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
-  .sum-card.neo .sum-n    { color: var(--text); }
-  .sum-card.yellow .sum-n { color: var(--dark); }
+  .sum-card.neo .sum-n { color: var(--text); } .sum-card.yellow .sum-n { color: var(--dark); }
   .sum-l { font-size: 10px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
-  .sum-card.neo .sum-l    { color: var(--text-2); }
-  .sum-card.yellow .sum-l { color: rgba(26,23,20,0.55); }
+  .sum-card.neo .sum-l { color: var(--text-2); } .sum-card.yellow .sum-l { color: rgba(26,23,20,0.55); }
 
   .quarter { margin-bottom: 44px; }
   .q-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
@@ -102,21 +122,20 @@
   .q-num.active { background: var(--yellow); color: var(--dark); box-shadow: 3px 3px 7px rgba(180,155,0,0.35), -2px -2px 5px rgba(255,250,200,0.8); }
   .q-title { font-size: 28px; font-weight: 200; letter-spacing: -0.8px; color: var(--text); line-height: 1; }
   .q-title.active { font-weight: 700; }
-  .q-range { font-size: 12px; font-weight: 300; color: var(--text-2); margin-left: auto; letter-spacing: 0.02em; }
+  .q-range { font-size: 12px; font-weight: 300; color: var(--text-2); margin-left: auto; }
 
   .q-prog-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
   .q-bar-wrap { flex: 1; height: 4px; border-radius: var(--r-pill); background: var(--bg); box-shadow: var(--neo-shadow-in); overflow: hidden; }
   .q-bar { height: 100%; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--yellow-2), var(--yellow)); transition: width 1s ease; }
-  .q-pct { font-size: 12px; font-weight: 700; color: var(--text-2); min-width: 36px; text-align: right; letter-spacing: -0.3px; }
+  .q-pct { font-size: 12px; font-weight: 700; color: var(--text-2); min-width: 36px; text-align: right; }
 
-  /* ── Now/Next/Later lanes ── */
   .lane-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; margin-top: 18px; }
   .lane-label:first-child { margin-top: 0; }
   .lane-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-pill); }
   .lane-badge.now   { background: var(--dark); color: var(--yellow); }
   .lane-badge.next  { background: var(--bg); box-shadow: var(--neo-shadow-pill); color: var(--text-2); }
   .lane-badge.later { background: var(--bg); box-shadow: var(--neo-shadow-pill); color: var(--text-3); opacity: 0.7; }
-  .lane-date { font-size: 11px; font-weight: 300; color: var(--text-3); letter-spacing: 0.02em; }
+  .lane-date { font-size: 11px; font-weight: 300; color: var(--text-3); }
 
   .themes { display: flex; flex-direction: column; gap: 10px; }
   .theme-card { border-radius: var(--r); padding: 18px 22px; position: relative; }
@@ -128,7 +147,7 @@
   .theme-name { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; flex: 1; }
   .theme-card.yellow .theme-name { color: var(--dark); }
   .theme-card.yellow .theme-pct  { color: rgba(26,23,20,0.55); }
-  .theme-pct { font-size: 13px; font-weight: 300; color: var(--text-3); letter-spacing: -0.2px; }
+  .theme-pct { font-size: 13px; font-weight: 300; color: var(--text-3); }
 
   .prog-wrap { height: 3px; border-radius: var(--r-pill); overflow: hidden; margin-bottom: 14px; background: rgba(0,0,0,0.08); }
   .theme-card.neo .prog-wrap { box-shadow: inset 1px 1px 3px rgba(150,140,120,0.4); background: rgba(0,0,0,0.06); }
@@ -138,7 +157,7 @@
   .pf-mid    { background: rgba(26,23,20,0.3); }
 
   .theme-items { display: flex; flex-wrap: wrap; gap: 7px; }
-  .ti { font-size: 11px; font-weight: 400; padding: 5px 12px; border-radius: var(--r-pill); letter-spacing: 0.01em; transition: all 0.15s; }
+  .ti { font-size: 11px; font-weight: 400; padding: 5px 12px; border-radius: var(--r-pill); letter-spacing: 0.01em; }
   .ti-active { background: transparent; border: 1.5px solid var(--dark); color: var(--dark); font-weight: 500; }
   .ti-done   { background: var(--dark); border: 1.5px solid var(--dark); color: var(--yellow); font-weight: 500; }
   .ti-next   { background: transparent; border: 1px solid rgba(26,23,20,0.28); color: var(--text-2); }
@@ -147,7 +166,6 @@
   .theme-card.yellow .ti-next   { background: transparent; border: 1px solid rgba(26,23,20,0.25); color: rgba(26,23,20,0.45); }
   .theme-card.faded .ti-next    { border-color: rgba(26,23,20,0.22); color: var(--text-2); }
 
-  /* ── KPI toggle ── */
   .kpi-toggle { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(26,23,20,0.08); cursor: pointer; user-select: none; width: fit-content; }
   .theme-card.yellow .kpi-toggle { border-top-color: rgba(26,23,20,0.12); }
   .kpi-toggle-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
@@ -164,7 +182,6 @@
   .kpi-row:hover { background: rgba(26,23,20,0.07); }
   .theme-card.yellow .kpi-row:hover { background: rgba(26,23,20,0.12); }
   .kpi-row.checked { background: rgba(26,23,20,0.08); }
-  .theme-card.yellow .kpi-row.checked { background: rgba(26,23,20,0.14); }
 
   .kpi-check { width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; border: 1.5px solid rgba(26,23,20,0.25); background: transparent; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all 0.15s; }
   .kpi-row.checked .kpi-check { background: var(--dark); border-color: var(--dark); }
@@ -187,107 +204,23 @@
 
   .q-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(180,170,150,0.4), transparent); margin: 4px 0 20px; }
 
-  .edit-hint { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 300; color: var(--text-2); margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(180,170,150,0.3); letter-spacing: 0.02em; }
+  .edit-hint { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 300; color: var(--text-2); margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(180,170,150,0.3); }
   code { font-size: 10px; background: var(--bg); box-shadow: var(--neo-shadow-pill); padding: 2px 7px; border-radius: 6px; color: var(--text-2); font-family: monospace; }
-
-  /* ── AUTH GATE ── */
-  .gate {
-    position: fixed; inset: 0; z-index: 999;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  .gate::before {
-    content: ''; position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse 55% 40% at 90% 5%,  rgba(245,216,66,0.12) 0%, transparent 55%),
-      radial-gradient(ellipse 45% 35% at 5%  95%, rgba(245,216,66,0.06) 0%, transparent 55%);
-    pointer-events: none;
-  }
-  .gate-card {
-    background: var(--bg); border-radius: var(--r);
-    box-shadow: var(--neo-shadow-card);
-    padding: 48px 40px 40px;
-    width: 100%; max-width: 400px;
-    position: relative; z-index: 1; text-align: center;
-  }
-  .gate-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
-  .gate-title { font-size: 42px; font-weight: 100; letter-spacing: -2px; line-height: 0.9; color: var(--text); margin-bottom: 4px; }
-  .gate-title strong { font-weight: 800; }
-  .gate-sub { font-size: 12px; font-weight: 300; color: var(--text-3); margin-top: 12px; margin-bottom: 32px; line-height: 1.6; }
-  .gate-field { margin-bottom: 12px; position: relative; }
-  .gate-input {
-    width: 100%; background: var(--bg); border: none;
-    border-radius: var(--r-sm); padding: 13px 16px;
-    font-family: 'Geist', sans-serif; font-size: 13px; color: var(--text);
-    outline: none; box-shadow: var(--neo-shadow-in); transition: box-shadow 0.15s;
-    text-align: left;
-  }
-  .gate-input:focus { box-shadow: inset 4px 4px 10px rgba(140,130,110,0.45), inset -3px -3px 8px rgba(255,252,245,0.95); }
-  .gate-input::placeholder { color: var(--text-3); }
-  .gate-eye {
-    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer; color: var(--text-3);
-    padding: 0; display: flex; align-items: center;
-  }
-  .gate-btn {
-    width: 100%; margin-top: 8px;
-    background: var(--dark);
-    border: none; border-radius: var(--r-sm); padding: 14px;
-    font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 800;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--yellow); cursor: pointer;
-    box-shadow: 4px 4px 10px rgba(26,23,20,0.4), -2px -2px 6px rgba(80,70,50,0.3);
-    transition: all 0.15s;
-  }
-  .gate-btn:hover { box-shadow: 2px 2px 6px rgba(26,23,20,0.5); }
-  .gate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-  .gate-forgot { font-size: 11px; color: var(--text-2); text-decoration: none; display: inline-block; margin-top: 14px; }
-  .gate-forgot:hover { color: var(--text); }
-  .gate-footer { font-size: 11px; color: var(--text-3); margin-top: 20px; font-weight: 300; }
-  .gate-error { font-size: 11px; font-weight: 500; color: #7A2E18; margin-top: 10px; min-height: 16px; }
-  .gate-user-bar {
-    display: none; align-items: center; gap: 8px;
-    justify-content: flex-end; padding: 6px 32px 0;
-    position: relative; z-index: 200;
-  }
-  .gate-user-bar.visible { display: flex; }
-  .gate-user-email { font-size: 11px; color: var(--text-3); font-weight: 300; }
-  .gate-signout {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-2); background: var(--bg); border: none;
-    border-radius: var(--r-pill); padding: 4px 12px; cursor: pointer;
-    box-shadow: var(--neo-shadow-pill); transition: box-shadow 0.15s;
-  }
-  .gate-signout:hover { box-shadow: var(--neo-shadow-out); }
-  .gate.hidden { display: none; }
 
   @media (max-width: 640px) {
     .main { padding: 32px 16px 80px; }
-    .nav { padding: 12px 16px; gap: 8px; }
-    .nav-wordmark { font-size: 12px; }
-    .nav-sub { font-size: 10px; }
-    .nav-link { font-size: 10px; padding: 5px 10px; }
+    .nav { padding: 12px 16px; }
     .page-title { font-size: 44px; letter-spacing: -1.5px; }
-    .summary { grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 36px; }
-    .sum-n { font-size: 24px; }
-    .q-header { flex-wrap: wrap; gap: 8px; }
-    .q-range { margin-left: 0; font-size: 11px; }
-    .theme-card { padding: 14px 16px; }
-    .theme-name { font-size: 13px; }
-    .ti { font-size: 11px; padding: 4px 9px; }
+    .summary { grid-template-columns: repeat(2,1fr); }
+    .gate-card { padding: 36px 24px 28px; }
+    #user-bar { padding: 7px 16px; }
     .edit-hint { display: none; }
   }
 </style>
 </head>
 <body>
 
-<div id="user-bar">
-  <span class="gate-user-email" id="user-email-display"></span>
-  <button class="gate-signout" id="signout-btn">Sign out</button>
-</div>
-
-<div class="gate" id="gate">
+<div id="gate">
   <div class="gate-card">
     <p class="gate-kicker">Andy · Oritain</p>
     <h1 class="gate-title">Road<strong>map</strong></h1>
@@ -295,18 +228,23 @@
     <div class="gate-field">
       <input class="gate-input" id="gate-email" type="email" placeholder="Email address" />
     </div>
-    <div class="gate-field">
-      <input class="gate-input" id="gate-password" type="password" placeholder="Password" style="padding-right:44px" />
-      <button class="gate-eye" onclick="togglePw()" tabindex="-1">
+    <div class="gate-pw-wrap">
+      <input class="gate-input" id="gate-password" type="password" placeholder="Password" />
+      <button class="gate-eye" id="eye-btn" tabindex="-1">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
       </button>
     </div>
     <p class="gate-error" id="gate-error"></p>
-    <button class="gate-btn" id="gate-btn" onclick="signIn()">Sign in →</button>
+    <button class="gate-btn" id="gate-btn">Sign in →</button>
     <br>
-    <a class="gate-forgot" href="#" onclick="forgotPassword(event)">Forgot password?</a>
+    <a class="gate-forgot" href="#" id="forgot-btn">Forgot password?</a>
     <p class="gate-footer">Private access only — Oritain Design Team</p>
   </div>
+</div>
+
+<div id="user-bar">
+  <span class="ub-email" id="ub-email"></span>
+  <button class="ub-signout" id="ub-signout">Sign out</button>
 </div>
 
 <nav class="nav">
@@ -317,7 +255,6 @@
 </nav>
 
 <main class="main">
-
   <div class="page-header">
     <p class="page-kicker">Financial year · 2026–27</p>
     <h1 class="page-title">Road<strong>map</strong></h1>
@@ -332,7 +269,7 @@
     <div class="sum-card neo"><div class="sum-n">18%</div><div class="sum-l">Year done</div></div>
   </div>
 
-  <!-- ── Q1 ── -->
+  <!-- Q1 -->
   <div class="quarter">
     <div class="q-header">
       <span class="q-num active">Q1</span>
@@ -344,440 +281,205 @@
       <span class="q-pct">35%</span>
     </div>
 
-    <!-- NOW -->
-    <div class="lane-label">
-      <span class="lane-badge now">Now</span>
-      <span class="lane-date">May — next 2 weeks</span>
-    </div>
+    <div class="lane-label"><span class="lane-badge now">Now</span><span class="lane-date">May — next 2 weeks</span></div>
     <div class="themes">
-
       <div class="theme-card yellow">
         <div class="validated-badge">Validated ✓</div>
         <div class="theme-top"><span class="theme-name">Mini MVP & prototype</span><span class="theme-pct">20%</span></div>
         <div class="prog-wrap"><div class="pf pf-dark" style="width:20%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-active">Scope definition</span>
-          <span class="ti ti-active">Core flows built</span>
-          <span class="ti ti-next">Upsell mechanics</span>
-          <span class="ti ti-next">Tier visibility</span>
-          <span class="ti ti-next">Prototype review</span>
+          <span class="ti ti-active">Scope definition</span><span class="ti ti-active">Core flows built</span>
+          <span class="ti ti-next">Upsell mechanics</span><span class="ti ti-next">Tier visibility</span><span class="ti ti-next">Prototype review</span>
         </div>
         <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">3 KPIs</span>
+          <span class="kpi-toggle-label">Success metrics</span><span class="kpi-toggle-count">3 KPIs</span>
           <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Prototype signed off by stakeholders</div><div class="kpi-desc-text">Engineering-ready with core flows covered</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR2</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Tier value visible at point of use</div><div class="kpi-desc-text">In-product signals surfacing upgrade paths</div></div>
-            <span class="kpi-okr-tag">Obj 1 · KR1</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Handoff package ready by end of May</div><div class="kpi-desc-text">Specs, annotations, and assets complete</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR1</span>
-          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Prototype signed off by stakeholders</div><div class="kpi-desc-text">Engineering-ready with core flows covered</div></div><span class="kpi-okr-tag">Obj 2 · KR2</span></div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Tier value visible at point of use</div><div class="kpi-desc-text">In-product signals surfacing upgrade paths</div></div><span class="kpi-okr-tag">Obj 1 · KR1</span></div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Handoff package ready by end of May</div><div class="kpi-desc-text">Specs, annotations, and assets complete</div></div><span class="kpi-okr-tag">Obj 2 · KR1</span></div>
         </div>
       </div>
-
       <div class="theme-card neo">
         <div class="validated-badge">Validated ✓</div>
         <div class="theme-top"><span class="theme-name">Engineering handoff</span><span class="theme-pct">15%</span></div>
         <div class="prog-wrap"><div class="pf pf-yellow" style="width:15%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-active">Engineering meetings</span>
-          <span class="ti ti-next">Spec documentation</span>
-          <span class="ti ti-next">Handoff package</span>
-          <span class="ti ti-next">Dev kickoff (late May)</span>
+          <span class="ti ti-active">Engineering meetings</span><span class="ti ti-next">Spec documentation</span><span class="ti ti-next">Handoff package</span><span class="ti ti-next">Dev kickoff (late May)</span>
         </div>
         <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">2 KPIs</span>
+          <span class="kpi-toggle-label">Success metrics</span><span class="kpi-toggle-count">2 KPIs</span>
           <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Eng kickoff completed by end of May</div><div class="kpi-desc-text">Team unblocked and building before June</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR1</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">CI/CD first pass green</div><div class="kpi-desc-text">Initial build passes pipeline checks</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR3</span>
-          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Eng kickoff completed by end of May</div><div class="kpi-desc-text">Team unblocked and building before June</div></div><span class="kpi-okr-tag">Obj 2 · KR1</span></div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">CI/CD first pass green</div><div class="kpi-desc-text">Initial build passes pipeline checks</div></div><span class="kpi-okr-tag">Obj 2 · KR3</span></div>
         </div>
       </div>
-
       <div class="theme-card neo">
         <div class="validated-badge">Validated ✓</div>
         <div class="theme-top"><span class="theme-name">OOE automation prototype</span><span class="theme-pct">10%</span></div>
         <div class="prog-wrap"><div class="pf pf-yellow" style="width:10%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-done">User interviews ✓</span>
-          <span class="ti ti-active">New flow design</span>
-          <span class="ti ti-next">Automation prototype</span>
-          <span class="ti ti-next">Impact scoring</span>
-          <span class="ti ti-next">Validation sessions</span>
+          <span class="ti ti-done">User interviews ✓</span><span class="ti ti-active">New flow design</span><span class="ti ti-next">Automation prototype</span><span class="ti ti-next">Impact scoring</span><span class="ti ti-next">Validation sessions</span>
         </div>
         <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">2 KPIs</span>
+          <span class="kpi-toggle-label">Success metrics</span><span class="kpi-toggle-count">2 KPIs</span>
           <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">New OOE flow prototype complete</div><div class="kpi-desc-text">Covers key automation touchpoints end-to-end</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR2</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Impact score model defined</div><div class="kpi-desc-text">Scoring logic agreed with product and commercial</div></div>
-            <span class="kpi-okr-tag">Obj 3 · KR2</span>
-          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">New OOE flow prototype complete</div><div class="kpi-desc-text">Covers key automation touchpoints end-to-end</div></div><span class="kpi-okr-tag">Obj 2 · KR2</span></div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Impact score model defined</div><div class="kpi-desc-text">Scoring logic agreed with product and commercial</div></div><span class="kpi-okr-tag">Obj 3 · KR2</span></div>
         </div>
       </div>
-
     </div>
 
-    <!-- NEXT -->
-    <div class="lane-label">
-      <span class="lane-badge next">Next</span>
-      <span class="lane-date">Late May → 10 June</span>
-    </div>
+    <div class="lane-label"><span class="lane-badge next">Next</span><span class="lane-date">Late May → 10 June</span></div>
     <div class="themes">
-
       <div class="theme-card neo">
         <div class="validated-badge">Validated ✓</div>
         <div class="theme-top"><span class="theme-name">Typography & design system</span><span class="theme-pct">40%</span></div>
         <div class="prog-wrap"><div class="pf pf-yellow" style="width:40%"></div></div>
         <div class="theme-items">
-          <span class="ti ti-done">Font finalisation</span>
-          <span class="ti ti-active">Timber commodity design</span>
-          <span class="ti ti-active">Cotton commodity design</span>
-          <span class="ti ti-next">Design system in Claude</span>
-          <span class="ti ti-next">Design tokens</span>
-          <span class="ti ti-next">Component audit</span>
+          <span class="ti ti-done">Font finalisation</span><span class="ti ti-active">Timber commodity design</span><span class="ti ti-active">Cotton commodity design</span><span class="ti ti-next">Design system in Claude</span><span class="ti ti-next">Design tokens</span><span class="ti ti-next">Component audit</span>
         </div>
         <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">2 KPIs</span>
+          <span class="kpi-toggle-label">Success metrics</span><span class="kpi-toggle-count">2 KPIs</span>
           <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Commodity design pattern established</div><div class="kpi-desc-text">Timber + Cotton covered, extensible to new commodities</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR1</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Design system adopted by eng</div><div class="kpi-desc-text">Tokens and components used in first build sprint</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR3</span>
-          </div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Commodity design pattern established</div><div class="kpi-desc-text">Timber + Cotton covered, extensible to new commodities</div></div><span class="kpi-okr-tag">Obj 2 · KR1</span></div>
+          <div class="kpi-row" onclick="toggleCheck(this)"><div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="kpi-text"><div class="kpi-name-text">Design system adopted by eng</div><div class="kpi-desc-text">Tokens and components used in first build sprint</div></div><span class="kpi-okr-tag">Obj 2 · KR3</span></div>
         </div>
       </div>
-
     </div>
 
-    <!-- LATER -->
-    <div class="lane-label">
-      <span class="lane-badge later">Later</span>
-      <span class="lane-date">Post June · Q1 tail</span>
-    </div>
+    <div class="lane-label"><span class="lane-badge later">Later</span><span class="lane-date">Post June · Q1 tail</span></div>
     <div class="themes">
       <div class="theme-card faded">
         <div class="theme-top"><span class="theme-name">Platform copy & tone</span><span class="theme-pct">—</span></div>
         <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Copy audit</span>
-          <span class="ti ti-next">Tone of voice pass</span>
-          <span class="ti ti-next">Microcopy standards</span>
-        </div>
+        <div class="theme-items"><span class="ti ti-next">Copy audit</span><span class="ti ti-next">Tone of voice pass</span><span class="ti ti-next">Microcopy standards</span></div>
       </div>
     </div>
   </div>
 
-  <!-- ── Q2 ── -->
+  <!-- Q2 -->
   <div class="quarter">
-    <div class="q-header">
-      <span class="q-num">Q2</span>
-      <span class="q-title">July – September 2026</span>
-      <span class="q-range">Upcoming</span>
-    </div>
+    <div class="q-header"><span class="q-num">Q2</span><span class="q-title">July – September 2026</span><span class="q-range">Upcoming</span></div>
     <div class="q-divider"></div>
     <div class="themes">
-
-      <div class="theme-card faded">
-        <div class="validated-badge">Validated ✓</div>
-        <div class="theme-top"><span class="theme-name">Upsell & tier logic</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Self-serve upgrade journeys</span>
-          <span class="ti ti-next">Contextual tier signals</span>
-          <span class="ti ti-next">Expansion triggers</span>
-          <span class="ti ti-next">Sales-free upgrade flow</span>
-        </div>
-        <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">3 KPIs</span>
-          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">≥X% users encounter tier signals in-product</div><div class="kpi-desc-text">Contextual value surfaced at point of use</div></div>
-            <span class="kpi-okr-tag">Obj 1 · KR1</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">≥X% upgrade journeys without sales</div><div class="kpi-desc-text">Self-serve discovery evidenced</div></div>
-            <span class="kpi-okr-tag">Obj 1 · KR2</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Reusable design system ships</div><div class="kpi-desc-text">Core product areas covered: nav, tiers, upsell</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR1</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="theme-card faded">
-        <div class="theme-top"><span class="theme-name">Platform simplification</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Global wishlist (batch 1)</span>
-          <span class="ti ti-next">Onboarding tier UX</span>
-          <span class="ti ti-next">UX polish round</span>
-          <span class="ti ti-next">Navigation simplification</span>
-        </div>
-      </div>
-
-      <div class="theme-card faded">
-        <div class="theme-top"><span class="theme-name">OOE continued</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Automation flows (complex)</span>
-          <span class="ti ti-next">Self-submission (photos)</span>
-          <span class="ti ti-next">Validations</span>
-          <span class="ti ti-next">Who does what</span>
-        </div>
-      </div>
-
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">Upsell & tier logic</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Self-serve upgrade journeys</span><span class="ti ti-next">Contextual tier signals</span><span class="ti ti-next">Expansion triggers</span><span class="ti ti-next">Sales-free upgrade flow</span></div></div>
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">Platform simplification</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Global wishlist (batch 1)</span><span class="ti ti-next">Onboarding tier UX</span><span class="ti ti-next">UX polish round</span><span class="ti ti-next">Navigation simplification</span></div></div>
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">OOE continued</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Automation flows (complex)</span><span class="ti ti-next">Self-submission (photos)</span><span class="ti ti-next">Validations</span><span class="ti ti-next">Who does what</span></div></div>
     </div>
   </div>
 
-  <!-- ── Q3 ── -->
+  <!-- Q3 -->
   <div class="quarter">
-    <div class="q-header">
-      <span class="q-num">Q3</span>
-      <span class="q-title">October – December 2026</span>
-      <span class="q-range">Upcoming</span>
-    </div>
+    <div class="q-header"><span class="q-num">Q3</span><span class="q-title">October – December 2026</span><span class="q-range">Upcoming</span></div>
     <div class="q-divider"></div>
     <div class="themes">
-
-      <div class="theme-card faded">
-        <div class="validated-badge">Validated ✓</div>
-        <div class="theme-top"><span class="theme-name">Commercial signals</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Usage threshold signals</span>
-          <span class="ti ti-next">Unmet needs triggers</span>
-          <span class="ti ti-next">Programme triggers</span>
-          <span class="ti ti-next">Account team integration</span>
-        </div>
-        <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">2 KPIs</span>
-          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">≥X qualified upsell actions triggered</div><div class="kpi-desc-text">Product signals driving expansion in-platform</div></div>
-            <span class="kpi-okr-tag">Obj 1 · KR3</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">≥X% new features on reusable components</div><div class="kpi-desc-text">Standardised patterns adopted cross-team</div></div>
-            <span class="kpi-okr-tag">Obj 2 · KR3</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="theme-card faded">
-        <div class="theme-top"><span class="theme-name">Simplification continued</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Global wishlist (batch 2)</span>
-          <span class="ti ti-next">Cross-team pattern adoption</span>
-          <span class="ti ti-next">Iteration cycle reduction</span>
-        </div>
-      </div>
-
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">Commercial signals</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Usage threshold signals</span><span class="ti ti-next">Unmet needs triggers</span><span class="ti ti-next">Programme triggers</span><span class="ti ti-next">Account team integration</span></div></div>
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">Simplification continued</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Global wishlist (batch 2)</span><span class="ti ti-next">Cross-team pattern adoption</span><span class="ti ti-next">Iteration cycle reduction</span></div></div>
     </div>
   </div>
 
-  <!-- ── Q4 ── -->
+  <!-- Q4 -->
   <div class="quarter">
-    <div class="q-header">
-      <span class="q-num">Q4</span>
-      <span class="q-title">January – March 2027</span>
-      <span class="q-range">Upcoming</span>
-    </div>
+    <div class="q-header"><span class="q-num">Q4</span><span class="q-title">January – March 2027</span><span class="q-range">Upcoming</span></div>
     <div class="q-divider"></div>
     <div class="themes">
-
-      <div class="theme-card faded">
-        <div class="validated-badge">Validated ✓</div>
-        <div class="theme-top"><span class="theme-name">Expansion mechanics</span><span class="theme-pct">—</span></div>
-        <div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div>
-        <div class="theme-items">
-          <span class="ti ti-next">Signals operationalised</span>
-          <span class="ti ti-next">Account team workflows</span>
-          <span class="ti ti-next">User-completed upgrades</span>
-          <span class="ti ti-next">End of year review</span>
-        </div>
-        <div class="kpi-toggle" onclick="toggleKpi(this)">
-          <span class="kpi-toggle-label">Success metrics</span>
-          <span class="kpi-toggle-count">3 KPIs</span>
-          <svg class="kpi-chevron" viewBox="0 0 14 14" fill="none"><path d="M2.5 5l4.5 4.5L11.5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="kpi-panel">
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">≥X upgrade actions completed by users</div><div class="kpi-desc-text">Without manual sales prompts</div></div>
-            <span class="kpi-okr-tag">Obj 1 · KR4</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Signals inform ≥X% of upsell conversations</div><div class="kpi-desc-text">Product intelligence embedded in commercial team workflows</div></div>
-            <span class="kpi-okr-tag">Obj 3 · KR1</span>
-          </div>
-          <div class="kpi-row" onclick="toggleCheck(this)">
-            <div class="kpi-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#F5D842" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="kpi-text"><div class="kpi-name-text">Commercial signals set operationalised</div><div class="kpi-desc-text">Defined triggers actively surfacing expansion opportunities</div></div>
-            <span class="kpi-okr-tag">Obj 3 · KR2</span>
-          </div>
-        </div>
-      </div>
-
+      <div class="theme-card faded"><div class="theme-top"><span class="theme-name">Expansion mechanics</span><span class="theme-pct">—</span></div><div class="prog-wrap"><div class="pf pf-mid" style="width:0%"></div></div><div class="theme-items"><span class="ti ti-next">Signals operationalised</span><span class="ti ti-next">Account team workflows</span><span class="ti ti-next">User-completed upgrades</span><span class="ti ti-next">End of year review</span></div></div>
     </div>
   </div>
 
   <p class="edit-hint">
-    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
-      <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-    </svg>
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
     Progress bars: <code>width:X%</code> — Pills: <code>ti-done</code> <code>ti-active</code> <code>ti-next</code> — Cards: <code>neo</code> <code>yellow</code> <code>faded</code>
   </p>
-
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const { createClient } = supabase;
-  const db = createClient(
+(function () {
+  const db = supabase.createClient(
     'https://aiqdizvifkiylkwbesix.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpcWRpenZpZmtpeWxrd2Jlc2l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NDEyODMsImV4cCI6MjA5MTUxNzI4M30.78rwjJ67B80tcBhD4nvVvpgIwwpPIsl3tIm-WqrPrzY'
   );
 
-  function togglePw() {
-    const f = document.getElementById('gate-password');
-    f.type = f.type === 'password' ? 'text' : 'password';
-  }
+  const gateEl  = document.getElementById('gate');
+  const emailEl = document.getElementById('gate-email');
+  const pwEl    = document.getElementById('gate-password');
+  const btnEl   = document.getElementById('gate-btn');
+  const errEl   = document.getElementById('gate-error');
+  const userBar = document.getElementById('user-bar');
 
-  async function signIn() {
-    const email = document.getElementById('gate-email').value.trim();
-    const password = document.getElementById('gate-password').value;
-    const errEl = document.getElementById('gate-error');
-    const btn = document.getElementById('gate-btn');
-    errEl.textContent = '';
-    if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; return; }
-    btn.textContent = 'Signing in…'; btn.disabled = true;
-    const { data, error } = await db.auth.signInWithPassword({ email, password });
-    if (error) {
-      errEl.textContent = error.message;
-      btn.textContent = 'Sign in →'; btn.disabled = false;
-    } else {
-      showApp(data.user.email);
-    }
-  }
-
-  async function forgotPassword(e) {
-    e.preventDefault();
-    const email = document.getElementById('gate-email').value.trim();
-    const errEl = document.getElementById('gate-error');
-    if (!email) { errEl.textContent = 'Enter your email above first.'; return; }
-    const { error } = await db.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://andycoritain.github.io/andy-oritain-updates/index.html'
-    });
-    errEl.style.color = error ? '#7A2E18' : '#1E4E2A';
-    errEl.textContent = error ? error.message : 'Reset link sent — check your email.';
-  }
-
-  async function signOut() {
-    await db.auth.signOut();
-    document.getElementById('gate').classList.remove('hidden');
-    document.getElementById('user-bar').classList.remove('visible');
-    document.getElementById('gate-password').value = '';
-    document.getElementById('gate-error').textContent = '';
-    document.getElementById('gate-btn').textContent = 'Sign in →';
-    document.getElementById('gate-btn').disabled = false;
-  }
-
-  function showApp(email) {
-    document.getElementById('gate').classList.add('hidden');
-    document.getElementById('user-bar').classList.add('visible');
-    document.getElementById('user-email-display').textContent = email;
-  }
-
-  // Restore session on every page load
-  db.auth.getSession().then(({ data: { session } }) => {
-    if (session) showApp(session.user.email);
+  document.getElementById('eye-btn').addEventListener('click', () => {
+    pwEl.type = pwEl.type === 'password' ? 'text' : 'password';
   });
 
-  // Listen for auth state changes
-  db.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session) showApp(session.user.email);
-    if (event === 'SIGNED_OUT') {
-      document.getElementById('gate').classList.remove('hidden');
-      document.getElementById('user-bar').classList.remove('visible');
-    }
+  btnEl.addEventListener('click', signIn);
+
+  document.getElementById('forgot-btn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = emailEl.value.trim();
+    if (!email) { errEl.textContent = 'Enter your email above first.'; return; }
+    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: 'https://andycoritain.github.io/andy-oritain-updates/index.html' });
+    errEl.style.color = error ? '#7A2E18' : '#1E4E2A';
+    errEl.textContent = error ? error.message : 'Reset link sent — check your email.';
+  });
+
+  document.getElementById('ub-signout').addEventListener('click', async () => {
+    await db.auth.signOut();
+    gateEl.classList.remove('hidden');
+    userBar.classList.remove('visible');
+    pwEl.value = ''; errEl.textContent = '';
+    btnEl.textContent = 'Sign in →'; btnEl.disabled = false;
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !document.getElementById('gate').classList.contains('hidden')) signIn();
+    if (e.key === 'Enter' && !gateEl.classList.contains('hidden')) signIn();
   });
 
-  function toggleKpi(toggleEl) {
-    const chevron = toggleEl.querySelector('.kpi-chevron');
-    const panel = toggleEl.nextElementSibling;
-    const isOpen = panel.classList.contains('open');
-    panel.classList.toggle('open', !isOpen);
-    chevron.classList.toggle('open', !isOpen);
+  async function signIn() {
+    const email = emailEl.value.trim(), password = pwEl.value;
+    errEl.textContent = '';
+    if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; return; }
+    btnEl.textContent = 'Signing in…'; btnEl.disabled = true;
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) { errEl.textContent = error.message; btnEl.textContent = 'Sign in →'; btnEl.disabled = false; }
+    else showApp(data.user.email);
   }
 
-  function toggleCheck(rowEl) {
-    rowEl.classList.toggle('checked');
-    const card = rowEl.closest('.theme-card');
-    const allRows = card.querySelectorAll('.kpi-row');
-    const checkedRows = card.querySelectorAll('.kpi-row.checked');
-    if (allRows.length > 0 && allRows.length === checkedRows.length) {
-      card.classList.add('all-checked');
-    } else {
-      card.classList.remove('all-checked');
-    }
+  function showApp(email) {
+    gateEl.classList.add('hidden');
+    userBar.classList.add('visible');
+    document.getElementById('ub-email').textContent = email;
   }
+
+  db.auth.getSession().then(({ data: { session } }) => { if (session) showApp(session.user.email); });
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) showApp(session.user.email);
+    if (event === 'SIGNED_OUT') { gateEl.classList.remove('hidden'); userBar.classList.remove('visible'); }
+  });
+
+  function toggleKpi(el) {
+    const chevron = el.querySelector('.kpi-chevron');
+    const panel = el.nextElementSibling;
+    panel.classList.toggle('open'); chevron.classList.toggle('open');
+  }
+
+  function toggleCheck(row) {
+    row.classList.toggle('checked');
+    const card = row.closest('.theme-card');
+    const all = card.querySelectorAll('.kpi-row'), checked = card.querySelectorAll('.kpi-row.checked');
+    card.classList.toggle('all-checked', all.length > 0 && all.length === checked.length);
+  }
+
+  window.toggleKpi = toggleKpi;
+  window.toggleCheck = toggleCheck;
+})();
 </script>
-
 </body>
 </html>
